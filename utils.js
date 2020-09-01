@@ -9,7 +9,7 @@ module.exports = {
       )
       .then((res) => {
         if (res.data && res.data.access_token) {
-          console.log("Get token: ", res.data.access_token);
+          console.log("Token requested.");
           token = res.data.access_token;
           app.access_token = token;
         } else {
