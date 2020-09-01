@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
-const axios = require("axios");
 const fs = require("fs");
-const requestToken = require("./utils").requestToken;
 const pushMessage = require("./utils").pushMessage;
 
 router.all("/", (req, res, next) => {
@@ -13,6 +11,11 @@ router.all("/", (req, res, next) => {
       res.render("message", {
         message: "服务已在运行，本次访问已被记录。",
       });
+      pushMessage(
+        req,
+        res,
+        `请注意，ip 地址为 ${req.ip} 的用户访问了你的消息通知服务，如果非你本人，则你的私有消息通知服务可能已被泄露，当前版本无法阻止其他用户通过本系统向你发送消息。`
+      );
     })
     .catch(() => {
       res.render("configure");
