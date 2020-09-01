@@ -4,13 +4,14 @@ const crypto = require("crypto");
 const axios = require("axios");
 const fs = require("fs");
 const requestToken = require("./utils").requestToken;
+const pushMessage = require("./utils").pushMessage;
 
 router.all("/", (req, res, next) => {
   fs.promises
     .access("./.env")
     .then(() => {
       res.render("message", {
-        message: "服务已在运行。",
+        message: "服务已在运行，本次访问已被记录。",
       });
     })
     .catch(() => {
@@ -65,28 +66,13 @@ router.all("/verify", (req, res, next) => {
 });
 
 router.all("/push", (req, res, next) => {
-  // Reference: https://mp.weixin.qq.com/debug/cgi-bin/readtmpl?t=tmplmsg/faq_tmpl
   let content = req.query.content || req.body.content;
-  let access_token = req.app.access_token;
-  let request_data = {
-    touser: process.env.OPEN_ID,
-    template_id: process.env.TEMPLATE_ID,
-  };
-  request_data.data = { text: { value: content } };
-  axios
-    .post(
-      `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${access_token}`,
-      request_data
-    )
-    .then((response) => {
-      if (response.data && response.data.errcode === "40001") {
-        requestToken(req.app);
-      }
-      res.json(response.data);
-    })
-    .catch((error) => {
-      res.json(error);
-    });
+  pushMessage(req, res, content);
+});
+
+router.all("/:content", (req, res, next) => {
+  let content = req.params.content;
+  pushMessage(req, res, content);
 });
 
 module.exports = router;
