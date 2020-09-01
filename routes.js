@@ -8,7 +8,7 @@ router.get("/", (req, res, next) => {
 
 router.get("/verify", (req, res, next) => {
   // 验证消息来自微信服务器：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Access_Overview.html
-  const { signature, timestamp, nonce, echostr } = req.body;
+  const { signature, timestamp, nonce, echostr } = req.query;
   const token = process.env.TOKEN;
   let tmp_array = [token, timestamp, nonce].sort();
   let tmp_string = tmp_array.join("");
