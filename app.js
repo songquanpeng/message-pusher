@@ -6,8 +6,12 @@ const http = require("http");
 require("dotenv").config();
 
 const indexRouter = require("./routes");
+const requestToken = require("./utils").requestToken;
 
 const app = express();
+
+requestToken(app);
+setInterval(() => requestToken(app), 100 * 60 * 1000);
 
 app.use(logger("dev"));
 app.use(express.json());
