@@ -30,7 +30,7 @@ router.get("/push", (req, res, next) => {
     touser: process.env.OPEN_ID,
     template_id: process.env.TEMPLATE_ID,
   };
-  request_data.data = { text: content };
+  request_data.data = { text: { value: content } };
   axios
     .post(
       `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${access_token}`,
