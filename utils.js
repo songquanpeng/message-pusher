@@ -11,7 +11,7 @@ module.exports = {
         if (res.data && res.data.access_token) {
           console.log("Token requested.");
           token = res.data.access_token;
-          app.access_token = token;
+          app.locals.access_token = token;
         } else {
           console.error(res.data);
         }
@@ -21,7 +21,7 @@ module.exports = {
 
   pushMessage: function (req, res, content) {
     // Reference: https://mp.weixin.qq.com/debug/cgi-bin/readtmpl?t=tmplmsg/faq_tmpl
-    let access_token = req.app.access_token;
+    let access_token = req.app.locals.access_token;
     let request_data = {
       touser: process.env.OPEN_ID,
       template_id: process.env.TEMPLATE_ID,
