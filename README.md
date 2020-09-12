@@ -15,9 +15,9 @@
 
 ### 微信公众平台端配置
 1. 首先前往[此页面](https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index)拿到 APP_ID 以及 APP_SECRET。
-2. 填写接口配置信息，URL 填 `https://你的域名/verify`，TOKEN 随意，之后点击验证。
-3. 使用微信扫描下方的测试号二维码，拿到你的 OPEN_ID。
-4. 新增模板消息模板，模板标题随意，模板内容填 `{{text.DATA}}`，提交后可以拿到 TEMPLATE_ID。
+2. 使用微信扫描下方的测试号二维码，拿到你的 OPEN_ID。
+3. 新增模板消息模板，模板标题随意，模板内容填 `{{text.DATA}}`，提交后可以拿到 TEMPLATE_ID。
+4. 填写接口配置信息，URL 填 `https://你的域名/verify`，TOKEN 随意，之后点击验证。
 
 ### 应用内配置
 1. 使用 pm2 启动应用：`pm2 start ./app.js --name wechat-message-push-service`。
