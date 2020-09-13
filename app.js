@@ -5,8 +5,9 @@ const logger = require("morgan");
 const http = require("http");
 require("dotenv").config();
 
-const indexRouter = require("./routes");
-const requestToken = require("./utils").requestToken;
+const indexRouter = require("./routers/index");
+const messageRouter = require("./routers/message");
+const requestToken = require("./utils/wechat").requestToken;
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
+app.use("/message", messageRouter);
 
 const server = http.createServer(app);
 

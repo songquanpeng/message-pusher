@@ -2,20 +2,14 @@ const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
 const fs = require("fs");
-const pushMessage = require("./utils").pushMessage;
 
 router.all("/", (req, res, next) => {
   fs.promises
     .access("./.env")
     .then(() => {
-      res.render("message", {
-        message: "服务已在运行，本次访问已被记录。",
+      res.render("info", {
+        message: "服务已在运行。",
       });
-      pushMessage(
-        req,
-        res,
-        `请注意，ip 地址为 ${req.ip} 的用户访问了你的消息通知服务，如果非你本人，则你的私有消息通知服务可能已被泄露，当前版本无法阻止其他用户通过本系统向你发送消息。`
-      );
     })
     .catch(() => {
       res.render("configure");
@@ -47,7 +41,7 @@ router.post("/configure", (req, res, next) => {
           process.exit();
         })
         .catch((e) => {
-          res.render("message", {
+          res.render("info", {
             message: "在尝试写入 .env 文件时发生错误：" + e,
           });
         });
@@ -66,16 +60,6 @@ router.all("/verify", (req, res, next) => {
   } else {
     res.send("verification failed");
   }
-});
-
-router.all("/push", (req, res, next) => {
-  let content = req.query.content || req.body.content;
-  pushMessage(req, res, content);
-});
-
-router.all("/:content", (req, res, next) => {
-  let content = req.params.content;
-  pushMessage(req, res, content);
 });
 
 module.exports = router;
