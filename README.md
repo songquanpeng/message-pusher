@@ -8,6 +8,9 @@
 3. 在各种脚本运行结束后发消息提醒。
 
 ## 搭建步骤
+### 域名设置
+先去你的云服务提供商那里添加一个子域名，解析到你的目标服务器。
+
 ### 服务器端配置
 1. 配置 Node.js 环境，推荐使用 [nvm](https://github.com/nvm-sh/nvm)。
 2. 下载代码：`git clone https://github.com/songquanpeng/wechat-message-push.git`。
@@ -15,7 +18,7 @@
 4. 安装 pm2：`npm i -g pm2`。
 5. 使用 pm2 启动服务：`pm2 start ./app.js --name wechat-message-push-service`。
 6. 使用 Nginx 反代我们的 Node.js 服务，默认端口 3000。
-    1. 修改应用根目录下的 `nginx.conf` 中的域名以及端口号，并创建软链接：`sudo ln -s ./nginx.conf /etc/nginx/site-enabled/wechat-push-service.conf` 
+    1. 修改应用根目录下的 `nginx.conf` 中的域名以及端口号，并创建软链接：`sudo ln -s /path/to/nginx.conf /etc/nginx/sites-enabled/wechat-push-service.conf` ，**注意修改这里的 /path/to/nginx.conf，且必须是绝对路径**，当然如果不想创建软链接的话也可以直接将配置文件拷贝过去：`sudo mv ./nginx.conf /etc/nginx/sites-enabled/wechat-push-service.conf`。
     2. 之后使用 [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx) 申请证书：`sudo certbot --nginx`。
     3. 重启 Nginx 服务：`sudo service nginx restart`。
 
