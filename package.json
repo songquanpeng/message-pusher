@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./app.js"
+    "start": "node ./app.js",
+    "devStart": "nodemon ./app.js"
   },
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
@@ -15,6 +16,7 @@
     "morgan": "~1.9.1"
   },
   "devDependencies": {
+    "nodemon": "^2.0.6",
     "prettier": "^2.1.1"
   }
 }
