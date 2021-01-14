@@ -73,6 +73,10 @@ router.all("/push", (req, res, next) => {
   pushMessage(req, res, content);
 });
 
+router.get("/favicon.ico", (req, res, next) => {
+  res.sendStatus(404);
+});
+
 router.all("/:content", (req, res, next) => {
   let content = req.params.content;
   pushMessage(req, res, content);
