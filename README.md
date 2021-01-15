@@ -12,7 +12,7 @@
 先去你的云服务提供商那里添加一个子域名，解析到你的目标服务器。
 
 ### 服务器端配置
-1. 配置 Node.js 环境，推荐使用 [nvm](https://github.com/nvm-sh/nvm)。
+1. 配置 Node.js 环境，推荐使用 [nvm](https://github.com/nvm-sh/nvm)，nvm 安装好之后运行 `nvm install v14.15.4`。
 2. 下载代码：`git clone https://github.com/songquanpeng/wechat-message-push.git`。
 3. 安装依赖：`npm i`。
 4. 安装 pm2：`npm i -g pm2`。
