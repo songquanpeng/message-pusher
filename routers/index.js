@@ -2,7 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models');
 const { tokenStore } = require('../common/token');
-const { allowRegister } = require('../middlewares/web_auth');
+const { requestToken } = require('../common/wechat');
+const {
+  userRequired,
+  adminRequired,
+  allowRegister,
+} = require('../middlewares/web_auth');
 const config = require('../config');
 
 router.get('/', (req, res, next) => {
@@ -12,7 +17,9 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/login', (req, res, next) => {
-  res.render('login');
+  res.render('login', {
+    message: req.flash('message'),
+  });
 });
 
 router.post('/login', async (req, res, next) => {
@@ -45,7 +52,7 @@ router.post('/login', async (req, res, next) => {
   });
 });
 
-router.get('/logout', (req, res, next) => {
+router.get('/logout', userRequired, (req, res, next) => {
   req.session.user = undefined;
   req.flash('message', '已退出登录');
   res.redirect('/');
@@ -67,7 +74,13 @@ router.post('/register', allowRegister, async (req, res, next) => {
   }
 });
 
-router.post('/configure', async (req, res, next) => {
+router.get('/configure', userRequired, (req, res, next) => {
+  res.locals.message = req.flash('message');
+  res.render('configure', req.session.user);
+});
+
+router.post('/configure', userRequired, async (req, res, next) => {
+  let id = req.session.user.id;
   let user = {
     username: req.body.username,
     password: req.body.password,
@@ -80,19 +93,41 @@ router.post('/configure', async (req, res, next) => {
     wechatOpenId: req.body.wechatOpenId,
     wechatVerifyToken: req.body.wechatVerifyToken,
   };
+  for (let field in user) {
+    let value = user[field];
+    value = value.trim();
+    if (value) {
+      user[field] = value;
+    } else {
+      delete user[field];
+    }
+  }
+  let message = '';
   try {
-    user = await User.create(user);
-    tokenStore.set(user.prefix, {
-      appId: user.wechatAppId,
-      appSecret: user.wechatAppSecret,
-      templateId: user.wechatTemplateId,
-      openId: user.wechatOpenId,
-      wechatVerifyToken: user.wechatVerifyToken,
-      token: '',
+    let userObj = await User.findOne({
+      where: {
+        id: id,
+      },
     });
+    if (userObj) {
+      await userObj.update(user);
+    }
+    req.session.user = userObj;
+    tokenStore.set(userObj.prefix, {
+      appId: userObj.wechatAppId,
+      appSecret: userObj.wechatAppSecret,
+      templateId: userObj.wechatTemplateId,
+      openId: userObj.wechatOpenId,
+      wechatVerifyToken: userObj.wechatVerifyToken,
+      token: requestToken(userObj.wechatAppId, userObj.wechatAppSecret),
+    });
+    message = '配置更新成功';
   } catch (e) {
     console.error(e);
+    message = e.message;
   }
+  req.flash('message', message);
+  res.redirect('/configure');
 });
 
 module.exports = router;

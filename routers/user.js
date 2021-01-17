@@ -6,10 +6,6 @@ const { tokenStore } = require('../common/token');
 
 const router = express.Router();
 
-router.get('/:userPrefix/configure', (req, res, next) => {
-  res.render('configure');
-});
-
 router.all('/:userPrefix/verify', (req, res, next) => {
   // 验证消息来自微信服务器：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Access_Overview.html
   const userPrefix = req.params.userPrefix;
@@ -23,6 +19,16 @@ router.all('/:userPrefix/verify', (req, res, next) => {
   } else {
     res.send('verification failed');
   }
+});
+
+router.all('/:userPrefix/:description', async (req, res, next) => {
+  const userPrefix = req.params.userPrefix;
+  let message = {
+    type: '0',
+    title: '无标题',
+    description: req.params.description,
+  };
+  res.json(await processMessage(userPrefix, message));
 });
 
 router.all('/:userPrefix', async (req, res, next) => {

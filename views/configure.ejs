@@ -3,48 +3,99 @@
 <div class="normal-container">
     <div>
         <h2 class="title">配置页面</h2>
+        <%- include('./partials/message') %>
         <form action="/configure" method="post">
             <div class="field">
                 <label class="label">APP ID</label>
                 <div class="control">
-                    <input class="input" name="APP_ID" type="text" required placeholder="请输入 APP ID">
+                    <input class="input" name="wechatAppId" value="<%- wechatAppId %>" type="text" required placeholder="请输入 APP ID">
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">APP SECRET</label>
                 <div class="control">
-                    <input class="input" name="APP_SECRET" type="text" required placeholder="请输入 APP SECRET">
+                    <input class="input" name="wechatAppSecret" value="<%- wechatAppSecret %>" type="text" required placeholder="请输入 APP SECRET">
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">OPEN ID</label>
                 <div class="control">
-                    <input class="input" name="OPEN_ID" type="text" required placeholder="请输入你的 OPEN ID">
+                    <input class="input" name="wechatOpenId" value="<%- wechatOpenId %>" type="text" required placeholder="请输入你的 OPEN ID">
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">TEMPLATE ID</label>
                 <div class="control">
-                    <input class="input" name="TEMPLATE_ID" type="text" required placeholder="请输入一个模板通知 ID">
+                    <input class="input" name="wechatTemplateId" value="<%- wechatTemplateId %>" type="text" required placeholder="请输入一个模板通知 ID">
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">TOKEN</label>
                 <div class="control">
-                    <input class="input" name="TOKEN" type="text" required placeholder="请输入你的 TOKEN">
+                    <input class="input" name="wechatVerifyToken" value="<%- wechatVerifyToken %>" type="text" required placeholder="请输入你的 TOKEN">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">前缀</label>
+                <article class="message">
+                    <div class="message-body">
+                        前缀默认和用户名相同，如非必要，无需修改
+                    </div>
+                </article>
+                <div class="control">
+                    <input class="input" name="prefix" value="<%- prefix %>" type="text" placeholder="请输入你的 TOKEN">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">ACCESS TOKEN</label>
+                <article class="message">
+                    <div class="message-body">
+                        Access Token 可防止未授权者利用本系统向你发送消息，留空则不做该检查
+                    </div>
+                </article>
+                <div class="control">
+                    <input class="input" name="accessToken" value="<%- accessToken %>" type="text" placeholder="请设置新的 ACCESS TOKEN（可不填）">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">邮箱</label>
+                <article class="message">
+                    <div class="message-body">
+                        后续版本将支持选择将消息发送到邮箱
+                    </div>
+                </article>
+                <div class="control">
+                    <input class="input" name="email" value="<%- email %>" type="text" placeholder="请输入你的邮箱（可不填）">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">用户名</label>
+                <div class="control">
+                    <input class="input" name="username" value="<%- username %>" type="text" placeholder="请输入新的用户名">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">密码</label>
+                <div class="control">
+                    <input class="input" name="password" type="text" placeholder="请输入新的密码">
                 </div>
             </div>
 
             <div class="field is-grouped is-grouped-right">
                 <div class="control">
-                    <input type="submit" class="button is-link" value="提交">
+                    <input type="submit" class="button is-light" value="提交">
                 </div>
                 <div class="control">
-                    <input type="reset" class="button is-link is-light" value="重置">
+                    <input type="reset" class="button is-light" value="重置">
                 </div>
             </div>
         </form>

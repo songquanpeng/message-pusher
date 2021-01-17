@@ -7,16 +7,15 @@ async function initializeTokenStore() {
   users.forEach((user) => {
     if (user.wechatAppId) {
       tokenStore.set(user.prefix, {
-        appId: user.wechatAppId,
-        appSecret: user.wechatAppSecret,
-        templateId: user.wechatTemplateId,
-        openId: user.wechatOpenId,
-        serverVerifyToken: user.wechatVerifyToken,
+        wechatAppId: user.wechatAppId,
+        wechatAppSecret: user.wechatAppSecret,
+        wechatTemplateId: user.wechatTemplateId,
+        wechatOpenId: user.wechatOpenId,
+        wechatVerifyToken: user.wechatVerifyToken,
         token: '',
       });
     }
   });
-  console.debug(tokenStore);
   console.log('Token store initialized.');
 }
 

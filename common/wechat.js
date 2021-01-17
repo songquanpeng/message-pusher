@@ -3,8 +3,9 @@ const { tokenStore } = require('./token');
 const config = require('../config');
 
 async function refreshToken() {
-  for (const item of tokenStore) {
-    item.token = await this.requestToken();
+  for (let [key, value] of tokenStore) {
+    value.token = await requestToken(value.wechatAppId, value.wechatAppSecret);
+    tokenStore.set(key, value);
   }
   console.log('Token refreshed.');
 }
@@ -15,9 +16,13 @@ async function requestToken(appId, appSecret) {
     let res = await axios.get(
       `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appId}&secret=${appSecret}`
     );
-    console.log(res);
-    if (res && res.data && res.data.access_token) {
-      token = res.data.access_token;
+    // console.debug(res);
+    if (res && res.data) {
+      if (res.data.access_token) {
+        token = res.data.access_token;
+      } else {
+        console.error(res.data);
+      }
     }
   } catch (e) {
     console.error(e);

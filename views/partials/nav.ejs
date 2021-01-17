@@ -15,13 +15,14 @@
         <div id="mainNavbar" class="navbar-menu">
             <div class="navbar-start">
                 <a class="navbar-item" href="/"> 首页 </a>
-                <a class="navbar-item" target="_blank" href="https://github.com/songquanpeng/message-pusher"> 帮助 </a>
+                <a class="navbar-item" target="_blank" href="https://github.com/songquanpeng/message-pusher/blob/master/README.md"> 帮助 </a>
                 <a class="navbar-item" target="_blank" href="https://iamazing.cn/page/message-pusher"> 关于 </a>
             </div>
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
                         <% if (isLogged) { %>
+                            <a class="button is-light" href="/configure">配置</a>
                             <a class="button is-light" href="/logout">退出</a>
                         <% } else { %>
                             <a class="button is-light" href="/register">注册</a>
