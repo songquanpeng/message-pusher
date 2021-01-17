@@ -92,6 +92,9 @@ router.get('/configure', userRequired, (req, res, next) => {
   }
   res.locals.message = req.flash('message');
   res.locals.showPasswordWarning = showPasswordWarning;
+  if (req.session.user.prefix === null) {
+    req.session.user.prefix = req.session.user.username;
+  }
   res.locals.verifyUrl = config.href + req.session.user.prefix + '/verify';
   res.render('configure', req.session.user);
 });
