@@ -22,6 +22,9 @@
                 <div class="navbar-item">
                     <div class="buttons">
                         <% if (isLogged) { %>
+                            <% if (isAdmin) { %>
+                                <a class="button is-light" href="/register">添加新用户</a>
+                            <% } %>
                             <a class="button is-light" href="/configure">配置</a>
                             <a class="button is-light" href="/logout">退出</a>
                         <% } else { %>
