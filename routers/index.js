@@ -10,6 +10,14 @@ router.all("/", (req, res, next) => {
       res.render("info", {
         message: "服务已在运行。",
       });
+<<<<<<< HEAD:routers/index.js
+=======
+      // pushMessage(
+      //   req,
+      //   res,
+      //   `请注意，ip 地址为 ${req.ip} 的用户访问了你的消息通知服务，如果非你本人，则你的私有消息通知服务可能已被泄露，当前版本无法阻止其他用户通过本系统向你发送消息。`
+      // );
+>>>>>>> master:routes.js
     })
     .catch(() => {
       res.render("configure");
@@ -62,4 +70,21 @@ router.all("/verify", (req, res, next) => {
   }
 });
 
+<<<<<<< HEAD:routers/index.js
+=======
+router.all("/push", (req, res, next) => {
+  let content = req.query.content || req.body.content;
+  pushMessage(req, res, content);
+});
+
+router.get("/favicon.ico", (req, res, next) => {
+  res.sendStatus(404);
+});
+
+router.all("/:content", (req, res, next) => {
+  let content = req.params.content;
+  pushMessage(req, res, content);
+});
+
+>>>>>>> master:routes.js
 module.exports = router;
