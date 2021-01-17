@@ -91,7 +91,7 @@ router.get('/configure', userRequired, (req, res, next) => {
     showPasswordWarning = true;
   }
   res.locals.message = req.flash('message');
-  res.locals.showPasswordWarning = true;
+  res.locals.showPasswordWarning = showPasswordWarning;
   res.render('configure', req.session.user);
 });
 
