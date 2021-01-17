@@ -1,0 +1,12 @@
+<% if(message && message.length) { %>
+    <article id='message' class="message <%= isErrorMessage ? 'is-danger' : 'is-info'%>">
+        <div class="message-body">
+            <%= message %>
+        </div>
+        <script>
+            setTimeout(function (){
+              document.getElementById('message').style.display='none';
+            }, 5000)
+        </script>
+    </article>
+<% }%>

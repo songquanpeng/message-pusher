@@ -19,6 +19,8 @@ const app = express();
 
 app.locals.isLogged = false;
 app.locals.isAdmin = false;
+app.locals.message = '';
+app.locals.isErrorMessage = false;
 
 setTimeout(async () => {
   // TODO: Here we need an improvement! I have tried EventEmitter but it's not working. :(

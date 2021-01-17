@@ -3,13 +3,7 @@
 <div class="narrow-container">
     <div>
         <h2 class="title">用户登录</h2>
-        <% if(message) { %>
-            <article class="message is-danger">
-                <div class="message-body">
-                    <%= message %>
-                </div>
-            </article>
-        <% }%>
+        <%- include('./partials/message') %>
         <form action="/login" method="post">
             <div class="field">
                 <label class="label">用户名</label>

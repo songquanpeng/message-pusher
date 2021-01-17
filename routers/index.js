@@ -2,17 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models');
 const { tokenStore } = require('../common/token');
+const { allowRegister } = require('../middlewares/web_auth');
+const config = require('../config');
 
 router.get('/', (req, res, next) => {
   res.render('index', {
-    message: '',
+    message: req.flash('message'),
   });
 });
 
 router.get('/login', (req, res, next) => {
-  res.render('login', {
-    message: '',
-  });
+  res.render('login');
 });
 
 router.post('/login', async (req, res, next) => {
@@ -21,10 +21,17 @@ router.post('/login', async (req, res, next) => {
     password: req.body.password,
   };
   let message = '';
+  res.locals.isErrorMessage = true;
   try {
     user = await User.findOne({ where: user });
     if (user) {
       req.session.user = user;
+      req.flash(
+        'message',
+        `欢迎${user.isAdmin ? '管理员' : '普通'}用户 ${
+          user.username
+        } 登陆系统！`
+      );
       return res.redirect('/');
     } else {
       message = '用户名或密码错误';
@@ -38,11 +45,17 @@ router.post('/login', async (req, res, next) => {
   });
 });
 
-router.get('/register', (req, res, next) => {
+router.get('/logout', (req, res, next) => {
+  req.session.user = undefined;
+  req.flash('message', '已退出登录');
+  res.redirect('/');
+});
+
+router.get('/register', allowRegister, (req, res, next) => {
   res.render('register');
 });
 
-router.post('/register', async (req, res, next) => {
+router.post('/register', allowRegister, async (req, res, next) => {
   let user = {
     username: req.body.username,
     password: req.body.password,

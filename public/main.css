@@ -70,7 +70,7 @@ code {
     box-shadow: 0 2px 3px rgba(26,26,26,.1);
 }
 
-.box article {
+.box .article {
     overflow-wrap: break-word;
     font-size: larger;
     word-break: break-word;
@@ -105,21 +105,21 @@ img {
     font-size: larger;
 }
 
-article a {
+.article a {
     color: #368CCB;
     text-decoration: none;
 }
 
-article a:hover {
+.article a:hover {
     color: #368CCB;
     text-decoration: none;
 }
 
-article h2,
-article h3,
-article h4,
-article h5,
-article h6 {
+.article h2,
+.article h3,
+.article h4,
+.article h5,
+.article h6 {
     font-weight: 700;
     line-height: 1.5;
     margin: 20px 0 15px;
@@ -127,54 +127,54 @@ article h6 {
     margin-block-end: 0.2em;
 }
 
-article h1 {
+.article h1 {
     font-size: 1.7em
 }
 
-article h2 {
+.article h2 {
     font-size: 1.6em
 }
 
-article h3 {
+.article h3 {
     font-size: 1.45em
 }
 
-article h4 {
+.article h4 {
     font-size: 1.25em;
 }
 
-article h5 {
+.article h5 {
     font-size: 1.1em;
 }
-article h6 {
+.article h6 {
     font-size: 1em;
     font-weight: bold
 }
 
 @media screen and (max-width: 960px) {
-    article h1 {
+    .article h1 {
         font-size: 1.5em
     }
 
-    article h2 {
+    .article h2 {
         font-size: 1.35em
     }
 
-    article h3 {
+    .article h3 {
         font-size: 1.3em
     }
 
-    article h4 {
+    .article h4 {
         font-size: 1.2em;
     }
 }
 
-article p {
+.article p {
     margin-top: 0;
     margin-bottom: 1.25rem;
 }
 
-article table {
+.article table {
     margin: auto;
     border-collapse: collapse;
     border-spacing: 0;
@@ -183,20 +183,20 @@ article table {
     min-width: 66%;
 }
 
-article table td,
-article table th {
+.article table td,
+.article table th {
     padding: 5px 8px;
     border: 1px solid #bbb;
 }
 
-article blockquote {
+.article blockquote {
     margin-left: 0;
     padding: 0 1em;
     font-size: smaller;
     border-left: 5px solid #ddd;
 }
 
-article pre {
+.article pre {
     overflow-x: auto;
     padding: 0;
     font-size: 16px;
@@ -204,18 +204,18 @@ article pre {
     margin-bottom: 12px;
 }
 
-article ol {
+.article ol {
     text-decoration: none;
     padding-inline-start: 40px;
     margin-bottom: 1.25rem;
 }
 
-article code {
+.article code {
     color: #bc9458;
     padding: .065em .4em;
 }
 
-article .copyright{
+.article .copyright{
     display: none;
 }
 
