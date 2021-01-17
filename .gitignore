@@ -1,7 +1,7 @@
 .idea
 node_modules
-package-lock.json
 .env
 data.db-journal
 .vscode
 *.db
+package-lock.json
