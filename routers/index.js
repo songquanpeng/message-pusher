@@ -11,8 +11,13 @@ const {
 const config = require('../config');
 
 router.get('/', (req, res, next) => {
+  let showGuidance = false;
+  if (req.session.user && !req.session.user.wechatAppId) {
+    showGuidance = true;
+  }
   res.render('index', {
     message: req.flash('message'),
+    showGuidance,
   });
 });
 
@@ -67,15 +72,26 @@ router.post('/register', allowRegister, async (req, res, next) => {
     username: req.body.username,
     password: req.body.password,
   };
+  let message = '';
   try {
     user = await User.create(user);
+    message = '用户创建成功，请登录';
+    req.flash('message', message);
+    return res.redirect('/login');
   } catch (e) {
     console.error(e);
+    message = '用户名已被占用';
   }
+  res.render('register', { message, isErrorMessage: true });
 });
 
 router.get('/configure', userRequired, (req, res, next) => {
+  let showPasswordWarning = false;
+  if (req.session.user && req.session.user.password === '123456') {
+    showPasswordWarning = true;
+  }
   res.locals.message = req.flash('message');
+  res.locals.showPasswordWarning = true;
   res.render('configure', req.session.user);
 });
 
@@ -114,14 +130,15 @@ router.post('/configure', userRequired, async (req, res, next) => {
     }
     req.session.user = userObj;
     tokenStore.set(userObj.prefix, {
-      appId: userObj.wechatAppId,
-      appSecret: userObj.wechatAppSecret,
-      templateId: userObj.wechatTemplateId,
-      openId: userObj.wechatOpenId,
+      wechatAppId: userObj.wechatAppId,
+      wechatAppSecret: userObj.wechatAppSecret,
+      wechatTemplateId: userObj.wechatTemplateId,
+      wechatOpenId: userObj.wechatOpenId,
       wechatVerifyToken: userObj.wechatVerifyToken,
-      token: requestToken(userObj.wechatAppId, userObj.wechatAppSecret),
+      token: await requestToken(userObj.wechatAppId, userObj.wechatAppSecret),
     });
     message = '配置更新成功';
+    console.debug(tokenStore);
   } catch (e) {
     console.error(e);
     message = e.message;

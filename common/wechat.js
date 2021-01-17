@@ -36,7 +36,7 @@ async function pushWeChatMessage(userPrefix, message) {
   if (!user) {
     return {
       success: false,
-      message: `tokenStore 中不存在该前缀（${userPrefix}）`,
+      message: `不存在的前缀：${userPrefix}，请注意大小写`,
     };
   }
   let access_token = user.token;
@@ -51,15 +51,21 @@ async function pushWeChatMessage(userPrefix, message) {
   let requestUrl = `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${access_token}`;
   try {
     let response = await axios.post(requestUrl, request_data);
-    if (response && response.data && response.data.errcode === '40001') {
+    if (response && response.data && response.data.errcode !== 0) {
       await requestToken(user.wechatAppId, user.wechatAppSecret);
       await axios.post(requestUrl, request_data);
     }
-    console.log(response.data);
-    return {
-      success: true,
-      message: '',
-    };
+    if (response.data.errcode === 0) {
+      return {
+        success: true,
+        message: 'ok',
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.errmsg,
+      };
+    }
   } catch (e) {
     console.error(e);
     return {

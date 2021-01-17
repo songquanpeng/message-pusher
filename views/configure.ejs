@@ -4,6 +4,16 @@
     <div>
         <h2 class="title">配置页面</h2>
         <%- include('./partials/message') %>
+        <% if(showPasswordWarning) { %>
+            <article class="message is-warning">
+                <div class="message-header">
+                    <p>警告</p>
+                </div>
+                <div class="message-body">
+                    你正在使用的密码是默认密码，请尽快修改！
+                </div>
+            </article>
+        <% }%>
         <form action="/configure" method="post">
             <div class="field">
                 <label class="label">APP ID</label>
@@ -48,7 +58,7 @@
                     </div>
                 </article>
                 <div class="control">
-                    <input class="input" name="prefix" value="<%- prefix %>" type="text" placeholder="请输入你的 TOKEN">
+                    <input class="input" name="prefix" value="<%- prefix ? prefix : username %>" type="text" placeholder="请输入你的前缀">
                 </div>
             </div>
 

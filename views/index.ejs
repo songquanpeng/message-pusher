@@ -1,6 +1,16 @@
 <%- include('./partials/header') %>
 <div class="normal-container">
     <%- include('./partials/message') %>
+    <% if(showGuidance) { %>
+        <article class="message is-warning">
+            <div class="message-header">
+                <p>系统尚未完成配置</p>
+            </div>
+            <div class="message-body">
+                点击<a href="/configure">此处</a>访问配置页面，如需帮助，请点击上方帮助按钮。
+            </div>
+        </article>
+    <% }%>
     <article class="message is-light">
         <div class="message-header">
             <p>系统状况</p>
