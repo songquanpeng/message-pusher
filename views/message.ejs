@@ -1,10 +1,10 @@
-<%- include('./header') %>
-<article class="info is-primary">
+<%- include('./partials/header') %>
+<article class="message is-danger">
     <div class="message-header">
-        <p>注意</p>
+        <p><%= title %></p>
     </div>
     <div class="message-body">
-
+        <%= message %>
     </div>
 </article>
-<%- include('./footer') %>
+<%- include('./partials/footer') %>

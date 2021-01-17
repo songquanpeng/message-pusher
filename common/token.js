@@ -11,6 +11,7 @@ async function initializeTokenStore() {
         appSecret: user.wechatAppSecret,
         templateId: user.wechatTemplateId,
         openId: user.wechatOpenId,
+        serverVerifyToken: user.wechatVerifyToken,
         token: '',
       });
     }

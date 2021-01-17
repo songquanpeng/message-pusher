@@ -41,6 +41,7 @@ User.init(
     wechatAppSecret: DataTypes.STRING,
     wechatTemplateId: DataTypes.STRING,
     wechatOpenId: DataTypes.STRING,
+    wechatVerifyToken: DataTypes.STRING,
   },
   { sequelize }
 );

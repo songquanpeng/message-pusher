@@ -1,56 +1,57 @@
-<%- include('./header') %>
-<h2 class="subtitle">配置页面</h2>
-<article class="message is-warning">
-    <div class="message-header">
-        <p>警告</p>
-    </div>
-    <div class="message-body">
-        提交后将在程序的根目录创建一个 .env 文件，之后程序将自动关闭，请确保你已经使用了诸如 pm2 的进程守护程序来自动重启本程序。提交之后如果想要对配置内容进行修改，则你必须手动删除 .env 文件。
-    </div>
-</article>
-<form action="/configure" method="post">
-    <div class="field">
-        <label class="label">APP ID</label>
-        <div class="control">
-            <input class="input" name="APP_ID" type="text" required placeholder="请输入 APP ID">
-        </div>
-    </div>
+<%- include('./partials/header') %>
 
-    <div class="field">
-        <label class="label">APP SECRET</label>
-        <div class="control">
-            <input class="input" name="APP_SECRET" type="text" required placeholder="请输入 APP SECRET">
-        </div>
-    </div>
+<div class="normal-container">
+    <div>
+        <h2 class="title">配置页面</h2>
+        <form action="/configure" method="post">
+            <div class="field">
+                <label class="label">APP ID</label>
+                <div class="control">
+                    <input class="input" name="APP_ID" type="text" required placeholder="请输入 APP ID">
+                </div>
+            </div>
 
-    <div class="field">
-        <label class="label">OPEN ID</label>
-        <div class="control">
-            <input class="input" name="OPEN_ID" type="text" required placeholder="请输入你的 OPEN ID">
-        </div>
-    </div>
+            <div class="field">
+                <label class="label">APP SECRET</label>
+                <div class="control">
+                    <input class="input" name="APP_SECRET" type="text" required placeholder="请输入 APP SECRET">
+                </div>
+            </div>
 
-    <div class="field">
-        <label class="label">TEMPLATE ID</label>
-        <div class="control">
-            <input class="input" name="TEMPLATE_ID" type="text" required placeholder="请输入一个模板通知 ID">
-        </div>
-    </div>
+            <div class="field">
+                <label class="label">OPEN ID</label>
+                <div class="control">
+                    <input class="input" name="OPEN_ID" type="text" required placeholder="请输入你的 OPEN ID">
+                </div>
+            </div>
 
-    <div class="field">
-        <label class="label">TOKEN</label>
-        <div class="control">
-            <input class="input" name="TOKEN" type="text" required placeholder="请输入你的 TOKEN">
-        </div>
-    </div>
+            <div class="field">
+                <label class="label">TEMPLATE ID</label>
+                <div class="control">
+                    <input class="input" name="TEMPLATE_ID" type="text" required placeholder="请输入一个模板通知 ID">
+                </div>
+            </div>
 
-    <div class="field is-grouped is-grouped-right">
-        <div class="control">
-            <input type="submit" class="button is-link" value="提交">
-        </div>
-        <div class="control">
-            <input type="reset" class="button is-link is-light" value="重置">
-        </div>
+            <div class="field">
+                <label class="label">TOKEN</label>
+                <div class="control">
+                    <input class="input" name="TOKEN" type="text" required placeholder="请输入你的 TOKEN">
+                </div>
+            </div>
+
+            <div class="field is-grouped is-grouped-right">
+                <div class="control">
+                    <input type="submit" class="button is-link" value="提交">
+                </div>
+                <div class="control">
+                    <input type="reset" class="button is-link is-light" value="重置">
+                </div>
+            </div>
+        </form>
+
     </div>
-</form>
-<%- include('./footer') %>
+</div>
+
+
+<%- include('./partials/footer') %>
+

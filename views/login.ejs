@@ -1,0 +1,41 @@
+<%- include('./partials/header') %>
+
+<div class="narrow-container">
+    <div>
+        <h2 class="title">用户登录</h2>
+        <% if(message) { %>
+            <article class="message is-danger">
+                <div class="message-body">
+                    <%= message %>
+                </div>
+            </article>
+        <% }%>
+        <form action="/login" method="post">
+            <div class="field">
+                <label class="label">用户名</label>
+                <div class="control">
+                    <input class="input" name="username" type="text" required placeholder="请输入用户名">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">密码</label>
+                <div class="control">
+                    <input class="input" name="password" type="password" required placeholder="请输入你的密码">
+                </div>
+            </div>
+            <div class="field is-grouped is-grouped-right">
+                <div class="control">
+                    <input type="submit" class="button is-light" value="提交">
+                </div>
+                <div class="control">
+                    <input type="reset" class="button is-light" value="重置">
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+<%- include('./partials/footer') %>
+

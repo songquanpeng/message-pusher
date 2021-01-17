@@ -28,16 +28,19 @@ async function requestToken(appId, appSecret) {
 async function pushWeChatMessage(userPrefix, message) {
   // Reference: https://mp.weixin.qq.com/debug/cgi-bin/readtmpl?t=tmplmsg/faq_tmpl
   let user = tokenStore.get(userPrefix);
+  if (!user) {
+    return {
+      success: false,
+      message: `tokenStore 中不存在该前缀（${userPrefix}）`,
+    };
+  }
   let access_token = user.token;
   let request_data = {
     touser: user.wechatOpenId,
     template_id: user.wechatTemplateId,
   };
   if (message.content) {
-    // TODO
-    // Generate html, save message to database and then return the id
-    let id = 'TODO';
-    request_data.url = `${config.href}${userPrefix}/${id}`;
+    request_data.url = `${config.href}${userPrefix}/${message.id}`;
   }
   request_data.data = { text: { value: message.description } };
   let requestUrl = `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${access_token}`;

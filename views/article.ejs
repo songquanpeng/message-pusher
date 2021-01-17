@@ -1,0 +1,34 @@
+<%- include('./partials/header') %>
+
+<div class="normal-container">
+    <div class="columns is-desktop">
+        <div class="column">
+            <article id="article">
+                <%- include('./partials/page-info') %>
+                <%-page.converted_content%>
+                <p class="copyright"><strong>Links: <a href="<%-page.link%>"><%-page.link%></a></strong></p>
+                <%- config.copyright %>
+                <%- config.ad %>
+            </article>
+        </div>
+        <div class="column is-one-fifth-fullhd">
+            <aside class="menu toc">
+                <p class="menu-label">
+                    Table of Content
+                </p>
+                <ul class="menu-list" id="toc">
+                </ul>
+            </aside>
+        </div>
+    </div>
+    <%- include('./partials/prev-next') %>
+    <%- include('./partials/comment') %>
+</div>
+
+<script>
+  (function() {
+    generateTOC();
+  })();
+</script>
+
+<%- include('./partials/footer') %>

@@ -1,84 +1,85 @@
 const express = require('express');
 const router = express.Router();
-const crypto = require('crypto');
-const fs = require('fs');
+const { User } = require('../models');
+const { tokenStore } = require('../common/token');
 
-router.all('/', (req, res, next) => {
-  fs.promises
-    .access('./.env')
-    .then(() => {
-      res.render('info', {
-        message: '服务已在运行。',
-      });
-      // pushMessage(
-      //   req,
-      //   res,
-      //   `请注意，ip 地址为 ${req.ip} 的用户访问了你的消息通知服务，如果非你本人，则你的私有消息通知服务可能已被泄露，当前版本无法阻止其他用户通过本系统向你发送消息。`
-      // );
-    })
-    .catch(() => {
-      res.render('configure');
-    });
+router.get('/', (req, res, next) => {
+  res.render('index', {
+    message: '',
+  });
 });
 
-router.post('/configure', (req, res, next) => {
-  fs.promises
-    .access('./.env')
-    .then(() => {
-      res.render('message', {
-        message: '.env 文件已经存在，请手动删除该文件后重试！',
-      });
-    })
-    .catch(() => {
-      let content =
-        `APP_ID=${req.body.APP_ID}\n` +
-        `APP_SECRET=${req.body.APP_SECRET}\n` +
-        `TOKEN=${req.body.TOKEN}\n` +
-        `TEMPLATE_ID=${req.body.TEMPLATE_ID}\n` +
-        `OPEN_ID=${req.body.OPEN_ID}`;
-      fs.promises
-        .writeFile('./.env', content, 'utf8')
-        .then(() => {
-          res.render('message', {
-            message:
-              '.env 文件写入成功，程序即将自动关闭以应用写入的新的环境变量，需要进程守护程序自动重启应用或者手动重启。',
-          });
-          process.exit();
-        })
-        .catch((e) => {
-          res.render('info', {
-            message: '在尝试写入 .env 文件时发生错误：' + e,
-          });
-        });
-    });
+router.get('/login', (req, res, next) => {
+  res.render('login', {
+    message: '',
+  });
 });
 
-router.all('/verify', (req, res, next) => {
-  // 验证消息来自微信服务器：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Access_Overview.html
-  const { signature, timestamp, nonce, echostr } = req.query;
-  const token = process.env.TOKEN;
-  let tmp_array = [token, timestamp, nonce].sort();
-  let tmp_string = tmp_array.join('');
-  tmp_string = crypto.createHash('sha1').update(tmp_string).digest('hex');
-  if (tmp_string === signature) {
-    res.send(echostr);
-  } else {
-    res.send('verification failed');
+router.post('/login', async (req, res, next) => {
+  let user = {
+    username: req.body.username,
+    password: req.body.password,
+  };
+  let message = '';
+  try {
+    user = await User.findOne({ where: user });
+    if (user) {
+      req.session.user = user;
+      return res.redirect('/');
+    } else {
+      message = '用户名或密码错误';
+    }
+  } catch (e) {
+    console.error(e);
+    message = e.message;
+  }
+  res.render('login', {
+    message,
+  });
+});
+
+router.get('/register', (req, res, next) => {
+  res.render('register');
+});
+
+router.post('/register', async (req, res, next) => {
+  let user = {
+    username: req.body.username,
+    password: req.body.password,
+  };
+  try {
+    user = await User.create(user);
+  } catch (e) {
+    console.error(e);
   }
 });
 
-router.all('/push', (req, res, next) => {
-  let content = req.query.content || req.body.content;
-  pushMessage(req, res, content);
-});
-
-router.get('/favicon.ico', (req, res, next) => {
-  res.sendStatus(404);
-});
-
-router.all('/:content', (req, res, next) => {
-  let content = req.params.content;
-  pushMessage(req, res, content);
+router.post('/configure', async (req, res, next) => {
+  let user = {
+    username: req.body.username,
+    password: req.body.password,
+    accessToken: req.body.accessToken,
+    email: req.body.email,
+    prefix: req.body.prefix,
+    wechatAppId: req.body.wechatAppId,
+    wechatAppSecret: req.body.wechatAppSecret,
+    wechatTemplateId: req.body.wechatTemplateId,
+    wechatOpenId: req.body.wechatOpenId,
+    wechatVerifyToken: req.body.wechatVerifyToken,
+  };
+  try {
+    user = await User.create(user);
+    tokenStore.set(user.prefix, {
+      appId: user.wechatAppId,
+      appSecret: user.wechatAppSecret,
+      templateId: user.wechatTemplateId,
+      openId: user.wechatOpenId,
+      wechatVerifyToken: user.wechatVerifyToken,
+      token: '',
+    });
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 module.exports = router;
