@@ -1,19 +1,24 @@
-const db = require("../utils/database").db;
-const { v4: uuid } = require("uuid");
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../common/database');
 
-class Message {
-  create(message) {
-    message.id = uuid();
-    return db("messages").insert(message);
-  }
+class Message extends Model {}
 
-  getById(id) {
-    return db("messages").where("id", id);
-  }
+Message.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    title: DataTypes.STRING,
+    description: DataTypes.TEXT,
+    content: DataTypes.TEXT,
+    type: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+  },
+  { sequelize }
+);
 
-  deleteById(id) {
-    return db("messages").where("id", id).del();
-  }
-}
-
-module.exports.Message = new Message();
+module.exports = Message;
