@@ -5,7 +5,7 @@
 ## 用途举例
 1. [整合进自己的博客系统，每当有人登录时发微信消息提醒](https://github.com/songquanpeng/blog/blob/486d63e96ef7906a6c767653a20ec2d3278e9a4a/routes/user.js#L27)。
 2. 在进行深度学习模型训练时，在每个 epoch 结束后将关键数据发送到微信以方便及时监控。
-3. 在[各种脚本](https://github.com/songquanpeng/scripts)运行结束后发消息提醒。
+3. 在各种脚本运行结束后发消息提醒，例如[监控 Github Star 数量的脚本](https://github.com/songquanpeng/scripts/blob/main/star_watcher.py)。
 
 ## 搭建步骤
 ### 域名设置
@@ -38,5 +38,9 @@
 - [x] 支持多用户。
 - [ ] 完善的用户管理。
 - [ ] 支持 Markdown。
+- [ ] 支持推送消息到邮箱。
+- [ ] 更加便于部署的 Go 语言的版本。
+- [ ] 适配企业微信应用。
+- [ ] 提供常见语言的调用示例。
 
 敬请期待。
