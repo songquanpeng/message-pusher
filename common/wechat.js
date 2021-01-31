@@ -45,7 +45,8 @@ async function pushWeChatMessage(userPrefix, message) {
     template_id: user.wechatTemplateId,
   };
   if (message.content) {
-    request_data.url = `${config.href}${userPrefix}/${message.id}`;
+    request_data.url = `${config.href}message/${message.id}`;
+    console.debug(`http://localhost:3000/message/${message.id}`);
   }
   request_data.data = { text: { value: message.description } };
   let requestUrl = `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${access_token}`;

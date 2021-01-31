@@ -1,34 +1,22 @@
-<%- include('./partials/header') %>
-
-<div class="normal-container">
-    <div class="columns is-desktop">
-        <div class="column">
-            <article id="article">
-                <%- include('./partials/page-info') %>
-                <%-page.converted_content%>
-                <p class="copyright"><strong>Links: <a href="<%-page.link%>"><%-page.link%></a></strong></p>
-                <%- config.copyright %>
-                <%- config.ad %>
-            </article>
-        </div>
-        <div class="column is-one-fifth-fullhd">
-            <aside class="menu toc">
-                <p class="menu-label">
-                    Table of Content
-                </p>
-                <ul class="menu-list" id="toc">
-                </ul>
-            </aside>
-        </div>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title><%= message.title %></title>
+    <meta name="theme-color" content="#ffffff"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="/public/main.css">
+</head>
+<body>
+<div class="container" style="max-width: 960px">
+    <div style="margin: 16px 16px">
+        <h1 class="title"><%= message.title %></h1>
+        <h2 class="subtitle"><%- message.description %></h2>
+        <article id="article">
+            <%- message.content %>
+        </article>
     </div>
-    <%- include('./partials/prev-next') %>
-    <%- include('./partials/comment') %>
 </div>
-
-<script>
-  (function() {
-    generateTOC();
-  })();
-</script>
-
-<%- include('./partials/footer') %>
+</body>
+</html>

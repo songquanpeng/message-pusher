@@ -1,4 +1,6 @@
 const express = require('express');
+const { Message } = require('../models');
+const { md2html } = require('../common/utils');
 
 const router = express.Router();
 
@@ -10,11 +12,23 @@ router.get('/delete/:id', (req, res, next) => {
   });
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   const id = req.params.id;
-  // TODO: show article
-  req.query.description = req.params.description;
-  res.render('article');
+  try {
+    let message = await Message.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (message) {
+      message.content = md2html(message.content);
+      res.render('article', {
+        message,
+      });
+    }
+  } catch (e) {
+    res.status(404);
+  }
 });
 
 module.exports = router;

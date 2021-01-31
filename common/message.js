@@ -1,6 +1,6 @@
 const { pushWeChatMessage } = require('./wechat');
 const { pushEmailMessage } = require('./email');
-const Message = require('../models/message').Message;
+const { Message } = require('../models');
 
 async function processMessage(userPrefix, message) {
   if (message.email) {
