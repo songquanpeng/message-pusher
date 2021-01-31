@@ -1,7 +1,6 @@
 {
     "name": "message-pusher",
     "description": "消息推送服务",
-    "keywords": ["v2ray vmess vless trojan shadowsocks socks tor"],
     "env": {
         "MODE": {
             "description": "Heroku 模式",
@@ -57,5 +56,6 @@
         },
     },
     "website": "https://github.com/Ecalose/message-pusher",
-    "repository": "https://github.com/Ecalose/message-pusher"
+    "repository": "https://github.com/Ecalose/message-pusher",
+    "stack": "container"
 }
