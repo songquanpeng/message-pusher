@@ -53,7 +53,7 @@
         "HREF": {
             "description": "服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /",
             "value": ""
-        },
+        }
     },
     "website": "https://github.com/Ecalose/message-pusher",
     "repository": "https://github.com/Ecalose/message-pusher",
