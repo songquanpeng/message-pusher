@@ -56,6 +56,5 @@
         }
     },
     "website": "https://github.com/Ecalose/message-pusher",
-    "repository": "https://github.com/Ecalose/message-pusher",
-    "stack": "container"
+    "repository": "https://github.com/Ecalose/message-pusher"
 }
