@@ -1,4 +1,4 @@
-# 消息推送
+# 消息推送服务
 ## 描述
 1. 利用微信公众号测试号来给自己的微信推送消息。
 2. 也可推送邮件消息，在微信中开启 QQ 邮件提醒后，也可以达到同样效果。
@@ -62,7 +62,7 @@
 |SMTP_SERVER|smtp 服务器地址，如 smtp.qq.com|
 |SMTP_USER|smtp 服务器用户邮箱|
 |SMTP_PASS|smtp 服务器用户凭据|
-|HREF|服务的 href，如 https://wechat-message.herokuapp.com/，注意后面要有 /|
+|HREF|服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /|
 
 ## 发送消息的方式
 1. 发送纯文本消息：直接 HTTP GET 请求 `https://你的域名/前缀/消息`，缺点是有字数限制，且只能是纯文本，这是微信模板消息的限制。
