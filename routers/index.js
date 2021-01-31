@@ -112,6 +112,9 @@ router.post('/configure', userRequired, async (req, res, next) => {
     wechatTemplateId: req.body.wechatTemplateId,
     wechatOpenId: req.body.wechatOpenId,
     wechatVerifyToken: req.body.wechatVerifyToken,
+    smtpServer: req.body.smtpServer,
+    smtpUser: req.body.smtpUser,
+    smtpPass: req.body.smtpPass,
   };
   for (let field in user) {
     let value = user[field];
@@ -140,6 +143,9 @@ router.post('/configure', userRequired, async (req, res, next) => {
       wechatOpenId: userObj.wechatOpenId,
       wechatVerifyToken: userObj.wechatVerifyToken,
       token: await requestToken(userObj.wechatAppId, userObj.wechatAppSecret),
+      smtpServer: userObj.smtpServer,
+      smtpUser: userObj.smtpUser,
+      smtpPass: userObj.smtpPass,
     });
     message = '配置更新成功';
     console.debug(tokenStore);

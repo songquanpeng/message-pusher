@@ -1,12 +1,6 @@
 const express = require('express');
-const lexer = require('marked').lexer;
-const parser = require('marked').parser;
 
 const router = express.Router();
-
-function md2html(markdown) {
-  return parser(lexer(markdown));
-}
 
 router.get('/delete/:id', (req, res, next) => {
   // TODO: delete message

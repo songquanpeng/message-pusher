@@ -13,6 +13,10 @@ async function initializeTokenStore() {
         wechatOpenId: user.wechatOpenId,
         wechatVerifyToken: user.wechatVerifyToken,
         token: '',
+        email: user.email,
+        smtpServer: user.smtpServer,
+        smtpUser: user.smtpUser,
+        smtpPass: user.smtpPass,
       });
     }
   });

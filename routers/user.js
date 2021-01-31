@@ -38,6 +38,7 @@ router.all('/:userPrefix', async (req, res, next) => {
     title: req.query.title || req.body.title || '无标题',
     description: req.query.description || req.body.description,
     content: req.query.content || req.body.content,
+    email: req.query.email || req.body.email,
   };
   let result = await processMessage(userPrefix, message);
   res.json(result);

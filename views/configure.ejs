@@ -89,14 +89,50 @@
             </div>
 
             <div class="field">
-                <label class="label">邮箱</label>
+                <label class="label">默认目标邮箱</label>
                 <article class="message">
                     <div class="message-body">
-                        后续版本将支持选择将消息发送到邮箱
+                        要用 QQ 邮箱或者 Foxmail 邮箱，否则将无法通过微信得到邮件消息提醒
                     </div>
                 </article>
                 <div class="control">
-                    <input class="input" name="email" value="<%- email %>" type="text" placeholder="请输入你的邮箱（可不填）">
+                    <input class="input" name="email" value="<%- email %>" type="email" placeholder="请输入你的邮箱（可不填）">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">SMTP 服务器地址</label>
+                <article class="message">
+                    <div class="message-body">
+                        此项可选，但如果不配置该项，则无法发送邮件类型的消息
+                    </div>
+                </article>
+                <div class="control">
+                    <input class="input" name="smtpServer" value="<%- smtpServer %>" type="text" placeholder="如 smtp.qq.com">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">SMTP 账号</label>
+                <article class="message">
+                    <div class="message-body">
+                        此项可选，但如果不配置该项，则无法发送邮件类型的消息
+                    </div>
+                </article>
+                <div class="control">
+                    <input class="input" name="smtpUser" value="<%- smtpUser %>" type="email" placeholder="请输入 SMTP 账号（是一个邮箱地址）">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">SMTP 凭据</label>
+                <article class="message">
+                    <div class="message-body">
+                        此项可选，但如果不配置该项，则无法发送邮件类型的消息
+                    </div>
+                </article>
+                <div class="control">
+                    <input class="input" name="smtpPass" type="text" placeholder="请输入 SMTP Token">
                 </div>
             </div>
 

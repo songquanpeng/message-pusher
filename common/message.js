@@ -1,8 +1,13 @@
 const { pushWeChatMessage } = require('./wechat');
+const { pushEmailMessage } = require('./email');
 const Message = require('../models/message').Message;
 
 async function processMessage(userPrefix, message) {
-  if (message.content) {
+  if (message.email) {
+    // If message has the attribute "email", override its type.
+    message.type = '1';
+  }
+  if (message.content && message.type === '0') {
     message = await Message.create(message);
   }
   let result = {
@@ -14,7 +19,7 @@ async function processMessage(userPrefix, message) {
       result = await pushWeChatMessage(userPrefix, message);
       break;
     case '1': // Email message
-      // TODO: Email message
+      result = await pushEmailMessage(userPrefix, message);
       break;
     case '2': // HTTP GET request
       // TODO: HTTP GET request

@@ -42,6 +42,12 @@ User.init(
     wechatTemplateId: DataTypes.STRING,
     wechatOpenId: DataTypes.STRING,
     wechatVerifyToken: DataTypes.STRING,
+    smtpServer: {
+      type: DataTypes.STRING,
+      defaultValue: 'smtp.qq.com',
+    },
+    smtpUser: DataTypes.STRING,
+    smtpPass: DataTypes.STRING,
   },
   { sequelize }
 );
