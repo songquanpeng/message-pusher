@@ -3,13 +3,14 @@
 1. 利用微信公众号测试号来给自己的微信推送消息。
 2. 也可推送邮件消息，在微信中开启 QQ 邮件提醒后，也可以达到同样效果。
 3. 支持 Markdown。
+4. 可以使用 Heroku 的免费服务器，[详见此处](#在-Heroku-上的搭建步骤)。
 
 ## 用途举例
 1. [整合进自己的博客系统，每当有人登录时发微信消息提醒](https://github.com/songquanpeng/blog/blob/486d63e96ef7906a6c767653a20ec2d3278e9a4a/routes/user.js#L27)。
 2. 在进行深度学习模型训练时，在每个 epoch 结束后将关键数据发送到微信以方便及时监控。
 3. 在各种脚本运行结束后发消息提醒，例如[监控 Github Star 数量的脚本](https://github.com/songquanpeng/scripts/blob/main/star_watcher.py)。
 
-## 搭建步骤
+## 在自己的服务器上的部署步骤
 ### 域名设置
 先去你的云服务提供商那里添加一个子域名，解析到你的目标服务器。
 
@@ -39,6 +40,29 @@
 ### 验证是否配置成功
 访问 `https://你的域名/前缀/Hi`，如果你的微信能够收到一条内容为 Hi 的模板消息，则配置成功。
 
+## 在 Heroku 上的搭建步骤
+在此之前，请先读一下“在自己的服务器上的部署步骤”这一节。
+由于 Heroku 的限制，当 30 分钟内没有请求的话就会被冻结，之后再次启动时数据就丢了，因此这里我们采用配置环境的方式进行配置。
+
+1. Fork 本项目。
+2. 在[此处](https://dashboard.heroku.com/new-app)新建一个 Heroku APP，名字随意，之后可以设置自己的域名。
+3. 在 Deployment method 处，选择 Connect to Github，输入 message-pusher 搜索本项目，之后点击 Connect，之后启用自动部署（Enable Automatic Deploys）。 
+4. 点击上方的 Setting 标签，找到下面的 Config Vars 配置环境变量，有以下环境变量需要配置。
+
+|KEY|VALUE|
+|---|---|
+|MODE|1（Heroku 模式）|
+|WECHAT_APP_ID|你的测试号的 APP ID|
+|WECHAT_APP_SECRET|你的测试号的 APP Secret|
+|WECHAT_TEMPLATE_ID|你的测试号的模板消息的 ID|
+|WECHAT_OPEN_ID|你的 Open ID|
+|WECHAT_VERIFY_TOKEN|你自己设置的验证 token|
+|EMAIL|你的默认目标邮箱|
+|PREFIX|你的前缀，如 admin|
+|SMTP_SERVER|smtp 服务器地址，如 smtp.qq.com|
+|SMTP_USER|smtp 服务器用户邮箱|
+|SMTP_PASS|smtp 服务器用户凭据|
+
 ## 发送消息的方式
 1. 发送纯文本消息：直接 HTTP GET 请求 `https://你的域名/前缀/消息`，缺点是有字数限制，且只能是纯文本，这是微信模板消息的限制。
 2. 发送 Markdown 消息，调用方式分为两种：
@@ -57,6 +81,7 @@
 - [ ] 完善的用户管理。
 - [x] 支持 Markdown。
 - [x] 支持推送消息到邮箱。
+- [x] 支持在 Heroku 上部署
 - [ ] 更加便于部署的 Go 语言的版本。
 - [ ] 适配企业微信应用。
 - [ ] 提供常见语言的调用示例。
