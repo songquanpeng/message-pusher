@@ -50,7 +50,7 @@
 4. 点击上方的 Setting 标签，找到下面的 Config Vars 配置环境变量，有以下环境变量需要配置。
 
 |KEY|VALUE|
-|---|---|
+|:--|:--|
 |MODE|1（Heroku 模式）|
 |WECHAT_APP_ID|你的测试号的 APP ID|
 |WECHAT_APP_SECRET|你的测试号的 APP Secret|
@@ -62,6 +62,7 @@
 |SMTP_SERVER|smtp 服务器地址，如 smtp.qq.com|
 |SMTP_USER|smtp 服务器用户邮箱|
 |SMTP_PASS|smtp 服务器用户凭据|
+|HREF|服务的 href，如 https://wechat-message.herokuapp.com/，注意后面要有 /|
 
 ## 发送消息的方式
 1. 发送纯文本消息：直接 HTTP GET 请求 `https://你的域名/前缀/消息`，缺点是有字数限制，且只能是纯文本，这是微信模板消息的限制。
