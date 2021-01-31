@@ -36,7 +36,7 @@ router.all('/:userPrefix', async (req, res, next) => {
   let message = {
     type: req.query.type || req.body.type || '0',
     title: req.query.title || req.body.title || '无标题',
-    description: req.query.description || req.body.description,
+    description: req.query.description || req.body.description || '无描述',
     content: req.query.content || req.body.content,
     email: req.query.email || req.body.email,
   };
