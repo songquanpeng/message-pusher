@@ -65,7 +65,7 @@
 |HREF|服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /|
 
 ### 一键部署
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/songquanpeng/message-pusher)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Ecalose/message-pusher)
 
 ## 发送消息的方式
 1. 发送纯文本消息：直接 HTTP GET 请求 `https://你的域名/前缀/消息`，缺点是有字数限制，且只能是纯文本，这是微信模板消息的限制。
