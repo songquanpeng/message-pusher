@@ -1,0 +1,61 @@
+{
+    "name": "message-pusher",
+    "description": "消息推送服务",
+    "keywords": ["v2ray vmess vless trojan shadowsocks socks tor"],
+    "env": {
+        "MODE": {
+            "description": "Heroku 模式",
+            "value": "1"
+        },
+        "WECHAT_APP_ID": {
+            "description": "你的测试号的 APP ID",
+            "value": ""
+        },
+        "WECHAT_APP_SECRET": {
+            "description": "你的测试号的 APP Secret",
+            "value": ""
+        },
+        "WECHAT_TEMPLATE_ID": {
+            "description": "你的测试号的模板消息的 ID",
+            "value": ""
+        },
+        "WECHAT_OPEN_ID": {
+            "description": "你的 Open ID",
+            "value": ""
+        },
+        "WECHAT_VERIFY_TOKEN": {
+            "description": "你自己设置的验证 token",
+            "value": ""
+        },
+        "EMAIL": {
+            "description": "你的默认目标邮箱",
+            "value": ""
+        },
+        "PREFIX": {
+            "description": "你的前缀，如 admin",
+            "value": ""
+        },
+        "SMTP_SERVER": {
+            "description": "smtp 服务器地址，如 smtp.qq.com",
+            "value": ""
+        },
+        "SMTP_USER": {
+            "description": "smtp 服务器用户邮箱",
+            "value": ""
+        },
+        "SMTP_PASS": {
+            "description": "你自己设置的验证 token",
+            "value": ""
+        },
+        "WECHAT_VERIFY_TOKEN": {
+            "description": "smtp 服务器用户凭据",
+            "value": ""
+        },
+        "HREF": {
+            "description": "服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /",
+            "value": ""
+        },
+    },
+    "website": "https://github.com/Ecalose/message-pusher",
+    "repository": "https://github.com/Ecalose/message-pusher"
+}
