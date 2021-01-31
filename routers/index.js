@@ -143,6 +143,7 @@ router.post('/configure', userRequired, async (req, res, next) => {
       wechatOpenId: userObj.wechatOpenId,
       wechatVerifyToken: userObj.wechatVerifyToken,
       token: await requestToken(userObj.wechatAppId, userObj.wechatAppSecret),
+      email: userObj.email,
       smtpServer: userObj.smtpServer,
       smtpUser: userObj.smtpUser,
       smtpPass: userObj.smtpPass,
