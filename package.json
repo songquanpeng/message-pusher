@@ -16,7 +16,7 @@
     "express": "~4.16.1",
     "express-rate-limit": "^5.2.3",
     "express-session": "^1.17.1",
-    "marked": "^1.2.7",
+    "marked": ">=2.0.0",
     "morgan": "~1.9.1",
     "nodemailer": "^6.4.17",
     "sequelize": "^6.3.5",
