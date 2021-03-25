@@ -3,7 +3,7 @@
     "description": "消息推送服务",
     "env": {
         "MODE": {
-            "description": "Heroku 模式",
+            "description": "Heroku 模式（请保持默认）",
             "value": "1"
         },
         "WECHAT_APP_ID": {
@@ -19,7 +19,7 @@
             "value": ""
         },
         "WECHAT_OPEN_ID": {
-            "description": "你的 Open ID",
+            "description": "你的 Open ID (扫描测试号二维码，列表中显示的微信号)",
             "value": ""
         },
         "WECHAT_VERIFY_TOKEN": {
@@ -28,27 +28,27 @@
         },
         "EMAIL": {
             "description": "你的默认目标邮箱",
-            "value": ""
+            "value": "",
+            "required" : false
         },
         "PREFIX": {
             "description": "你的前缀，如 admin",
-            "value": ""
+            "value": "admin"
         },
         "SMTP_SERVER": {
             "description": "smtp 服务器地址，如 smtp.qq.com",
-            "value": ""
+            "value": "",
+            "required" : false
         },
         "SMTP_USER": {
             "description": "smtp 服务器用户邮箱",
-            "value": ""
+            "value": "",
+            "required" : false
         },
         "SMTP_PASS": {
             "description": "你自己设置的验证 token",
-            "value": ""
-        },
-        "WECHAT_VERIFY_TOKEN": {
-            "description": "smtp 服务器用户凭据",
-            "value": ""
+            "value": "",
+            "required" : false
         },
         "HREF": {
             "description": "服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /",
