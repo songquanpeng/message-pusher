@@ -43,6 +43,10 @@
 ## 在 Heroku 上的搭建步骤
 在此之前，请先读一下“在自己的服务器上的部署步骤”这一节。
 由于 Heroku 的限制，当 30 分钟内没有请求的话就会被冻结，之后再次启动时数据就丢了，因此这里我们采用配置环境变量的方式进行配置。
+
+### 一键部署
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/songquanpeng/message-pusher)
+
 ### 手动部署
 1. Fork 本项目。
 2. 在[此处](https://dashboard.heroku.com/new-app)新建一个 Heroku APP，名字随意，之后可以设置自己的域名。
@@ -63,9 +67,6 @@
 |SMTP_USER|smtp 服务器用户邮箱|
 |SMTP_PASS|smtp 服务器用户凭据|
 |HREF|服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /|
-
-### 一键部署
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/songquanpeng/message-pusher)
 
 ## 发送消息的方式
 1. 发送纯文本消息：直接 HTTP GET 请求 `https://你的域名/前缀/消息`，缺点是有字数限制，且只能是纯文本，这是微信模板消息的限制。
