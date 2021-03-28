@@ -56,6 +56,8 @@ async function pushWeChatCorpMessage(userPrefix, message) {
   };
   if (message.content) {
     request_data.textcard.url = `${config.href}message/${message.id}`;
+  } else {
+    request_data.textcard.url = `${config.href}`;
   }
   let requestUrl = `https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${access_token}`;
   try {
