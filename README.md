@@ -56,26 +56,32 @@
 |KEY|VALUE|
 |:--|:--|
 |MODE|1（Heroku 模式）|
+|PREFIX|你的前缀，如 admin|
+|DEFAULT_METHOD|默认方式方式（test 代表微信测试号，cor 代表微信企业号，email 代表邮件推送）|
+|HREF|服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /|
 |WECHAT_APP_ID|你的测试号的 APP ID|
 |WECHAT_APP_SECRET|你的测试号的 APP Secret|
 |WECHAT_TEMPLATE_ID|你的测试号的模板消息的 ID|
 |WECHAT_OPEN_ID|你的 Open ID|
 |WECHAT_VERIFY_TOKEN|你自己设置的验证 token|
 |EMAIL|你的默认目标邮箱|
-|PREFIX|你的前缀，如 admin|
 |SMTP_SERVER|smtp 服务器地址，如 smtp.qq.com|
 |SMTP_USER|smtp 服务器用户邮箱|
 |SMTP_PASS|smtp 服务器用户凭据|
-|HREF|服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /|
+|CORP_ID|微信企业号 ID|
+|CORP_AGENT_ID|微信企业号应用 ID|
+|CORP_APP_SECRET|微信企业号应用 Secret|
+|CORP_USER_ID|微信企业号用户 ID|
 
 ## 发送消息的方式
 1. 发送纯文本消息：直接 HTTP GET 请求 `https://你的域名/前缀/消息`，缺点是有字数限制，且只能是纯文本，这是微信模板消息的限制。
 2. 发送 Markdown 消息，调用方式分为两种：
-    + GET 请求方式：`https://你的域名/前缀/?type=0&title=消息标题&description=简短的消息描述&content=markdown格式的消息内容&email=test@qq.com`
+    + GET 请求方式：`https://你的域名/前缀/?&title=消息标题&description=简短的消息描述&content=markdown格式的消息内容&email=test@qq.com`
     + POST 请求方式：请求路径为 `https://你的域名/前缀/`，参数有：
-        1. type：（可选）消息类型，默认为 0
-            + 0：通过微信公众号测试号推送
-            + 1：通过发送邮件的方式进行推送
+        1. type：（可选）发送方式
+            + test：通过微信公众号测试号推送
+            + email：通过发送邮件的方式进行推送
+            + corp：通过微信企业号的应用号发送
         2. title：（可选）消息的标题
         3. description：（必填）消息的描述
         4. content：（可选）消息内容，支持 Markdown
@@ -88,7 +94,6 @@
 - [x] 支持推送消息到邮箱。
 - [x] 支持在 Heroku 上部署
 - [ ] 更加便于部署的 Go 语言的版本。
-- [ ] 适配企业微信应用。
-- [ ] 提供常见语言的调用示例。
+- [x] 适配企业微信应用。
 
 敬请期待。

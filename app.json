@@ -53,6 +53,26 @@
         "HREF": {
             "description": "服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /",
             "value": ""
+        },
+        "DEFAULT_METHOD" : {
+            "description": "默认方式方式（test 代表微信测试号，cor 代表微信企业号，email 代表邮件推送）",
+            "value": ""
+        },
+        "CORP_ID" : {
+            "description": "微信企业号 ID",
+            "value": ""
+        },
+        "CORP_AGENT_ID" : {
+            "description": "微信企业号应用 ID",
+            "value": ""
+        },
+        "CORP_APP_SECRET" : {
+            "description": "微信企业号应用 Secret",
+            "value": ""
+        },
+        "CORP_USER_ID" : {
+            "description": "微信企业号用户 ID",
+            "value": ""
         }
     },
     "website": "https://github.com/songquanpeng/message-pusher",
