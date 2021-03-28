@@ -5,7 +5,7 @@ const sequelize = require('../common/database');
 Message.belongsTo(User);
 
 (async () => {
-  await sequelize.sync({ alter: true });
+  await sequelize.sync();
   console.log('Database initialized.');
   const isNoAdminExisted =
     (await User.findOne({ where: { isAdmin: true } })) === null;

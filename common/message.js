@@ -1,30 +1,37 @@
+const { getUserDefaultMethod } = require('./token');
 const { pushWeChatMessage } = require('./wechat');
+const { pushWeChatCorpMessage } = require('./wechat-corp');
 const { pushEmailMessage } = require('./email');
 const { Message } = require('../models');
 
 async function processMessage(userPrefix, message) {
   if (message.email) {
     // If message has the attribute "email", override its type.
-    message.type = '1';
+    message.type = 'email';
   }
-  if (message.content && message.type === '0') {
-    message = await Message.create(message);
+  if (!message.type) {
+    message.type = getUserDefaultMethod(userPrefix);
   }
-  let result = {
-    success: false,
-    message: `unsupported message type ${message.type}`,
-  };
+  if (message.content && message.type !== 'email') {
+    // If message is not email type, we should save it because we have to serve the page.
+    message = await Message.create(message, { raw: true });
+  }
+  let result;
   switch (message.type) {
-    case '0': // WeChat message
+    case 'test': // WeChat message
       result = await pushWeChatMessage(userPrefix, message);
       break;
-    case '1': // Email message
+    case 'email': // Email message
       result = await pushEmailMessage(userPrefix, message);
       break;
-    case '2': // HTTP GET request
-      // TODO: HTTP GET request
+    case 'corp': // WeChar corp message
+      result = await pushWeChatCorpMessage(userPrefix, message);
       break;
     default:
+      result = {
+        success: false,
+        message: `unsupported message type ${message.type}`,
+      };
       break;
   }
   return result;

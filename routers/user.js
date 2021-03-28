@@ -24,7 +24,6 @@ router.all('/:userPrefix/verify', (req, res, next) => {
 router.all('/:userPrefix/:description', async (req, res, next) => {
   const userPrefix = req.params.userPrefix;
   let message = {
-    type: '0',
     title: '无标题',
     description: req.params.description,
   };
@@ -34,7 +33,7 @@ router.all('/:userPrefix/:description', async (req, res, next) => {
 router.all('/:userPrefix', async (req, res, next) => {
   const userPrefix = req.params.userPrefix;
   let message = {
-    type: req.query.type || req.body.type || '0',
+    type: req.query.type || req.body.type,
     title: req.query.title || req.body.title || '无标题',
     description: req.query.description || req.body.description || '无描述',
     content: req.query.content || req.body.content,

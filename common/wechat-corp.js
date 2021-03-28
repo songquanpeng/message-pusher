@@ -4,22 +4,21 @@ const config = require('../config');
 
 async function refreshToken() {
   for (let [key, value] of tokenStore) {
-    if (value.wechatAppId) {
-      value.wechatToken = await requestToken(
-        value.wechatAppId,
-        value.wechatAppSecret
-      );
+    if (value.corpId) {
+      value.corpToken = await requestToken(value.corpId, value.corpAppSecret);
       tokenStore.set(key, value);
     }
   }
   console.log('Token refreshed.');
 }
 
-async function requestToken(appId, appSecret) {
+async function requestToken(corpId, corpAppSecret) {
+  // Reference: https://work.weixin.qq.com/api/doc/90000/90135/91039
+
   let token = '';
   try {
     let res = await axios.get(
-      `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appId}&secret=${appSecret}`
+      `https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${corpId}&corpsecret=${corpAppSecret}`
     );
     // console.debug(res);
     if (res && res.data) {
@@ -35,8 +34,9 @@ async function requestToken(appId, appSecret) {
   return token;
 }
 
-async function pushWeChatMessage(userPrefix, message) {
-  // Reference: https://mp.weixin.qq.com/debug/cgi-bin/readtmpl?t=tmplmsg/faq_tmpl
+async function pushWeChatCorpMessage(userPrefix, message) {
+  // Reference: https://work.weixin.qq.com/api/doc/90000/90135/90236
+
   let user = tokenStore.get(userPrefix);
   if (!user) {
     return {
@@ -44,23 +44,27 @@ async function pushWeChatMessage(userPrefix, message) {
       message: `不存在的前缀：${userPrefix}，请注意大小写`,
     };
   }
-  let access_token = user.wechatToken;
+  let access_token = user.corpToken;
   let request_data = {
-    touser: user.wechatOpenId,
-    template_id: user.wechatTemplateId,
+    msgtype: 'textcard',
+    touser: user.corpUserId,
+    agentid: user.corpAgentId,
+    textcard: {
+      title: message.title,
+      description: message.description,
+    },
   };
   if (message.content) {
-    request_data.url = `${config.href}message/${message.id}`;
+    request_data.textcard.url = `${config.href}message/${message.id}`;
   }
-  request_data.data = { text: { value: message.description } };
-  let requestUrl = `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${access_token}`;
+  let requestUrl = `https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${access_token}`;
   try {
     let response = await axios.post(requestUrl, request_data);
     if (response && response.data && response.data.errcode !== 0) {
       // Failed to push message, get a new token and try again.
-      let token = await requestToken(user.wechatAppId, user.wechatAppSecret);
-      updateTokenStore(userPrefix, 'wechatToken', token);
-      requestUrl = `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${access_token}`;
+      access_token = await requestToken(user.corpId, user.corpAppSecret);
+      updateTokenStore(userPrefix, 'corpToken', access_token);
+      requestUrl = `https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${access_token}`;
       response = await axios.post(requestUrl, request_data);
     }
     if (response.data.errcode === 0) {
@@ -86,5 +90,5 @@ async function pushWeChatMessage(userPrefix, message) {
 module.exports = {
   refreshToken,
   requestToken,
-  pushWeChatMessage,
+  pushWeChatCorpMessage,
 };

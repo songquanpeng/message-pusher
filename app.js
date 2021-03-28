@@ -25,7 +25,7 @@ app.locals.isErrorMessage = false;
 setTimeout(async () => {
   // TODO: Here we need an improvement! I have tried EventEmitter but it's not working. :(
   await initializeTokenStore();
-  await refreshToken(app);
+  await refreshToken();
   setInterval(async () => refreshToken(), 100 * 60 * 1000);
 }, 1000);
 

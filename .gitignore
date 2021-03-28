@@ -5,3 +5,4 @@ data.db-journal
 .vscode
 *.db
 package-lock.json
+yarn.lock

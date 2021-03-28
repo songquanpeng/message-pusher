@@ -14,8 +14,8 @@ Message.init(
     description: DataTypes.TEXT,
     content: DataTypes.TEXT,
     type: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+      type: DataTypes.STRING,
+      defaultValue: 'test',
     },
   },
   { sequelize }

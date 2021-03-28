@@ -37,17 +37,28 @@ User.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    defaultMethod:{
+      type: DataTypes.STRING,
+      defaultValue: 'test'
+    },
+    // WeChat public account
     wechatAppId: DataTypes.STRING,
     wechatAppSecret: DataTypes.STRING,
     wechatTemplateId: DataTypes.STRING,
     wechatOpenId: DataTypes.STRING,
     wechatVerifyToken: DataTypes.STRING,
+    // Email
     smtpServer: {
       type: DataTypes.STRING,
       defaultValue: 'smtp.qq.com',
     },
     smtpUser: DataTypes.STRING,
     smtpPass: DataTypes.STRING,
+    // WeChat corporation
+    corpId: DataTypes.STRING,
+    corpAgentId: DataTypes.STRING,
+    corpAppSecret: DataTypes.STRING,
+    corpUserId: DataTypes.STRING
   },
   { sequelize }
 );
