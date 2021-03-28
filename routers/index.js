@@ -33,6 +33,12 @@ router.get('/login', (req, res, next) => {
 });
 
 router.post('/login', async (req, res, next) => {
+  if (process.env.MODE === '1') {
+    return res.render('register', {
+      message: '当前运行模式为 Heroku 模式，该模式下禁止用户登录',
+      isErrorMessage: true,
+    });
+  }
   let user = {
     username: req.body.username,
     password: req.body.password,

@@ -37,7 +37,7 @@
         },
         "SMTP_SERVER": {
             "description": "smtp 服务器地址，如 smtp.qq.com",
-            "value": "",
+            "value": "smtp.qq.com",
             "required" : false
         },
         "SMTP_USER": {
@@ -46,7 +46,7 @@
             "required" : false
         },
         "SMTP_PASS": {
-            "description": "你自己设置的验证 token",
+            "description": "smtp 服务器用户凭据",
             "value": "",
             "required" : false
         },
