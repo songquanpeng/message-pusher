@@ -16,7 +16,7 @@
 
 ### 服务器端配置
 1. 配置 Node.js 环境，推荐使用 [nvm](https://github.com/nvm-sh/nvm)。
-2. 下载代码：`git clone https://github.com/songquanpeng/message-pusher.git`。
+2. 下载代码：`git clone https://github.com/songquanpeng/message-pusher.git`，或者 `git clone https://gitee.com/songquanpeng/message-pusher`。
 3. 修改根目录下的 config.js 文件：
     + （可选）可以修改监听的端口
     + （可选）配置是否选择开放注册
