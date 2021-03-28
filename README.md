@@ -29,13 +29,20 @@
     2. 之后使用 [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx) 申请证书：`sudo certbot --nginx`。
     3. 重启 Nginx 服务：`sudo service nginx restart`。
 
-### 微信公众平台端配置
+### 微信测试号配置
 1. 首先前往[此页面](https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index)拿到 APP_ID 以及 APP_SECRET。
 2. 使用微信扫描下方的测试号二维码，拿到你的 OPEN_ID。
 3. 新增模板消息模板，模板标题随意，模板内容填 `{{text.DATA}}`，提交后可以拿到 TEMPLATE_ID。
 4. 填写接口配置信息，URL 填 `https://你的域名/前缀/verify`，TOKEN 随意，先不要点击验证。（前缀默认和用户名相同）
 5. 现在访问 `https://你的域名/`，默认用户为 admin，默认密码为 123456，登录后根据系统提示完成配置，之后点击提交按钮。
 6. 之后回到微信公众平台测试号的配置页面，点击验证。
+
+### 微信企业号配置
+1. 在该[页面](https://work.weixin.qq.com/)注册微信企业号（不需要企业资质）。
+2. 在该[页面](https://work.weixin.qq.com/wework_admin/frame#profile)的最下方找到企业 ID。
+3. 在该[页面](https://work.weixin.qq.com/wework_admin/frame#profile/wxPlugin)找到二维码，微信扫码关注。
+4. 在该[页面](https://work.weixin.qq.com/wework_admin/frame#apps)创建一个应用，之后找到应用的 AgentId 和 Secret。
+5. 在该[页面](https://work.weixin.qq.com/wework_admin/frame#contacts)找到你的个人账号（一般为你的姓名拼写）。
 
 ### 验证是否配置成功
 访问 `https://你的域名/前缀/Hi`，如果你的微信能够收到一条内容为 Hi 的模板消息，则配置成功。
@@ -80,14 +87,14 @@
 2. 发送 Markdown 消息，调用方式分为两种：
     + GET 请求方式：`https://你的域名/前缀/?&title=消息标题&description=简短的消息描述&content=markdown格式的消息内容&email=test@qq.com`
     + POST 请求方式：请求路径为 `https://你的域名/前缀/`，参数有：
-        1. type：（可选）发送方式
-            + test：通过微信公众号测试号推送
-            + email：通过发送邮件的方式进行推送
-            + corp：通过微信企业号的应用号发送
-        2. title：（可选）消息的标题
-        3. description：（必填）消息的描述
-        4. content：（可选）消息内容，支持 Markdown
-        5. email：（可选）当该项不为空时，将强制覆盖 type 参数，强制消息类型为邮件消息，收件邮箱即此处指定的邮箱。如果 type 为 1 且 email 参数为空，则邮件将发送至用户设置的默认邮箱。
+        1. `type`：（可选）发送方式
+            + `test`：通过微信公众号测试号推送
+            + `email`：通过发送邮件的方式进行推送
+            + `corp`：通过微信企业号的应用号发送
+        2. `title`：（可选）消息的标题
+        3. `description`：（必填）消息的描述
+        4. `content`：（可选）消息内容，支持 Markdown
+        5. `email`：（可选）当该项不为空时，将强制覆盖 type 参数，强制消息类型为邮件消息，收件邮箱即此处指定的邮箱。如果 type 为 `email` 且 email 参数为空，则邮件将发送至用户设置的默认邮箱。
 
 ## 待做清单
 - [x] 支持多用户。
