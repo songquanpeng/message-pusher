@@ -4,6 +4,7 @@
 2. 也可推送邮件消息，在微信中开启 QQ 邮件提醒后，也可以达到同样效果。
 3. 支持 Markdown。
 4. 可以使用 Heroku 的免费服务器，[详见此处](#在-Heroku-上的搭建步骤)。
+5. 无需手动配置数据库，这里使用的是 SQLite3 嵌入式数据库。
 
 ## 用途举例
 1. [整合进自己的博客系统，每当有人登录时发微信消息提醒](https://github.com/songquanpeng/blog/blob/486d63e96ef7906a6c767653a20ec2d3278e9a4a/routes/user.js#L27)。
@@ -28,6 +29,7 @@
     1. 修改应用根目录下的 `nginx.conf` 中的域名以及端口号，并创建软链接：`sudo ln -s /path/to/nginx.conf /etc/nginx/sites-enabled/message-pusher.conf` ，**注意修改这里的 /path/to/nginx.conf，且必须是绝对路径**，当然如果不想创建软链接的话也可以直接将配置文件拷贝过去：`sudo mv ./nginx.conf /etc/nginx/sites-enabled/message-pusher.conf`。
     2. 之后使用 [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx) 申请证书：`sudo certbot --nginx`。
     3. 重启 Nginx 服务：`sudo service nginx restart`。
+8. 默认用户名密码为：`admin` 和 `123456`。
 
 ### 微信测试号配置
 1. 首先前往[此页面](https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index)拿到 APP_ID 以及 APP_SECRET。
