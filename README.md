@@ -53,7 +53,7 @@
 
 ## 在 Heroku 上的搭建步骤
 在此之前，请先读一下“在自己的服务器上的部署步骤”这一节。
-由于 Heroku 的限制，当 30 分钟内没有请求的话就会被冻结，之后再次启动时数据就丢了，因此这里我们采用配置环境变量的方式进行配置。
+由于 Heroku 的限制，当 30 分钟内没有请求的话就会被冻结，之后再次启动时数据就丢了，因此这里我们采用配置环境变量的方式进行配置，这样即使应用冻结后再次启动配置信息依然存在。
 
 ### 一键部署
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/songquanpeng/message-pusher)
@@ -66,9 +66,9 @@
 
 |KEY|VALUE|
 |:--|:--|
-|MODE|1（Heroku 模式）|
-|PREFIX|你的前缀，如 admin|
-|DEFAULT_METHOD|默认方式方式（test 代表微信测试号，cor 代表微信企业号，email 代表邮件推送）|
+|MODE|1（1 代表 Heroku 模式，该模式下应用从环境变量中读取必要信息）|
+|PREFIX|你的前缀，如 admin（前缀用于区分用户，出现在请求的 api 路径中）|
+|DEFAULT_METHOD|默认方式方式（test 代表微信测试号，corp 代表微信企业号，email 代表邮件推送）|
 |HREF|服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /|
 |WECHAT_APP_ID|你的测试号的 APP ID|
 |WECHAT_APP_SECRET|你的测试号的 APP Secret|
@@ -85,7 +85,7 @@
 |CORP_USER_ID|微信企业号用户 ID|
 
 ## 发送消息的方式
-1. 发送纯文本消息：直接 HTTP GET 请求 `https://你的域名/前缀/消息`，缺点是有字数限制，且只能是纯文本，这是微信模板消息的限制。
+1. 发送纯文本消息：直接 HTTP GET 请求 `https://你的域名/你的前缀/消息`，缺点是有字数限制，且只能是纯文本，这是微信消息的限制。
 2. 发送 Markdown 消息，调用方式分为两种：
     + GET 请求方式：`https://你的域名/前缀/?&title=消息标题&description=简短的消息描述&content=markdown格式的消息内容&email=test@qq.com`
     + POST 请求方式：请求路径为 `https://你的域名/前缀/`，参数有：
