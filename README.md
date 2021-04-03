@@ -68,7 +68,7 @@
 |:--|:--|
 |MODE|1（1 代表 Heroku 模式，该模式下应用从环境变量中读取必要信息）|
 |PREFIX|你的前缀，如 admin（前缀用于区分用户，出现在请求的 api 路径中）|
-|DEFAULT_METHOD|默认方式方式（test 代表微信测试号，corp 代表微信企业号，email 代表邮件推送）|
+|DEFAULT_METHOD|默认推送方式（test 代表微信测试号，corp 代表微信企业号，email 代表邮件推送）|
 |HREF|服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /|
 |WECHAT_APP_ID|你的测试号的 APP ID|
 |WECHAT_APP_SECRET|你的测试号的 APP Secret|
