@@ -1,10 +1,12 @@
 # 消息推送服务
 ## 描述
-1. 利用微信公众号测试号或者微信企业号来给自己的微信推送消息。
-2. 也可推送邮件消息，在微信中开启 QQ 邮件提醒后，也可以达到同样效果。
-3. 支持 Markdown。
-4. 可以使用 Heroku 的免费服务器，[详见此处](#在-Heroku-上的搭建步骤)。
-5. 无需手动配置数据库，这里使用的是 SQLite3 嵌入式数据库。
+1. 多种消息推送方式：
+    + 使用微信公众号测试号推送，
+    + 使用微信企业号推送，
+    + 使用邮箱进行推送，
+    + 使用专门的桌面客户端进行推送，消息直达你的电脑，需要额外安装一个非常小的客户端，[详见此处](./client/README.md)。
+2. 支持 Markdown。
+3. 支持部署在 Heroku 上，无需自己的服务器，[详见此处](#在-Heroku-上的搭建步骤)。
 
 ## 用途举例
 1. [整合进自己的博客系统，每当有人登录时发微信消息提醒](https://github.com/songquanpeng/blog/blob/486d63e96ef7906a6c767653a20ec2d3278e9a4a/routes/user.js#L27)。
@@ -68,7 +70,7 @@
 |:--|:--|
 |MODE|1（1 代表 Heroku 模式，该模式下应用从环境变量中读取必要信息）|
 |PREFIX|你的前缀，如 admin（前缀用于区分用户，出现在请求的 api 路径中）|
-|DEFAULT_METHOD|默认推送方式（test 代表微信测试号，corp 代表微信企业号，email 代表邮件推送）|
+|DEFAULT_METHOD|默认推送方式（test 代表微信测试号，corp 代表微信企业号，email 代表邮件推送，client 代表客户端推送）|
 |HREF|服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /|
 |WECHAT_APP_ID|你的测试号的 APP ID|
 |WECHAT_APP_SECRET|你的测试号的 APP Secret|
@@ -92,7 +94,8 @@
         1. `type`：（可选）发送方式
             + `test`：通过微信公众号测试号推送
             + `email`：通过发送邮件的方式进行推送
-            + `corp`：通过微信企业号的应用号发送
+            + `corp`：通过微信企业号的应用号推送
+            + `client`：通过桌面客户端推送
         2. `title`：（可选）消息的标题
         3. `description`：（必填）消息的描述
         4. `content`：（可选）消息内容，支持 Markdown
@@ -107,5 +110,6 @@
 - [x] 支持在 Heroku 上部署
 - [ ] 更加便于部署的 Go 语言的版本。
 - [x] 适配企业微信应用。
+- [x] 客户端推送。
 
 敬请期待。
