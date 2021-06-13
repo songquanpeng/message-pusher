@@ -91,7 +91,7 @@ function checkPrefix(prefix) {
 
 function registerWebSocket(prefix, token, ws) {
   let user = tokenStore.get(prefix);
-  if (user && user.accessToken !== '' && user.accessToken === token) {
+  if (user && user.accessToken === token) {
     updateTokenStore(prefix, 'ws', ws);
   } else {
     ws.terminate();

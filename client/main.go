@@ -38,10 +38,10 @@ func main() {
 	for {
 		var message = new(Message)
 		err = c.ReadJSON(message)
-		log.Println("Get new message")
 		if err != nil {
 			log.Println("Error occurred when read message:", err)
 		} else {
+			log.Println("Get new message")
 			Notify(message)
 		}
 	}
