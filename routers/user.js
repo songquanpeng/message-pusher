@@ -21,6 +21,11 @@ router.all('/:userPrefix/verify', (req, res, next) => {
   }
 });
 
+router.get('/ws/:userPrefix/:token', async (ws, req) => {
+  const userPrefix = req.params.userPrefix;
+  const token = req.params.token;
+});
+
 router.all('/:userPrefix/:description', async (req, res, next) => {
   const userPrefix = req.params.userPrefix;
   let message = {

@@ -21,7 +21,8 @@
     "nodemailer": "^6.4.17",
     "sequelize": "^6.3.5",
     "serve-static": "^1.14.1",
-    "sqlite3": "^5.0.1"
+    "sqlite3": "^5.0.1",
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.6",

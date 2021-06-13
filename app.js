@@ -13,9 +13,10 @@ const indexRouter = require('./routers/index');
 const messageRouter = require('./routers/message');
 const userRouter = require('./routers/user');
 const { refreshToken } = require('./common/wechat');
-const { initializeTokenStore } = require('./common/token');
+const { initializeTokenStore, registerWebSocket } = require('./common/token');
 
 const app = express();
+const WebSocket = require('ws');
 
 app.locals.isLogged = false;
 app.locals.isAdmin = false;
@@ -78,7 +79,14 @@ app.use('/', indexRouter);
 app.use('/', userRouter);
 
 const server = http.createServer(app);
-
+const wss = new WebSocket.Server({ server });
 server.listen(config.port);
+
+wss.on('connection', (ws) => {
+  ws.on('message', (data) => {
+    let message = JSON.parse(data.toString());
+    registerWebSocket(message.prefix, message.token, ws);
+  });
+});
 
 module.exports = app;

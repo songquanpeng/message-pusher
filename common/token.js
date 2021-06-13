@@ -84,10 +84,26 @@ function checkAccessToken(prefix, token) {
   }
 }
 
+function checkPrefix(prefix) {
+  let user = tokenStore.get(prefix);
+  return user !== undefined;
+}
+
+function registerWebSocket(prefix, token, ws) {
+  let user = tokenStore.get(prefix);
+  if (user && user.accessToken !== '' && user.accessToken === token) {
+    updateTokenStore(prefix, 'ws', ws);
+  } else {
+    ws.terminate();
+  }
+}
+
 module.exports = {
   initializeTokenStore,
   updateTokenStore,
   getUserDefaultMethod,
   tokenStore,
   checkAccessToken,
+  checkPrefix,
+  registerWebSocket,
 };
