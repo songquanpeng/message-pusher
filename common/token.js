@@ -75,9 +75,19 @@ function getUserDefaultMethod(prefix) {
   return user.defaultMethod;
 }
 
+function checkAccessToken(prefix, token) {
+  let user = tokenStore.get(prefix);
+  if (user.accessToken === '') {
+    return true;
+  } else {
+    return user.accessToken === token;
+  }
+}
+
 module.exports = {
   initializeTokenStore,
   updateTokenStore,
   getUserDefaultMethod,
   tokenStore,
+  checkAccessToken,
 };

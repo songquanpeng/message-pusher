@@ -18,7 +18,7 @@
         <div class="message-body">
             运行模式：<%= process.env.MODE === '1' ? "Heroku 模式" : "普通模式"%>
             <br>
-            内存占用: <%= (process.memoryUsage().rss / (1024 *1024)).toFixed(2) %> MB
+            内存占用：<%= (process.memoryUsage().rss / (1024 *1024)).toFixed(2) %> MB
         </div>
     </article>
 </div>

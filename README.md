@@ -87,7 +87,7 @@
 ## 发送消息的方式
 1. 发送纯文本消息：直接 HTTP GET 请求 `https://你的域名/前缀/消息`，缺点是有字数限制，且只能是纯文本，这是微信模板消息的限制。
 2. 发送 Markdown 消息，调用方式分为两种：
-    + GET 请求方式：`https://你的域名/前缀/?&title=消息标题&description=简短的消息描述&content=markdown格式的消息内容&email=test@qq.com`
+    + GET 请求方式：`https://你的域名/前缀/?&title=消息标题&description=简短的消息描述&content=markdown格式的消息内容&email=test@qq.com&token=private`
     + POST 请求方式：请求路径为 `https://你的域名/前缀/`，参数有：
         1. `type`：（可选）发送方式
             + `test`：通过微信公众号测试号推送
@@ -97,6 +97,7 @@
         3. `description`：（必填）消息的描述
         4. `content`：（可选）消息内容，支持 Markdown
         5. `email`：（可选）当该项不为空时，将强制覆盖 type 参数，强制消息类型为邮件消息，收件邮箱即此处指定的邮箱。如果 type 为 `email` 且 email 参数为空，则邮件将发送至用户设置的默认邮箱。
+        6. `token`:（可选）如果你设置了 ACCESS_TOKEN，则你需要附上该参数以验证身份。
 
 ## 待做清单
 - [x] 支持多用户。

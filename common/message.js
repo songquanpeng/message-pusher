@@ -1,10 +1,16 @@
-const { getUserDefaultMethod } = require('./token');
+const { getUserDefaultMethod, checkAccessToken } = require('./token');
 const { pushWeChatMessage } = require('./wechat');
 const { pushWeChatCorpMessage } = require('./wechat-corp');
 const { pushEmailMessage } = require('./email');
 const { Message } = require('../models');
 
 async function processMessage(userPrefix, message) {
+  if (!checkAccessToken(userPrefix, message.token)) {
+    return {
+      success: false,
+      message: `invalid access token`,
+    };
+  }
   if (message.email) {
     // If message has the attribute "email", override its type.
     message.type = 'email';

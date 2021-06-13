@@ -145,7 +145,7 @@ router.post('/configure', userRequired, async (req, res, next) => {
   for (let field in user) {
     let value = user[field];
     value = value.trim();
-    if (value) {
+    if (value || field === 'accessToken') {
       user[field] = value;
     } else {
       delete user[field];

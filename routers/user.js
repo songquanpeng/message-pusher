@@ -38,6 +38,7 @@ router.all('/:userPrefix', async (req, res, next) => {
     description: req.query.description || req.body.description || '无描述',
     content: req.query.content || req.body.content,
     email: req.query.email || req.body.email,
+    token: req.query.token || req.body.token,
   };
   let result = await processMessage(userPrefix, message);
   res.json(result);
