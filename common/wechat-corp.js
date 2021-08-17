@@ -82,9 +82,13 @@ async function pushWeChatCorpMessage(userPrefix, message) {
     }
   } catch (e) {
     console.error(e);
+    let msg = e.message;
+    if (msg.startsWith('access_token missing')) {
+      msg = '请求微信服务器失败，请检查配置是否正确或重试！';
+    }
     return {
       success: false,
-      message: e.message,
+      message: msg,
     };
   }
 }

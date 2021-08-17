@@ -24,8 +24,9 @@ router.all('/:userPrefix/verify', (req, res, next) => {
 router.all('/:userPrefix/:description', async (req, res, next) => {
   const userPrefix = req.params.userPrefix;
   let message = {
-    title: '无标题',
+    title: '消息推送',
     description: req.params.description,
+    token: req.query.token,
   };
   res.json(await processMessage(userPrefix, message));
 });

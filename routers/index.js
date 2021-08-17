@@ -14,7 +14,12 @@ const config = require('../config');
 
 router.get('/', (req, res, next) => {
   let showGuidance = false;
-  if (req.session.user && !req.session.user.wechatAppId) {
+  if (
+    req.session.user &&
+    !req.session.user.wechatAppId &&
+    !req.session.user.corpId &&
+    !req.session.user.smtpUser
+  ) {
     showGuidance = true;
   }
   if (process.env.MODE === '1') {

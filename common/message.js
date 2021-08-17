@@ -13,13 +13,13 @@ async function processMessage(userPrefix, message) {
   if (!checkPrefix(userPrefix)) {
     return {
       success: false,
-      message: `不存在的前缀：${userPrefix}`,
+      message: `不存在的用户前缀：${userPrefix}`,
     };
   }
   if (!checkAccessToken(userPrefix, message.token)) {
     return {
       success: false,
-      message: `无效的 access token`,
+      message: `无效的访问凭证，请检查 token 参数是否正确`,
     };
   }
   if (message.email) {
@@ -50,7 +50,7 @@ async function processMessage(userPrefix, message) {
     default:
       result = {
         success: false,
-        message: `unsupported message type ${message.type}`,
+        message: `不支持的消息类型：${message.type}`,
       };
       break;
   }
