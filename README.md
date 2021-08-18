@@ -105,6 +105,25 @@
         5. `email`：（可选）当该项不为空时，将强制覆盖 type 参数，强制消息类型为邮件消息，收件邮箱即此处指定的邮箱。如果 type 为 `email` 且 email 参数为空，则邮件将发送至用户设置的默认邮箱。
         6. `token`:（可选）如果你设置了 ACCESS_TOKEN，则你需要附上该参数以验证身份。
 
+## 示例程序
+```python
+import requests
+
+# GET 方式
+res = requests.get("https://push.iamazing.cn/admin/?title={}&description={}&token={}".format("标题", "描述", "666"))
+
+# POST 方式
+res = requests.post("https://your.domain.com/prefix/", data={
+    "title": "标题",
+    "description" : "描述",
+    "content": "**Markdown 内容**",
+    "token": "6666"
+})
+
+print(res.text)
+# 输出为：{"success":true,"message":"ok"}
+```
+
 ## 待做清单
 - [x] 支持多用户。
 - [ ] 完善的用户管理。
