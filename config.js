@@ -1,5 +1,5 @@
 const config = {
-  allowRegister: true,
+  allowRegister: false,
   port: process.env.PORT || 3000,
   database: 'data.db',
   href: process.env.HREF || 'https://your.domain.com/',

@@ -31,7 +31,7 @@
     1. 修改应用根目录下的 `nginx.conf` 中的域名以及端口号，并创建软链接：`sudo ln -s /path/to/nginx.conf /etc/nginx/sites-enabled/message-pusher.conf` ，**注意修改这里的 /path/to/nginx.conf，且必须是绝对路径**，当然如果不想创建软链接的话也可以直接将配置文件拷贝过去：`sudo mv ./nginx.conf /etc/nginx/sites-enabled/message-pusher.conf`。
     2. 之后使用 [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx) 申请证书：`sudo certbot --nginx`。
     3. 重启 Nginx 服务：`sudo service nginx restart`。
-8. 默认用户名密码为：`admin` 和 `123456`。
+8. 默认用户名密码为：`admin` 和 `123456`，且默认禁止新用户注册，如需修改，请编辑 `config.js`。
 
 ### 微信测试号配置
 1. 首先前往[此页面](https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index)拿到 APP_ID 以及 APP_SECRET。
