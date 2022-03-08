@@ -58,7 +58,7 @@ router.post('/login', async (req, res, next) => {
         'message',
         `欢迎${user.isAdmin ? '管理员' : '普通'}用户 ${
           user.username
-        } 登陆系统！`
+        } 登录系统！`
       );
       return res.redirect('/');
     } else {
