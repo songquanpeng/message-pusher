@@ -129,8 +129,8 @@ print(res.text)
 - [ ] 完善的用户管理。
 - [x] 支持 Markdown。
 - [x] 支持推送消息到邮箱。
-- [x] 支持在 Heroku 上部署
-- [ ] 更加便于部署的 Go 语言的版本。
+- [x] 支持在 Heroku 上部署。
+- [x] 更加便于部署的 [Go 语言版本](https://github.com/LeeJiangWei/go-message)。
 - [x] 适配企业微信应用。
 - [x] 客户端推送。
 
