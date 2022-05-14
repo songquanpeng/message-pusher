@@ -73,6 +73,10 @@
         "CORP_USER_ID" : {
             "description": "微信企业号用户 ID",
             "value": ""
+        },
+        "ACCESS_TOKEN" : {
+            "description": "用于验证调用者身份，防止别人使用借口发送垃圾信息，置空则不进行检查，设置该值后则需要在调用时加上 token 字段",
+            "value": ""
         }
     },
     "website": "https://github.com/songquanpeng/message-pusher",

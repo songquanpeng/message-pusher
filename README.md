@@ -75,6 +75,7 @@
 |PREFIX|你的前缀，如 admin（前缀用于区分用户，出现在请求的 api 路径中）|
 |DEFAULT_METHOD|默认推送方式（test 代表微信测试号，corp 代表微信企业号，email 代表邮件推送，client 代表客户端推送）|
 |HREF|服务的 href，如 https://wechat-message.herokuapp.com/ ，注意后面要有 /|
+|ACCESS_TOKEN|用于验证调用者身份，防止别人使用借口发送垃圾信息，置空则不进行检查，设置该值后则需要在调用时加上 token 字段|
 |WECHAT_APP_ID|你的测试号的 APP ID|
 |WECHAT_APP_SECRET|你的测试号的 APP Secret|
 |WECHAT_TEMPLATE_ID|你的测试号的模板消息的 ID|
