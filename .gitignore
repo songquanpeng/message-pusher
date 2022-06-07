@@ -6,3 +6,4 @@ data.db-journal
 *.db
 package-lock.json
 yarn.lock
+*.*~
