@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
@@ -38,14 +38,14 @@ app.set('trust proxy', true);
 app.use(
   rateLimit({
     windowMs: 30 * 1000,
-    max: 30,
+    max: 30
   })
 );
 app.use(
   '/login',
   rateLimit({
     windowMs: 60 * 1000,
-    max: 5,
+    max: 5
   })
 );
 app.use(compression());
@@ -57,7 +57,7 @@ app.use(
   session({
     resave: true,
     saveUninitialized: true,
-    secret: config.session_secret,
+    secret: config.session_secret
   })
 );
 app.use(flash());
@@ -65,7 +65,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   '/public',
   serveStatic(path.join(__dirname, `public`), {
-    maxAge: '600000',
+    maxAge: '600000'
   })
 );
 app.use('*', (req, res, next) => {
