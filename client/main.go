@@ -2,16 +2,15 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/url"
+	"os"
 )
 
 var (
-	server = flag.String("server", "", "message pusher address")
-	prefix = flag.String("prefix", "", "your prefix")
-	token  = flag.String("token", "", "the access token")
+	conn  = flag.String("url", "", "connection url")
+	token = flag.String("token", "", "the access token")
 )
 
 type Verification struct {
@@ -21,29 +20,50 @@ type Verification struct {
 
 func main() {
 	flag.Parse()
-	u := url.URL{Scheme: "ws", Host: *server, Path: "/"}
-	fmt.Printf("Connecting to %s\n", u.String())
-	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+	connString := *conn
+	if connString == "" {
+		connString = os.Getenv("MESSAGE_PUSHER_URL")
+	}
+	if *token == "" {
+		*token = os.Getenv("MESSAGE_PUSHER_TOKEN")
+	}
+	connUrl, err := url.Parse(connString)
 	if err != nil {
-		log.Fatal("Failed to connect server:", err)
+		log.Fatal("Failed to parse connection url", err)
 		return
 	}
-	defer c.Close()
-	verification := &Verification{
-		Prefix: *prefix,
-		Token:  *token,
+	scheme := "ws"
+	if connUrl.Scheme == "https" {
+		scheme = "wss"
 	}
-	_ = c.WriteJSON(verification)
-
+	u := url.URL{Scheme: scheme, Host: connUrl.Host, Path: "/"}
 	for {
-		var message = new(Message)
-		err = c.ReadJSON(message)
+		log.Printf("Connecting to %s...\n", u.String())
+		c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
 		if err != nil {
-			log.Println("Error occurred when read message:", err)
-		} else {
-			log.Println("Get new message")
-			Notify(message)
+			log.Fatal("Failed to connect to server:", err)
+			return
+		}
+		log.Printf("Server connected.\n")
+		verification := &Verification{
+			Prefix: connUrl.Path[1:],
+			Token:  *token,
+		}
+		err = c.WriteJSON(verification)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		for {
+			var message = new(Message)
+			err = c.ReadJSON(message)
+			if err != nil {
+				log.Println("Error occurred when read message:", err)
+				log.Println("Connection lost, retrying...")
+				break
+			} else {
+				log.Println("New message arrived.")
+				Notify(message)
+			}
 		}
 	}
-
 }
