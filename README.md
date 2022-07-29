@@ -37,7 +37,7 @@
 
 #### 方式二：使用 Docker 进行部署
 1. 拉取镜像：`docker pull justsong/message-pusher:v0.2.3`
-2. 运行：`docker run -p 3000:3000 justsong/message-pusher:v0.2.3`
+2. 执行命令：`docker run -d -p 3000:3000 justsong/message-pusher:v0.2.3`
 3. 接上面的第 7 步。
 
 ### 微信测试号配置
