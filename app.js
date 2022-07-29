@@ -86,7 +86,9 @@ server.listen(config.port);
 wss.on('connection', (ws) => {
   ws.on('message', (data) => {
     let message = JSON.parse(data.toString());
-    registerWebSocket(message.prefix, message.token, ws);
+    if (message.prefix) {
+      registerWebSocket(message.prefix, message.token, ws);
+    }
   });
 });
 

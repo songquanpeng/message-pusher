@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"time"
 )
 
 var (
@@ -16,6 +17,9 @@ var (
 type Verification struct {
 	Prefix string `json:"prefix"`
 	Token  string `json:"token"`
+}
+
+type Ping struct {
 }
 
 func main() {
@@ -37,6 +41,12 @@ func main() {
 		scheme = "wss"
 	}
 	u := url.URL{Scheme: scheme, Host: connUrl.Host, Path: "/"}
+	verification := &Verification{
+		Prefix: connUrl.Path[1:],
+		Token:  *token,
+	}
+	ping := &Ping{}
+	ticker := time.NewTicker(60 * time.Second)
 	for {
 		log.Printf("Connecting to %s...\n", u.String())
 		c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
@@ -45,20 +55,33 @@ func main() {
 			return
 		}
 		log.Printf("Server connected.\n")
-		verification := &Verification{
-			Prefix: connUrl.Path[1:],
-			Token:  *token,
-		}
+
 		err = c.WriteJSON(verification)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
+		go func() {
+			for {
+				select {
+				case <-ticker.C:
+					if err := c.WriteJSON(ping); err != nil {
+						log.Println("Error occurred when send ping message:", err)
+						log.Println("Connection lost, retrying...")
+						_ = c.Close()
+						break
+					} else {
+						log.Println("Ping message sent.")
+					}
+				}
+			}
+		}()
 		for {
 			var message = new(Message)
 			err = c.ReadJSON(message)
 			if err != nil {
 				log.Println("Error occurred when read message:", err)
 				log.Println("Connection lost, retrying...")
+				_ = c.Close()
 				break
 			} else {
 				log.Println("New message arrived.")
