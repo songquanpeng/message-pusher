@@ -36,8 +36,8 @@
 8. 默认用户名密码为：`admin` 和 `123456`，且默认禁止新用户注册，如需修改，请编辑 `config.js`。
 
 #### 方式二：使用 Docker 进行部署
-1. 拉取镜像：`docker pull justsong/message-pusher:latest`
-2. 运行：`docker -p 3000:3000 run justsong/message-pusher:latest`
+1. 拉取镜像：`docker pull justsong/message-pusher:v0.2.3`
+2. 运行：`docker run -p 3000:3000 justsong/message-pusher:v0.2.3`
 3. 接上面的第 7 步。
 
 ### 微信测试号配置
