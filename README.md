@@ -7,7 +7,7 @@
     + 使用专门的桌面客户端进行推送，消息直达你的电脑，需要额外安装一个非常小的客户端，[详见此处](./client/README.md)。
 2. 支持 Markdown。
 3. 支持部署在 Heroku 上，无需自己的服务器，[详见此处](#在-Heroku-上的搭建步骤)。
-4. 支持使用 Docker 进行部署。
+4. Docker 一键部署：`docker run -d -p 3000:3000 justsong/message-pusher`
 
 ## 用途举例
 1. [整合进自己的博客系统，每当有人登录时发微信消息提醒](https://github.com/songquanpeng/blog/blob/486d63e96ef7906a6c767653a20ec2d3278e9a4a/routes/user.js#L27)。
