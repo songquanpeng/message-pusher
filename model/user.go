@@ -6,18 +6,27 @@ import (
 )
 
 type User struct {
-	Id               int    `json:"id"`
-	Username         string `json:"username" gorm:"unique;index" validate:"max=12"`
-	Password         string `json:"password" gorm:"not null;" validate:"min=8,max=20"`
-	DisplayName      string `json:"display_name" gorm:"index" validate:"max=20"`
-	Role             int    `json:"role" gorm:"type:int;default:1"`   // admin, common
-	Status           int    `json:"status" gorm:"type:int;default:1"` // enabled, disabled
-	Token            string `json:"token"`
-	Email            string `json:"email" gorm:"index" validate:"max=50"`
-	GitHubId         string `json:"github_id" gorm:"column:github_id;index"`
-	WeChatId         string `json:"wechat_id" gorm:"column:wechat_id;index"`
-	Channel          string `json:"channel"`
-	VerificationCode string `json:"verification_code" gorm:"-:all"`
+	Id                                 int    `json:"id"`
+	Username                           string `json:"username" gorm:"unique;index" validate:"max=12"`
+	Password                           string `json:"password" gorm:"not null;" validate:"min=8,max=20"`
+	DisplayName                        string `json:"display_name" gorm:"index" validate:"max=20"`
+	Role                               int    `json:"role" gorm:"type:int;default:1"`   // admin, common
+	Status                             int    `json:"status" gorm:"type:int;default:1"` // enabled, disabled
+	Token                              string `json:"token"`
+	Email                              string `json:"email" gorm:"index" validate:"max=50"`
+	GitHubId                           string `json:"github_id" gorm:"column:github_id;index"`
+	WeChatId                           string `json:"wechat_id" gorm:"column:wechat_id;index"`
+	Channel                            string `json:"channel"`
+	VerificationCode                   string `json:"verification_code" gorm:"-:all"`
+	WeChatTestAccountId                string `json:"wechat_test_account_id" gorm:"column:wechat_test_account_id"`
+	WeChatTestAccountSecret            string `json:"wechat_test_account_secret" gorm:"column:wechat_test_account_secret"`
+	WeChatTestAccountTemplateId        string `json:"wechat_test_account_template_id" gorm:"column:wechat_test_account_template_id"`
+	WeChatTestAccountOpenId            string `json:"wechat_test_account_open_id" gorm:"column:wechat_test_account_open_id"`
+	WeChatTestAccountVerificationToken string `json:"wechat_test_account_verification_token" gorm:"column:wechat_test_account_verification_token"`
+	WeChatCorpAccountId                string `json:"wechat_corp_account_id" gorm:"column:wechat_corp_account_id"`
+	WeChatCorpAccountSecret            string `json:"wechat_corp_account_secret" gorm:"column:wechat_corp_account_secret"`
+	WeChatCorpAccountAgentId           string `json:"wechat_corp_account_agent_id" gorm:"column:wechat_corp_account_agent_id"`
+	WeChatCorpAccountUserId            string `json:"wechat_corp_account_user_id" gorm:"column:wechat_corp_account_user_id"`
 }
 
 func GetMaxUserId() int {

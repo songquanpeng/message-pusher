@@ -7,6 +7,7 @@ import (
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 	"log"
+	"message-pusher/channel"
 	"message-pusher/common"
 	"message-pusher/middleware"
 	"message-pusher/model"
@@ -47,6 +48,9 @@ func main() {
 
 	// Initialize options
 	model.InitOptionMap()
+
+	// Initialize token store
+	channel.TokenStoreInit()
 
 	// Initialize HTTP server
 	server := gin.Default()

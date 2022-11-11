@@ -131,3 +131,11 @@ func GetUUID() string {
 	code = strings.Replace(code, "-", "", -1)
 	return code
 }
+
+func Max(a int, b int) int {
+	if a >= b {
+		return a
+	} else {
+		return b
+	}
+}
