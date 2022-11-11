@@ -57,9 +57,16 @@ func pushMessageHelper(c *gin.Context, message *channel.Message) {
 		})
 		return
 	}
-	if user.Token != "" {
+	if user.Token != "" && user.Token != " " {
 		if message.Token == "" {
 			message.Token = c.Request.Header.Get("Authorization")
+			if message.Token == "" {
+				c.JSON(http.StatusForbidden, gin.H{
+					"success": false,
+					"message": "token 为空",
+				})
+				return
+			}
 		}
 		if user.Token != message.Token {
 			c.JSON(http.StatusForbidden, gin.H{

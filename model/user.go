@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 	"message-pusher/common"
-	"strings"
 )
 
 type User struct {
@@ -13,7 +12,7 @@ type User struct {
 	DisplayName      string `json:"display_name" gorm:"index" validate:"max=20"`
 	Role             int    `json:"role" gorm:"type:int;default:1"`   // admin, common
 	Status           int    `json:"status" gorm:"type:int;default:1"` // enabled, disabled
-	Token            string `json:"token;" gorm:"index"`
+	Token            string `json:"token"`
 	Email            string `json:"email" gorm:"index" validate:"max=50"`
 	GitHubId         string `json:"github_id" gorm:"column:github_id;index"`
 	WeChatId         string `json:"wechat_id" gorm:"column:wechat_id;index"`
@@ -43,7 +42,7 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 	if selectAll {
 		err = DB.First(&user, "id = ?", id).Error
 	} else {
-		err = DB.Select([]string{"id", "username", "display_name", "role", "status", "email", "wechat_id", "github_id"}).First(&user, "id = ?", id).Error
+		err = DB.Select([]string{"id", "username", "display_name", "role", "status", "email", "wechat_id", "github_id", "token"}).First(&user, "id = ?", id).Error
 	}
 	return &user, err
 }
@@ -116,18 +115,6 @@ func (user *User) FillUserByWeChatId() {
 
 func (user *User) FillUserByUsername() {
 	DB.Where(User{Username: user.Username}).First(user)
-}
-
-func ValidateUserToken(token string) (user *User) {
-	if token == "" {
-		return nil
-	}
-	token = strings.Replace(token, "Bearer ", "", 1)
-	user = &User{}
-	if DB.Where("token = ?", token).First(user).RowsAffected == 1 {
-		return user
-	}
-	return nil
 }
 
 func IsEmailAlreadyTaken(email string) bool {

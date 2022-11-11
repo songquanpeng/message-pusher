@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Image, Modal } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { API, copy, showError, showSuccess } from '../helpers';
+import { API, showError, showSuccess } from '../helpers';
 
 const PersonalSetting = () => {
   const [inputs, setInputs] = useState({
@@ -23,17 +23,6 @@ const PersonalSetting = () => {
 
   const handleInputChange = (e, { name, value }) => {
     setInputs((inputs) => ({ ...inputs, [name]: value }));
-  };
-
-  const generateToken = async () => {
-    const res = await API.get('/api/user/token');
-    const { success, message, data } = res.data;
-    if (success) {
-      await copy(data);
-      showSuccess(`令牌已重置并已复制到剪切板：${data}`);
-    } else {
-      showError(message);
-    }
   };
 
   const bindWeChat = async () => {
@@ -86,7 +75,6 @@ const PersonalSetting = () => {
       <Button as={Link} to={`/user/edit/`}>
         更新个人信息
       </Button>
-      <Button onClick={generateToken}>生成访问令牌</Button>
       <Button
         onClick={() => {
           setShowWeChatBindModal(true);

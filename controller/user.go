@@ -350,7 +350,9 @@ func UpdateSelf(c *gin.Context) {
 		})
 		return
 	}
-
+	if user.Password == "" {
+		user.Password = "$I_LOVE_U" // make Validator happy :)
+	}
 	if err := common.Validate.Struct(&user); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -364,8 +366,15 @@ func UpdateSelf(c *gin.Context) {
 		Username:    user.Username,
 		Password:    user.Password,
 		DisplayName: user.DisplayName,
+		Token:       user.Token,
 	}
-
+	if cleanUser.Token == "" {
+		cleanUser.Token = " " // this is because gorm will ignore zero value
+	}
+	if user.Password == "$I_LOVE_U" {
+		user.Password = "" // rollback to what it should be
+		cleanUser.Password = ""
+	}
 	updatePassword := user.Password != ""
 	if err := cleanUser.Update(updatePassword); err != nil {
 		c.JSON(http.StatusOK, gin.H{
