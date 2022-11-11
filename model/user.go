@@ -17,6 +17,7 @@ type User struct {
 	Email            string `json:"email" gorm:"index" validate:"max=50"`
 	GitHubId         string `json:"github_id" gorm:"column:github_id;index"`
 	WeChatId         string `json:"wechat_id" gorm:"column:wechat_id;index"`
+	Channel          string `json:"channel"`
 	VerificationCode string `json:"verification_code" gorm:"-:all"`
 }
 
