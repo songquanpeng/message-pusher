@@ -6,7 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 const PasswordResetConfirm = () => {
   const [inputs, setInputs] = useState({
     email: '',
-    token: ''
+    token: '',
   });
   const { email, token } = inputs;
 
@@ -15,11 +15,11 @@ const PasswordResetConfirm = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
     let token = searchParams.get('token');
-    let email = searchParams.get('email')
+    let email = searchParams.get('email');
     setInputs({
       token,
-      email
-    })
+      email,
+    });
   }, []);
 
   async function handleSubmit(e) {
@@ -27,7 +27,7 @@ const PasswordResetConfirm = () => {
     setLoading(true);
     const res = await API.post(`/api/user/reset`, {
       email,
-      token
+      token,
     });
     const { success, message } = res.data;
     if (success) {
@@ -43,17 +43,17 @@ const PasswordResetConfirm = () => {
   return (
     <Grid textAlign='center' style={{ marginTop: '48px' }}>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as='h2' color='teal' textAlign='center'>
+        <Header as='h2' color='telegram' textAlign='center'>
           <Image src='/logo.png' /> 密码重置确认
         </Header>
         <Form size='large'>
           <Segment>
             <Form.Input
               fluid
-              icon="mail"
-              iconPosition="left"
-              placeholder="邮箱地址"
-              name="email"
+              icon='mail'
+              iconPosition='left'
+              placeholder='邮箱地址'
+              name='email'
               value={email}
               readOnly
             />

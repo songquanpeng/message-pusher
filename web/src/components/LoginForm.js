@@ -88,44 +88,44 @@ const LoginForm = () => {
   }
 
   return (
-    <Grid textAlign="center" style={{ marginTop: '48px' }}>
+    <Grid textAlign='center' style={{ marginTop: '48px' }}>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2" color="teal" textAlign="center">
-          <Image src="/logo.png" /> 用户登录
+        <Header as='h2' color='telegram' textAlign='center'>
+          <Image src='/logo.png' /> 用户登录
         </Header>
-        <Form size="large">
+        <Form size='large'>
           <Segment>
             <Form.Input
               fluid
-              icon="user"
-              iconPosition="left"
-              placeholder="用户名"
-              name="username"
+              icon='user'
+              iconPosition='left'
+              placeholder='用户名'
+              name='username'
               value={username}
               onChange={handleChange}
             />
             <Form.Input
               fluid
-              icon="lock"
-              iconPosition="left"
-              placeholder="密码"
-              name="password"
-              type="password"
+              icon='lock'
+              iconPosition='left'
+              placeholder='密码'
+              name='password'
+              type='password'
               value={password}
               onChange={handleChange}
             />
-            <Button color="teal" fluid size="large" onClick={handleSubmit}>
+            <Button color='teal' fluid size='large' onClick={handleSubmit}>
               登录
             </Button>
           </Segment>
         </Form>
         <Message>
           忘记密码？
-          <Link to="/reset" className="btn btn-link">
+          <Link to='/reset' className='btn btn-link'>
             点击重置
           </Link>
           ； 没有账户？
-          <Link to="/register" className="btn btn-link">
+          <Link to='/register' className='btn btn-link'>
             点击注册
           </Link>
         </Message>
@@ -135,8 +135,8 @@ const LoginForm = () => {
             {status.github_oauth ? (
               <Button
                 circular
-                color="black"
-                icon="github"
+                color='black'
+                icon='github'
                 onClick={onGitHubOAuthClicked}
               />
             ) : (
@@ -145,8 +145,8 @@ const LoginForm = () => {
             {status.wechat_login ? (
               <Button
                 circular
-                color="green"
-                icon="wechat"
+                color='green'
+                icon='wechat'
                 onClick={onWeChatLoginClicked}
               />
             ) : (
@@ -170,18 +170,18 @@ const LoginForm = () => {
                   微信扫码关注公众号，输入「验证码」获取验证码（三分钟内有效）
                 </p>
               </div>
-              <Form size="large">
+              <Form size='large'>
                 <Form.Input
                   fluid
-                  placeholder="验证码"
-                  name="wechat_verification_code"
+                  placeholder='验证码'
+                  name='wechat_verification_code'
                   value={inputs.wechat_verification_code}
                   onChange={handleChange}
                 />
                 <Button
-                  color="teal"
+                  color='teal'
                   fluid
-                  size="large"
+                  size='large'
                   onClick={onSubmitWeChatVerificationCode}
                 >
                   登录
