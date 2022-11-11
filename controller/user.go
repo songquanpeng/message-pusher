@@ -295,6 +295,9 @@ func UpdateUser(c *gin.Context) {
 		})
 		return
 	}
+	if updatedUser.Password == "" {
+		updatedUser.Password = "$I_LOVE_U" // make Validator happy :)
+	}
 	if err := common.Validate.Struct(&updatedUser); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -324,6 +327,9 @@ func UpdateUser(c *gin.Context) {
 			"message": "无权将其他用户权限等级提升到大于等于自己的权限等级",
 		})
 		return
+	}
+	if updatedUser.Password == "$I_LOVE_U" {
+		updatedUser.Password = "" // rollback to what it should be
 	}
 	updatePassword := updatedUser.Password != ""
 	if err := updatedUser.Update(updatePassword); err != nil {
