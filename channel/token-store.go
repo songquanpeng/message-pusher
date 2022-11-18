@@ -25,7 +25,7 @@ func TokenStoreInit() {
 	s.Map = make(map[string]*TokenStoreItem)
 	s.ExpirationSeconds = 2 * 60 * 60
 	go func() {
-		users, err := model.GetAllUsers()
+		users, err := model.GetAllUsersWithSecrets()
 		if err != nil {
 			common.FatalLog(err.Error())
 		}
@@ -93,5 +93,10 @@ func TokenStoreRemoveItem(item *TokenStoreItem) {
 func TokenStoreGetToken(key string) string {
 	s.Mutex.RLock()
 	defer s.Mutex.RUnlock()
-	return (*s.Map[key]).Token()
+	item, ok := s.Map[key]
+	if ok {
+		return (*item).Token()
+	}
+	common.SysError("token for " + key + " is blank!")
+	return ""
 }

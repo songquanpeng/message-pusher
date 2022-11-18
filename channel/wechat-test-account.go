@@ -1,9 +1,12 @@
 package channel
 
 import (
+	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"message-pusher/common"
+	"message-pusher/model"
 	"net/http"
 	"time"
 )
@@ -58,4 +61,53 @@ func (i *WeChatTestAccountTokenStoreItem) Refresh() {
 	}
 	i.AccessToken = res.AccessToken
 	common.SysLog("access token refreshed")
+}
+
+type wechatTestMessageRequest struct {
+	ToUser     string `json:"touser"`
+	TemplateId string `json:"template_id"`
+	URL        string `json:"url"`
+	Data       struct {
+		Text struct {
+			Value string `json:"value"`
+		} `json:"text"`
+	} `json:"data"`
+}
+
+type wechatTestMessageResponse struct {
+	ErrorCode    int    `json:"errcode"`
+	ErrorMessage string `json:"errmsg"`
+}
+
+func SendWeChatTestMessage(message *Message, user *model.User) error {
+	if user.WeChatTestAccountId == "" {
+		return errors.New("未配置微信测试号消息推送方式")
+	}
+	values := wechatTestMessageRequest{
+		ToUser:     user.WeChatTestAccountOpenId,
+		TemplateId: user.WeChatTestAccountTemplateId,
+		URL:        "",
+	}
+	// TODO: render content and set URL
+	values.Data.Text.Value = message.Description
+	jsonData, err := json.Marshal(values)
+	if err != nil {
+		return err
+	}
+	key := fmt.Sprintf("%s%s", user.WeChatTestAccountId, user.WeChatTestAccountSecret)
+	accessToken := TokenStoreGetToken(key)
+	resp, err := http.Post(fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s", accessToken), "application/json",
+		bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+	var res wechatTestMessageResponse
+	err = json.NewDecoder(resp.Body).Decode(&res)
+	if err != nil {
+		return err
+	}
+	if res.ErrorCode != 0 {
+		return errors.New(res.ErrorMessage)
+	}
+	return nil
 }

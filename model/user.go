@@ -40,6 +40,11 @@ func GetAllUsers() (users []*User, err error) {
 	return users, err
 }
 
+func GetAllUsersWithSecrets() (users []*User, err error) {
+	err = DB.Find(&users).Error
+	return users, err
+}
+
 func SearchUsers(keyword string) (users []*User, err error) {
 	err = DB.Select([]string{"id", "username", "display_name", "role", "status", "email"}).Where("id = ? or username LIKE ? or email LIKE ? or display_name LIKE ?", keyword, keyword+"%", keyword+"%", keyword+"%").Find(&users).Error
 	return users, err

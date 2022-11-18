@@ -28,6 +28,7 @@ func (message *Message) Send(user *model.User) error {
 	case TypeEmail:
 		return SendEmailMessage(message, user)
 	case TypeWeChatTestAccount:
+		return SendWeChatTestMessage(message, user)
 	case TypeWeChatCorpAccount:
 	case TypeLark:
 	case TypeDingTalk:
