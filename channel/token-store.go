@@ -48,8 +48,9 @@ func TokenStoreInit() {
 			}
 		}
 		s.Mutex.RLock()
-		for _, item := range items {
-			s.Map[item.Key()] = &item
+		for i := range items {
+			// s.Map[item.Key()] = &item  // This is wrong, you are getting the address of a local variable!
+			s.Map[items[i].Key()] = &items[i]
 		}
 		s.Mutex.RUnlock()
 		for {

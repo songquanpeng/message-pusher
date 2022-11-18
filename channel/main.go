@@ -30,6 +30,7 @@ func (message *Message) Send(user *model.User) error {
 	case TypeWeChatTestAccount:
 		return SendWeChatTestMessage(message, user)
 	case TypeWeChatCorpAccount:
+		return SendWeChatCorpMessage(message, user)
 	case TypeLark:
 	case TypeDingTalk:
 	case TypeTelegram:
