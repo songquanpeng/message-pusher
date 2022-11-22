@@ -1,8 +1,6 @@
 package common
 
-import (
-	"gopkg.in/gomail.v2"
-)
+import "gopkg.in/gomail.v2"
 
 func SendEmail(subject string, receiver string, content string) error {
 	m := gomail.NewMessage()

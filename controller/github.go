@@ -107,16 +107,24 @@ func GitHubOAuth(c *gin.Context) {
 	if model.IsGitHubIdAlreadyTaken(user.GitHubId) {
 		user.FillUserByGitHubId()
 	} else {
-		user.Username = "github_" + strconv.Itoa(model.GetMaxUserId()+1)
-		user.DisplayName = githubUser.Name
-		user.Email = githubUser.Email
-		user.Role = common.RoleCommonUser
-		user.Status = common.UserStatusEnabled
+		if common.RegisterEnabled {
+			user.Username = "github_" + strconv.Itoa(model.GetMaxUserId()+1)
+			user.DisplayName = githubUser.Name
+			user.Email = githubUser.Email
+			user.Role = common.RoleCommonUser
+			user.Status = common.UserStatusEnabled
 
-		if err := user.Insert(); err != nil {
+			if err := user.Insert(); err != nil {
+				c.JSON(http.StatusOK, gin.H{
+					"success": false,
+					"message": err.Error(),
+				})
+				return
+			}
+		} else {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,
-				"message": err.Error(),
+				"message": "管理员关闭了新用户注册",
 			})
 			return
 		}

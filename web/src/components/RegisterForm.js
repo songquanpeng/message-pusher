@@ -10,6 +10,7 @@ import {
 } from 'semantic-ui-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { API, showError, showInfo, showSuccess } from '../helpers';
+import Turnstile from 'react-turnstile';
 
 const RegisterForm = () => {
   const [inputs, setInputs] = useState({
@@ -20,14 +21,21 @@ const RegisterForm = () => {
     verification_code: '',
   });
   const { username, password, password2 } = inputs;
-
   const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [turnstileEnabled, setTurnstileEnabled] = useState(false);
+  const [turnstileSiteKey, setTurnstileSiteKey] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let status = localStorage.getItem('status');
     if (status) {
       status = JSON.parse(status);
       setShowEmailVerification(status.email_verification);
+      if (status.turnstile_check) {
+        setTurnstileEnabled(true);
+        setTurnstileSiteKey(status.turnstile_site_key);
+      }
     }
   });
 
@@ -49,7 +57,15 @@ const RegisterForm = () => {
       return;
     }
     if (username && password) {
-      const res = await API.post('/api/user/register', inputs);
+      if (turnstileEnabled && turnstileToken === '') {
+        showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
+        return;
+      }
+      setLoading(true);
+      const res = await API.post(
+        `/api/user/register?turnstile=${turnstileToken}`,
+        inputs
+      );
       const { success, message } = res.data;
       if (success) {
         navigate('/login');
@@ -57,18 +73,27 @@ const RegisterForm = () => {
       } else {
         showError(message);
       }
+      setLoading(false);
     }
   }
 
   const sendVerificationCode = async () => {
     if (inputs.email === '') return;
-    const res = await API.get(`/api/verification?email=${inputs.email}`);
+    if (turnstileEnabled && turnstileToken === '') {
+      showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
+      return;
+    }
+    setLoading(true);
+    const res = await API.get(
+      `/api/verification?email=${inputs.email}&turnstile=${turnstileToken}`
+    );
     const { success, message } = res.data;
     if (success) {
       showSuccess('验证码发送成功，请检查你的邮箱！');
     } else {
       showError(message);
     }
+    setLoading(false);
   };
 
   return (
@@ -116,7 +141,9 @@ const RegisterForm = () => {
                   name='email'
                   type='email'
                   action={
-                    <Button onClick={sendVerificationCode}>获取验证码</Button>
+                    <Button onClick={sendVerificationCode} disabled={loading}>
+                      获取验证码
+                    </Button>
                   }
                 />
                 <Form.Input
@@ -131,7 +158,23 @@ const RegisterForm = () => {
             ) : (
               <></>
             )}
-            <Button color='teal' fluid size='large' onClick={handleSubmit}>
+            {turnstileEnabled ? (
+              <Turnstile
+                sitekey={turnstileSiteKey}
+                onVerify={(token) => {
+                  setTurnstileToken(token);
+                }}
+              />
+            ) : (
+              <></>
+            )}
+            <Button
+              color='telegram'
+              fluid
+              size='large'
+              onClick={handleSubmit}
+              loading={loading}
+            >
               注册
             </Button>
           </Segment>

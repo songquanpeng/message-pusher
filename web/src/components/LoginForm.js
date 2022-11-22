@@ -114,7 +114,7 @@ const LoginForm = () => {
               value={password}
               onChange={handleChange}
             />
-            <Button color='teal' fluid size='large' onClick={handleSubmit}>
+            <Button color='telegram' fluid size='large' onClick={handleSubmit}>
               登录
             </Button>
           </Segment>
@@ -179,7 +179,7 @@ const LoginForm = () => {
                   onChange={handleChange}
                 />
                 <Button
-                  color='teal'
+                  color='telegram'
                   fluid
                   size='large'
                   onClick={onSubmitWeChatVerificationCode}

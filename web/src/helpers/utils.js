@@ -85,3 +85,7 @@ export function showInfo(message) {
 export function showNotice(message) {
   toast.info(message, showNoticeOptions);
 }
+
+export function openPage(url) {
+  window.open(url);
+}

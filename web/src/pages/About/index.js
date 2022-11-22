@@ -26,18 +26,20 @@ const About = () => {
   return (
     <>
       <Segment>
-        {
-          about === '' ? <>
+        {about === '' ? (
+          <>
             <Header as='h3'>关于</Header>
             <p>可在设置页面设置关于内容，支持 HTML & Markdown</p>
             项目仓库地址：
-            <a href="https://github.com/songquanpeng/message-pusher">
+            <a href='https://github.com/songquanpeng/message-pusher'>
               https://github.com/songquanpeng/message-pusher
             </a>
-          </> : <>
-            <div dangerouslySetInnerHTML={{ __html: about}}></div>
           </>
-        }
+        ) : (
+          <>
+            <div dangerouslySetInnerHTML={{ __html: about }}></div>
+          </>
+        )}
       </Segment>
     </>
   );

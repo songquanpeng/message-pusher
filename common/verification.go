@@ -60,7 +60,7 @@ func DeleteKey(key string, purpose string) {
 	delete(verificationMap, purpose+key)
 }
 
-// no lock inside!
+// no lock inside, so the caller must lock the verificationMap before calling!
 func removeExpiredPairs() {
 	now := time.Now()
 	for key := range verificationMap {

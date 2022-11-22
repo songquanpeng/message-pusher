@@ -100,9 +100,16 @@ func Logout(c *gin.Context) {
 }
 
 func Register(c *gin.Context) {
-	if !common.PasswordRegisterEnabled {
+	if !common.RegisterEnabled {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "管理员关闭了新用户注册",
+			"success": false,
+		})
+		return
+	}
+	if !common.PasswordRegisterEnabled {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "管理员关闭了通过密码进行注册，请使用第三方账户验证的形式进行注册",
 			"success": false,
 		})
 		return
@@ -134,7 +141,7 @@ func Register(c *gin.Context) {
 		if !common.VerifyCodeWithKey(user.Email, user.VerificationCode, common.EmailVerificationPurpose) {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,
-				"message": "验证码错误！",
+				"message": "验证码错误或已过期",
 			})
 			return
 		}
@@ -154,7 +161,6 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
@@ -163,7 +169,11 @@ func Register(c *gin.Context) {
 }
 
 func GetAllUsers(c *gin.Context) {
-	users, err := model.GetAllUsers()
+	p, _ := strconv.Atoi(c.Query("p"))
+	if p < 0 {
+		p = 0
+	}
+	users, err := model.GetAllUsers(p*common.ItemsPerPage, common.ItemsPerPage)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -372,10 +382,6 @@ func UpdateSelf(c *gin.Context) {
 		Username:    user.Username,
 		Password:    user.Password,
 		DisplayName: user.DisplayName,
-		Token:       user.Token,
-	}
-	if cleanUser.Token == "" {
-		cleanUser.Token = " " // this is because gorm will ignore zero value
 	}
 	if user.Password == "$I_LOVE_U" {
 		user.Password = "" // rollback to what it should be
@@ -449,7 +455,6 @@ func DeleteSelf(c *gin.Context) {
 	return
 }
 
-// CreateUser Only admin user can call this, so we can trust it
 func CreateUser(c *gin.Context) {
 	var user model.User
 	err := json.NewDecoder(c.Request.Body).Decode(&user)
@@ -471,8 +476,13 @@ func CreateUser(c *gin.Context) {
 		})
 		return
 	}
-
-	if err := user.Insert(); err != nil {
+	// Even for admin users, we cannot fully trust them!
+	cleanUser := model.User{
+		Username:    user.Username,
+		Password:    user.Password,
+		DisplayName: user.DisplayName,
+	}
+	if err := cleanUser.Insert(); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": err.Error(),
@@ -557,10 +567,14 @@ func ManageUser(c *gin.Context) {
 		})
 		return
 	}
-
+	clearUser := model.User{
+		Role:   user.Role,
+		Status: user.Status,
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
+		"data":    clearUser,
 	})
 	return
 }
@@ -571,7 +585,7 @@ func EmailBind(c *gin.Context) {
 	if !common.VerifyCodeWithKey(email, code, common.EmailVerificationPurpose) {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
-			"message": "验证码错误！",
+			"message": "验证码错误或已过期",
 		})
 		return
 	}

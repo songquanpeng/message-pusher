@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Grid, Modal } from 'semantic-ui-react';
+import { Button, Divider, Form, Grid, Header, Modal } from 'semantic-ui-react';
 import { API, showError, showSuccess } from '../helpers';
 import { marked } from 'marked';
 
@@ -7,7 +7,7 @@ const OtherSetting = () => {
   let [inputs, setInputs] = useState({
     Footer: '',
     Notice: '',
-    About: ''
+    About: '',
   });
   let originInputs = {};
   let [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ const OtherSetting = () => {
     setLoading(true);
     const res = await API.put('/api/option', {
       key,
-      value
+      value,
     });
     const { success, message } = res.data;
     if (success) {
@@ -76,7 +76,7 @@ const OtherSetting = () => {
 
   const checkUpdate = async () => {
     const res = await API.get(
-      'https://api.github.com/repos/songquanpeng/message-pusher/releases/latest'
+      'https://api.github.com/repos/songquanpeng/gin-template/releases/latest'
     );
     const { tag_name, body } = res.data;
     if (tag_name === process.env.REACT_APP_VERSION) {
@@ -94,6 +94,7 @@ const OtherSetting = () => {
     <Grid columns={1}>
       <Grid.Column>
         <Form loading={loading}>
+          <Header as='h3'>通用设置</Header>
           <Form.Button onClick={checkUpdate}>检查更新</Form.Button>
           <Form.Group widths='equal'>
             <Form.TextArea
@@ -106,6 +107,8 @@ const OtherSetting = () => {
             />
           </Form.Group>
           <Form.Button onClick={submitNotice}>保存公告</Form.Button>
+          <Divider />
+          <Header as='h3'>个性化设置</Header>
           <Form.Group widths='equal'>
             <Form.TextArea
               label='关于'
@@ -126,9 +129,7 @@ const OtherSetting = () => {
               onChange={handleInputChange}
             />
           </Form.Group>
-          <Form.Button onClick={submitFooter}>
-            设置页脚
-          </Form.Button>
+          <Form.Button onClick={submitFooter}>设置页脚</Form.Button>
         </Form>
       </Grid.Column>
       <Modal
@@ -139,15 +140,13 @@ const OtherSetting = () => {
         <Modal.Header>新版本：{updateData.tag_name}</Modal.Header>
         <Modal.Content>
           <Modal.Description>
-            <div
-              dangerouslySetInnerHTML={{ __html: updateData.content }}
-            ></div>
+            <div dangerouslySetInnerHTML={{ __html: updateData.content }}></div>
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
           <Button onClick={() => setShowUpdateModal(false)}>关闭</Button>
           <Button
-            content="详情"
+            content='详情'
             onClick={() => {
               setShowUpdateModal(false);
               openGitHubRelease();

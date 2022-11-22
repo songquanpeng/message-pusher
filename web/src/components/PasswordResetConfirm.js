@@ -33,7 +33,7 @@ const PasswordResetConfirm = () => {
     if (success) {
       let password = res.data.data;
       await copy(password);
-      showSuccess(`密码已重置并已复制到剪切板：${password}`);
+      showSuccess(`密码已重置并已复制到剪贴板：${password}`);
     } else {
       showError(message);
     }
@@ -58,7 +58,7 @@ const PasswordResetConfirm = () => {
               readOnly
             />
             <Button
-              color='teal'
+              color='telegram'
               fluid
               size='large'
               onClick={handleSubmit}

@@ -52,6 +52,12 @@ func UpdateOption(c *gin.Context) {
 			"message": "无法启用微信登录，请先填入微信登录相关配置信息！",
 		})
 		return
+	} else if option.Key == "TurnstileCheckEnabled" && option.Value == "true" && common.TurnstileSiteKey == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "无法启用 Turnstile 校验，请先填入 Turnstile 校验相关配置信息！",
+		})
+		return
 	}
 	err = model.UpdateOption(option.Key, option.Value)
 	if err != nil {

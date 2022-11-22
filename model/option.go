@@ -31,6 +31,8 @@ func InitOptionMap() {
 	common.OptionMap["EmailVerificationEnabled"] = strconv.FormatBool(common.EmailVerificationEnabled)
 	common.OptionMap["GitHubOAuthEnabled"] = strconv.FormatBool(common.GitHubOAuthEnabled)
 	common.OptionMap["WeChatAuthEnabled"] = strconv.FormatBool(common.WeChatAuthEnabled)
+	common.OptionMap["TurnstileCheckEnabled"] = strconv.FormatBool(common.TurnstileCheckEnabled)
+	common.OptionMap["RegisterEnabled"] = strconv.FormatBool(common.RegisterEnabled)
 	common.OptionMap["SMTPServer"] = ""
 	common.OptionMap["SMTPAccount"] = ""
 	common.OptionMap["SMTPToken"] = ""
@@ -43,6 +45,8 @@ func InitOptionMap() {
 	common.OptionMap["WeChatServerAddress"] = ""
 	common.OptionMap["WeChatServerToken"] = ""
 	common.OptionMap["WeChatAccountQRCodeImageURL"] = ""
+	common.OptionMap["TurnstileSiteKey"] = ""
+	common.OptionMap["TurnstileSecretKey"] = ""
 	common.OptionMapRWMutex.Unlock()
 	options, _ := AllOption()
 	for _, option := range options {
@@ -87,16 +91,26 @@ func updateOptionMap(key string, value string) {
 			common.ImageDownloadPermission = intValue
 		}
 	}
-	boolValue := value == "true"
+	if strings.HasSuffix(key, "Enabled") {
+		boolValue := value == "true"
+		switch key {
+		case "PasswordRegisterEnabled":
+			common.PasswordRegisterEnabled = boolValue
+		case "PasswordLoginEnabled":
+			common.PasswordLoginEnabled = boolValue
+		case "EmailVerificationEnabled":
+			common.EmailVerificationEnabled = boolValue
+		case "GitHubOAuthEnabled":
+			common.GitHubOAuthEnabled = boolValue
+		case "WeChatAuthEnabled":
+			common.WeChatAuthEnabled = boolValue
+		case "TurnstileCheckEnabled":
+			common.TurnstileCheckEnabled = boolValue
+		case "RegisterEnabled":
+			common.RegisterEnabled = boolValue
+		}
+	}
 	switch key {
-	case "PasswordRegisterEnabled":
-		common.PasswordRegisterEnabled = boolValue
-	case "PasswordLoginEnabled":
-		common.PasswordLoginEnabled = boolValue
-	case "EmailVerificationEnabled":
-		common.EmailVerificationEnabled = boolValue
-	case "GitHubOAuthEnabled":
-		common.GitHubOAuthEnabled = boolValue
 	case "SMTPServer":
 		common.SMTPServer = value
 	case "SMTPAccount":
@@ -117,7 +131,9 @@ func updateOptionMap(key string, value string) {
 		common.WeChatServerToken = value
 	case "WeChatAccountQRCodeImageURL":
 		common.WeChatAccountQRCodeImageURL = value
-	case "WeChatAuthEnabled":
-		common.WeChatAuthEnabled = boolValue
+	case "TurnstileSiteKey":
+		common.TurnstileSiteKey = value
+	case "TurnstileSecretKey":
+		common.TurnstileSecretKey = value
 	}
 }

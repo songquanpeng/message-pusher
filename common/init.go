@@ -12,9 +12,9 @@ var (
 	Port         = flag.Int("port", 3000, "the listening port")
 	PrintVersion = flag.Bool("version", false, "print version and exit")
 	LogDir       = flag.String("log-dir", "", "specify the log directory")
-	//Host         = flag.Key("host", "localhost", "the server's ip address or domain")
-	//Path         = flag.Key("path", "", "specify a local path to public")
-	//VideoPath    = flag.Key("video", "", "specify a video folder to public")
+	//Host         = flag.String("host", "localhost", "the server's ip address or domain")
+	//Path         = flag.String("path", "", "specify a local path to public")
+	//VideoPath    = flag.String("video", "", "specify a video folder to public")
 	//NoBrowser    = flag.Bool("no-browser", false, "open browser or not")
 )
 

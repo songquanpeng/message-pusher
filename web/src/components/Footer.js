@@ -12,27 +12,27 @@ const Footer = () => {
 
   return (
     <Segment vertical>
-      <Container textAlign="center">
+      <Container textAlign='center'>
         {Footer === '' ? (
-          <div className="custom-footer">
+          <div className='custom-footer'>
             <a
-              href="https://github.com/songquanpeng/message-pusher"
-              target="_blank"
+              href='https://github.com/songquanpeng/message-pusher'
+              target='_blank'
             >
               消息推送服务 {process.env.REACT_APP_VERSION}{' '}
             </a>
             由{' '}
-            <a href="https://github.com/songquanpeng" target="_blank">
+            <a href='https://github.com/songquanpeng' target='_blank'>
               JustSong
             </a>{' '}
             构建，源代码遵循{' '}
-            <a href="https://opensource.org/licenses/mit-license.php">
+            <a href='https://opensource.org/licenses/mit-license.php'>
               MIT 协议
             </a>
           </div>
         ) : (
           <div
-            className="custom-footer"
+            className='custom-footer'
             dangerouslySetInnerHTML={{ __html: Footer }}
           ></div>
         )}

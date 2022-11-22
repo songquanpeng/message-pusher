@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Grid, Header, Image, Segment } from 'semantic-ui-react';
-import { API, showError, showSuccess } from '../helpers';
+import { API, showError, showInfo, showSuccess } from '../helpers';
+import Turnstile from 'react-turnstile';
 
 const PasswordResetForm = () => {
   const [inputs, setInputs] = useState({
@@ -9,6 +10,20 @@ const PasswordResetForm = () => {
   const { email } = inputs;
 
   const [loading, setLoading] = useState(false);
+  const [turnstileEnabled, setTurnstileEnabled] = useState(false);
+  const [turnstileSiteKey, setTurnstileSiteKey] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+
+  useEffect(() => {
+    let status = localStorage.getItem('status');
+    if (status) {
+      status = JSON.parse(status);
+      if (status.turnstile_check) {
+        setTurnstileEnabled(true);
+        setTurnstileSiteKey(status.turnstile_site_key);
+      }
+    }
+  }, []);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -17,8 +32,14 @@ const PasswordResetForm = () => {
 
   async function handleSubmit(e) {
     if (!email) return;
+    if (turnstileEnabled && turnstileToken === '') {
+      showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
+      return;
+    }
     setLoading(true);
-    const res = await API.get(`/api/reset_password?email=${email}`);
+    const res = await API.get(
+      `/api/reset_password?email=${email}&turnstile=${turnstileToken}`
+    );
     const { success, message } = res.data;
     if (success) {
       showSuccess('重置邮件发送成功，请检查邮箱！');
@@ -46,8 +67,18 @@ const PasswordResetForm = () => {
               value={email}
               onChange={handleChange}
             />
+            {turnstileEnabled ? (
+              <Turnstile
+                sitekey={turnstileSiteKey}
+                onVerify={(token) => {
+                  setTurnstileToken(token);
+                }}
+              />
+            ) : (
+              <></>
+            )}
             <Button
-              color='teal'
+              color='telegram'
               fluid
               size='large'
               onClick={handleSubmit}

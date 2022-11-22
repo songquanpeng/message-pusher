@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-contrib/sessions/redis"
@@ -54,6 +55,7 @@ func main() {
 
 	// Initialize HTTP server
 	server := gin.Default()
+	server.Use(gzip.Gzip(gzip.DefaultCompression))
 	server.Use(middleware.CORS())
 
 	// Initialize session store
@@ -71,16 +73,6 @@ func main() {
 	if port == "" {
 		port = strconv.Itoa(*common.Port)
 	}
-	//if *common.Host == "localhost" {
-	//	ip := common.GetIp()
-	//	if ip != "" {
-	//		*common.Host = ip
-	//	}
-	//}
-	//serverUrl := "http://" + *common.Host + ":" + port + "/"
-	//if !*common.NoBrowser {
-	//	common.OpenBrowser(serverUrl)
-	//}
 	err = server.Run(":" + port)
 	if err != nil {
 		log.Println(err)

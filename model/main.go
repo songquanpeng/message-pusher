@@ -14,6 +14,7 @@ func createRootAccountIfNeed() error {
 	var user User
 	//if user.Status != common.UserStatusEnabled {
 	if err := DB.First(&user).Error; err != nil {
+		common.SysLog("no user exists, create a root user for you: username is root, password is 123456")
 		hashedPassword, err := common.Password2Hash("123456")
 		if err != nil {
 			return err
@@ -51,11 +52,7 @@ func InitDB() (err error) {
 	}
 	if err == nil {
 		DB = db
-		err := db.AutoMigrate(&File{})
-		if err != nil {
-			return err
-		}
-		err = db.AutoMigrate(&User{})
+		err := db.AutoMigrate(&User{})
 		if err != nil {
 			return err
 		}

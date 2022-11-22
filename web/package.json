@@ -11,6 +11,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.0.8",
+    "react-turnstile": "^1.0.5",
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.3"
   },

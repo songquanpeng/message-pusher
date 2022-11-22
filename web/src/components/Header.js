@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/User';
 
-import { Button, Container, Icon, Menu, Segment } from 'semantic-ui-react';
+import { Button, Container, Dropdown, Icon, Menu, Segment } from 'semantic-ui-react';
 import { API, isAdmin, isMobile, showSuccess } from '../helpers';
 import '../index.css';
 
@@ -34,7 +34,6 @@ const headerButtons = [
 const Header = () => {
   const [userState, userDispatch] = useContext(UserContext);
   let navigate = useNavigate();
-  let size = isMobile() ? 'large' : '';
 
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -80,7 +79,7 @@ const Header = () => {
       <>
         <Menu
           borderless
-          size={size}
+          size='large'
           style={
             showSidebar
               ? {
@@ -93,17 +92,17 @@ const Header = () => {
           }
         >
           <Container>
-            <Menu.Item as={Link} to="/">
+            <Menu.Item as={Link} to='/'>
               <img
-                src="/logo.png"
-                alt="logo"
+                src='/logo.png'
+                alt='logo'
                 style={{ marginRight: '0.75em' }}
               />
               <div style={{ fontSize: '20px' }}>
                 <b>消息推送服务</b>
               </div>
             </Menu.Item>
-            <Menu.Menu position="right">
+            <Menu.Menu position='right'>
               <Menu.Item onClick={toggleSidebar}>
                 <Icon name={showSidebar ? 'close' : 'sidebar'} />
               </Menu.Item>
@@ -149,28 +148,32 @@ const Header = () => {
 
   return (
     <>
-      <Menu borderless size={size} style={{ borderTop: 'none' }}>
+      <Menu borderless style={{ borderTop: 'none' }}>
         <Container>
-          <Menu.Item as={Link} to="/" className={'hide-on-mobile'}>
-            <img src="/logo.png" alt="logo" style={{ marginRight: '0.75em' }} />
+          <Menu.Item as={Link} to='/' className={'hide-on-mobile'}>
+            <img src='/logo.png' alt='logo' style={{ marginRight: '0.75em' }} />
             <div style={{ fontSize: '20px' }}>
               <b>消息推送服务</b>
             </div>
           </Menu.Item>
           {renderButtons(false)}
-          <Menu.Menu position="right">
+          <Menu.Menu position='right'>
             {userState.user ? (
-              <Menu.Item
-                name="注销"
-                onClick={logout}
-                className="btn btn-link"
-              />
+              <Dropdown
+                text={userState.user.username}
+                pointing
+                className='link item'
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={logout}>注销</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             ) : (
               <Menu.Item
-                name="登录"
+                name='登录'
                 as={Link}
-                to="/login"
-                className="btn btn-link"
+                to='/login'
+                className='btn btn-link'
               />
             )}
           </Menu.Menu>

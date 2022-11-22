@@ -3,8 +3,11 @@ package model
 import (
 	"errors"
 	"message-pusher/common"
+	"strings"
 )
 
+// User if you add sensitive fields, don't forget to clean them in setupLogin function.
+// Otherwise, the sensitive information will be saved on local storage in plain text!
 type User struct {
 	Id                                 int    `json:"id"`
 	Username                           string `json:"username" gorm:"unique;index" validate:"max=12"`
@@ -12,12 +15,12 @@ type User struct {
 	DisplayName                        string `json:"display_name" gorm:"index" validate:"max=20"`
 	Role                               int    `json:"role" gorm:"type:int;default:1"`   // admin, common
 	Status                             int    `json:"status" gorm:"type:int;default:1"` // enabled, disabled
-	Token                              string `json:"token"`
+	Token                              string `json:"token" gorm:"index"`
 	Email                              string `json:"email" gorm:"index" validate:"max=50"`
 	GitHubId                           string `json:"github_id" gorm:"column:github_id;index"`
 	WeChatId                           string `json:"wechat_id" gorm:"column:wechat_id;index"`
+	VerificationCode                   string `json:"verification_code" gorm:"-:all"` // this field is only for Email verification, don't save it to database!
 	Channel                            string `json:"channel"`
-	VerificationCode                   string `json:"verification_code" gorm:"-:all"`
 	WeChatTestAccountId                string `json:"wechat_test_account_id" gorm:"column:wechat_test_account_id"`
 	WeChatTestAccountSecret            string `json:"wechat_test_account_secret" gorm:"column:wechat_test_account_secret"`
 	WeChatTestAccountTemplateId        string `json:"wechat_test_account_template_id" gorm:"column:wechat_test_account_template_id"`
@@ -40,8 +43,8 @@ func GetMaxUserId() int {
 	return user.Id
 }
 
-func GetAllUsers() (users []*User, err error) {
-	err = DB.Select([]string{"id", "username", "display_name", "role", "status", "email"}).Find(&users).Error
+func GetAllUsers(startIdx int, num int) (users []*User, err error) {
+	err = DB.Order("id desc").Limit(num).Offset(startIdx).Select([]string{"id", "username", "display_name", "role", "status", "email"}).Find(&users).Error
 	return users, err
 }
 
@@ -61,7 +64,7 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 	if selectAll {
 		err = DB.First(&user, "id = ?", id).Error
 	} else {
-		err = DB.Select([]string{"id", "username", "display_name", "role", "status", "email", "wechat_id", "github_id", "token"}).First(&user, "id = ?", id).Error
+		err = DB.Select([]string{"id", "username", "display_name", "role", "status", "email", "wechat_id", "github_id"}).First(&user, "id = ?", id).Error
 	}
 	return &user, err
 }
@@ -108,10 +111,13 @@ func (user *User) ValidateAndFill() (err error) {
 	// that means if your field’s value is 0, '', false or other zero values,
 	// it won’t be used to build query conditions
 	password := user.Password
+	if password == "" {
+		return errors.New("密码为空")
+	}
 	DB.Where(User{Username: user.Username}).First(user)
 	okay := common.ValidatePasswordAndHash(password, user.Password)
 	if !okay || user.Status != common.UserStatusEnabled {
-		return errors.New("用户名或密码错误，或者该用户已被封禁")
+		return errors.New("用户名或密码错误，或用户已被封禁")
 	}
 	return nil
 }
@@ -134,6 +140,18 @@ func (user *User) FillUserByWeChatId() {
 
 func (user *User) FillUserByUsername() {
 	DB.Where(User{Username: user.Username}).First(user)
+}
+
+func ValidateUserToken(token string) (user *User) {
+	if token == "" {
+		return nil
+	}
+	token = strings.Replace(token, "Bearer ", "", 1)
+	user = &User{}
+	if DB.Where("token = ?", token).First(user).RowsAffected == 1 {
+		return user
+	}
+	return nil
 }
 
 func IsEmailAlreadyTaken(email string) bool {

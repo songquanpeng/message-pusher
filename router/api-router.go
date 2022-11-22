@@ -13,8 +13,8 @@ func SetApiRouter(router *gin.Engine) {
 		apiRouter.GET("/status", controller.GetStatus)
 		apiRouter.GET("/notice", controller.GetNotice)
 		apiRouter.GET("/about", controller.GetAbout)
-		apiRouter.GET("/verification", middleware.CriticalRateLimit(), controller.SendEmailVerification)
-		apiRouter.GET("/reset_password", middleware.CriticalRateLimit(), controller.SendPasswordResetEmail)
+		apiRouter.GET("/verification", middleware.CriticalRateLimit(), middleware.TurnstileCheck(), controller.SendEmailVerification)
+		apiRouter.GET("/reset_password", middleware.CriticalRateLimit(), middleware.TurnstileCheck(), controller.SendPasswordResetEmail)
 		apiRouter.POST("/user/reset", middleware.CriticalRateLimit(), controller.ResetPassword)
 		apiRouter.GET("/oauth/github", middleware.CriticalRateLimit(), controller.GitHubOAuth)
 		apiRouter.GET("/oauth/wechat", middleware.CriticalRateLimit(), controller.WeChatAuth)
@@ -23,12 +23,12 @@ func SetApiRouter(router *gin.Engine) {
 
 		userRoute := apiRouter.Group("/user")
 		{
-			userRoute.POST("/register", middleware.CriticalRateLimit(), controller.Register)
+			userRoute.POST("/register", middleware.CriticalRateLimit(), middleware.TurnstileCheck(), controller.Register)
 			userRoute.POST("/login", middleware.CriticalRateLimit(), controller.Login)
 			userRoute.GET("/logout", controller.Logout)
 
 			selfRoute := userRoute.Group("/")
-			selfRoute.Use(middleware.UserAuth())
+			selfRoute.Use(middleware.UserAuth(), middleware.NoTokenAuth())
 			{
 				selfRoute.GET("/self", controller.GetSelf)
 				selfRoute.PUT("/self", controller.UpdateSelf)
@@ -37,7 +37,7 @@ func SetApiRouter(router *gin.Engine) {
 			}
 
 			adminRoute := userRoute.Group("/")
-			adminRoute.Use(middleware.AdminAuth())
+			adminRoute.Use(middleware.AdminAuth(), middleware.NoTokenAuth())
 			{
 				adminRoute.GET("/", controller.GetAllUsers)
 				adminRoute.GET("/search", controller.SearchUsers)
@@ -49,16 +49,10 @@ func SetApiRouter(router *gin.Engine) {
 			}
 		}
 		optionRoute := apiRouter.Group("/option")
-		optionRoute.Use(middleware.RootAuth())
+		optionRoute.Use(middleware.RootAuth(), middleware.NoTokenAuth())
 		{
 			optionRoute.GET("/", controller.GetOptions)
 			optionRoute.PUT("/", controller.UpdateOption)
-		}
-		fileRoute := apiRouter.Group("/file")
-		{
-			fileRoute.GET("/:id", middleware.DownloadRateLimit(), controller.DownloadFile)
-			fileRoute.POST("/", middleware.UserAuth(), middleware.UploadRateLimit(), controller.UploadFile)
-			fileRoute.DELETE("/:id", middleware.UserAuth(), controller.DeleteFile)
 		}
 	}
 	pushRouter := router.Group("/push")

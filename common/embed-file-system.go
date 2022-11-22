@@ -2,7 +2,7 @@ package common
 
 import (
 	"embed"
-	"github.com/gin-gonic/contrib/static"
+	"github.com/gin-contrib/static"
 	"io/fs"
 	"net/http"
 )

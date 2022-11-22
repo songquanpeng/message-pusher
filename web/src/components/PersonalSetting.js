@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Image, Modal } from 'semantic-ui-react';
+import { Button, Divider, Form, Header, Image, Modal } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { API, showError, showSuccess } from '../helpers';
+import { API, copy, showError, showInfo, showSuccess } from '../helpers';
+import Turnstile from 'react-turnstile';
 
 const PersonalSetting = () => {
   const [inputs, setInputs] = useState({
@@ -12,17 +13,36 @@ const PersonalSetting = () => {
   const [status, setStatus] = useState({});
   const [showWeChatBindModal, setShowWeChatBindModal] = useState(false);
   const [showEmailBindModal, setShowEmailBindModal] = useState(false);
+  const [turnstileEnabled, setTurnstileEnabled] = useState(false);
+  const [turnstileSiteKey, setTurnstileSiteKey] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let status = localStorage.getItem('status');
     if (status) {
       status = JSON.parse(status);
       setStatus(status);
+      if (status.turnstile_check) {
+        setTurnstileEnabled(true);
+        setTurnstileSiteKey(status.turnstile_site_key);
+      }
     }
   }, []);
 
   const handleInputChange = (e, { name, value }) => {
     setInputs((inputs) => ({ ...inputs, [name]: value }));
+  };
+
+  const generateToken = async () => {
+    const res = await API.get('/api/user/token');
+    const { success, message, data } = res.data;
+    if (success) {
+      await copy(data);
+      showSuccess(`令牌已重置并已复制到剪贴板：${data}`);
+    } else {
+      showError(message);
+    }
   };
 
   const bindWeChat = async () => {
@@ -47,17 +67,26 @@ const PersonalSetting = () => {
 
   const sendVerificationCode = async () => {
     if (inputs.email === '') return;
-    const res = await API.get(`/api/verification?email=${inputs.email}`);
+    if (turnstileEnabled && turnstileToken === '') {
+      showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
+      return;
+    }
+    setLoading(true);
+    const res = await API.get(
+      `/api/verification?email=${inputs.email}&turnstile=${turnstileToken}`
+    );
     const { success, message } = res.data;
     if (success) {
-      showSuccess('验证码发送成功，请检查你的邮箱！');
+      showSuccess('验证码发送成功，请检查邮箱！');
     } else {
       showError(message);
     }
+    setLoading(false);
   };
 
   const bindEmail = async () => {
     if (inputs.email_verification_code === '') return;
+    setLoading(true);
     const res = await API.get(
       `/api/oauth/email/bind?email=${inputs.email}&code=${inputs.email_verification_code}`
     );
@@ -68,13 +97,18 @@ const PersonalSetting = () => {
     } else {
       showError(message);
     }
+    setLoading(false);
   };
 
   return (
     <div style={{ lineHeight: '40px' }}>
+      <Header as='h3'>通用设置</Header>
       <Button as={Link} to={`/user/edit/`}>
         更新个人信息
       </Button>
+      <Button onClick={generateToken}>生成访问令牌</Button>
+      <Divider />
+      <Header as='h3'>账号绑定</Header>
       <Button
         onClick={() => {
           setShowWeChatBindModal(true);
@@ -104,7 +138,7 @@ const PersonalSetting = () => {
                 value={inputs.wechat_verification_code}
                 onChange={handleInputChange}
               />
-              <Button color='teal' fluid size='large' onClick={bindWeChat}>
+              <Button color='telegram' fluid size='large' onClick={bindWeChat}>
                 绑定
               </Button>
             </Form>
@@ -123,7 +157,8 @@ const PersonalSetting = () => {
         onClose={() => setShowEmailBindModal(false)}
         onOpen={() => setShowEmailBindModal(true)}
         open={showEmailBindModal}
-        size={'mini'}
+        size={'tiny'}
+        style={{ maxWidth: '450px' }}
       >
         <Modal.Header>绑定邮箱地址</Modal.Header>
         <Modal.Content>
@@ -136,7 +171,9 @@ const PersonalSetting = () => {
                 name='email'
                 type='email'
                 action={
-                  <Button onClick={sendVerificationCode}>获取验证码</Button>
+                  <Button onClick={sendVerificationCode} disabled={loading}>
+                    获取验证码
+                  </Button>
                 }
               />
               <Form.Input
@@ -146,7 +183,23 @@ const PersonalSetting = () => {
                 value={inputs.email_verification_code}
                 onChange={handleInputChange}
               />
-              <Button color='teal' fluid size='large' onClick={bindEmail}>
+              {turnstileEnabled ? (
+                <Turnstile
+                  sitekey={turnstileSiteKey}
+                  onVerify={(token) => {
+                    setTurnstileToken(token);
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+              <Button
+                color='telegram'
+                fluid
+                size='large'
+                onClick={bindEmail}
+                loading={loading}
+              >
                 绑定
               </Button>
             </Form>
