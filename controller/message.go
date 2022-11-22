@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"bytes"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"github.com/yuin/goldmark"
 	"message-pusher/channel"
 	"message-pusher/common"
 	"message-pusher/model"
@@ -78,15 +76,6 @@ func pushMessageHelper(c *gin.Context, message *channel.Message) {
 	}
 	if message.Title == "" {
 		message.Title = common.SystemName
-	}
-	if message.Content != "" {
-		var buf bytes.Buffer
-		err := goldmark.Convert([]byte(message.Content), &buf)
-		if err != nil {
-			common.SysLog(err.Error())
-		} else {
-			message.HTMLContent = buf.String()
-		}
 	}
 	if message.Channel == "" {
 		message.Channel = user.Channel
