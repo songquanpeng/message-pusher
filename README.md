@@ -39,26 +39,27 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 
 ## 描述
 1. 多种消息推送方式：
-  + 邮件消息，
-  + 微信测试号，
-  + 企业微信，
-  + 飞书群机器人，
-  + 钉钉群机器人，
-  + 桌面客户端（WIP）
-  + Bark（WIP）
+   + 邮件消息，
+   + 微信测试号，
+   + 企业微信，
+   + 飞书群机器人，
+   + 钉钉群机器人，
+   + 桌面客户端（WIP）
+   + Bark（WIP）
 2. 多种用户登录注册方式：
-  + 邮箱登录注册以及通过邮箱进行密码重置。
-  + [GitHub 开放授权](https://github.com/settings/applications/new)。
-  + 微信公众号授权（需要额外部署 [WeChat Server](https://github.com/songquanpeng/wechat-server)）。
+   + 邮箱登录注册以及通过邮箱进行密码重置。
+   + [GitHub 开放授权](https://github.com/settings/applications/new)。
+   + 微信公众号授权（需要额外部署 [WeChat Server](https://github.com/songquanpeng/wechat-server)）。
 3. 支持 Markdown。
 4. 支持用户管理。
 5. Cloudflare Turnstile 用户校验。
 6. 支持在线发布公告，设置关于界面以及页脚。
 
-## 用途举例
+## 用途
 1. [整合进自己的博客系统，每当有人登录时发微信消息提醒](https://github.com/songquanpeng/blog/blob/486d63e96ef7906a6c767653a20ec2d3278e9a4a/routes/user.js#L27)。
 2. 在进行深度学习模型训练时，在每个 epoch 结束后[将关键数据发送到微信](https://github.com/songquanpeng/pytorch-template/blob/b2ba113659056080d3009b3014a67e977e2851bf/solver/solver.py#L223)以方便及时监控。
-3. 在各种脚本运行结束后发消息提醒，例如[监控 Github Star 数量的脚本](https://github.com/songquanpeng/scripts/blob/main/star_watcher.py)，又例如[自动健康填报的脚本](https://github.com/songquanpeng/daily-report)，用来通知运行结果。
+3. 在各种脚本运行结束后发消息提醒，例如[监控 GitHub Star 数量的脚本](https://github.com/songquanpeng/scripts/blob/main/star_watcher.py)，又例如[自动健康填报的脚本](https://github.com/songquanpeng/daily-report)，用来通知运行结果。
+4. 为[其他系统](https://github.com/songquanpeng/personal-assistant#个人助理应用)提供消息推送功能。
 
 ## 部署
 1. 从 [GitHub Releases](https://github.com/songquanpeng/message-pusher/releases/latest) 下载可执行文件或者从源码编译：
@@ -73,6 +74,8 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
    ./message-pusher --port 3000 --log-dir ./logs
    ```
 3. 访问 [http://localhost:3000/](http://localhost:3000/) 并登录。初始账号用户名为 `root`，密码为 `123456`。
+
+如果服务需要长久运行，只是单纯地启动是不够的，[详细部署教程](https://iamazing.cn/page/how-to-deploy-a-website)。
 
 ## 配置
 系统本身仅需要下载一个可执行文件即可开始使用，无其他依赖。
