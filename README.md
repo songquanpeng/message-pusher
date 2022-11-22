@@ -20,7 +20,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
   <a href="https://github.com/songquanpeng/message-pusher/releases/latest">
     <img src="https://img.shields.io/github/downloads/songquanpeng/message-pusher/total?color=brightgreen&include_prereleases" alt="release">
   </a>
-  <a href="https://goreportcard.com/report/github.com/songquanpeng/go-file">
+  <a href="https://goreportcard.com/report/github.com/songquanpeng/message-pusher">
     <img src="https://goreportcard.com/badge/github.com/songquanpeng/message-pusher" alt="GoReportCard">
   </a>
 </p>
@@ -37,23 +37,28 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 
 > 注意：Message Pusher 原本基于 Node.js 开发，当前版本为 Golang 重构版本，目前处于预发布阶段，可能不太稳定，如果需要稳定版请使用[旧版本](https://github.com/songquanpeng/message-pusher/releases/tag/v0.2.3)。
 
-## 功能
+## 描述
 1. 多种消息推送方式：
-  + [x] 邮件消息
-  + [x] 微信测试号
-  + [x] 企业微信
-  + [x] 飞书群机器人
-  + [x] 钉钉群机器人
-  + [ ] 桌面客户端
-  + [ ] Bark
+  + 邮件消息，
+  + 微信测试号，
+  + 企业微信，
+  + 飞书群机器人，
+  + 钉钉群机器人，
+  + 桌面客户端（WIP）
+  + Bark（WIP）
 2. 多种用户登录注册方式：
-  + [x] 邮箱登录注册以及通过邮箱进行密码重置。
-  + [x] [GitHub 开放授权](https://github.com/settings/applications/new)。
-  + [x] 微信公众号授权（需要额外部署 [WeChat Server](https://github.com/songquanpeng/wechat-server)）。
+  + 邮箱登录注册以及通过邮箱进行密码重置。
+  + [GitHub 开放授权](https://github.com/settings/applications/new)。
+  + 微信公众号授权（需要额外部署 [WeChat Server](https://github.com/songquanpeng/wechat-server)）。
 3. 支持 Markdown。
 4. 支持用户管理。
 5. Cloudflare Turnstile 用户校验。
 6. 支持在线发布公告，设置关于界面以及页脚。
+
+## 用途举例
+1. [整合进自己的博客系统，每当有人登录时发微信消息提醒](https://github.com/songquanpeng/blog/blob/486d63e96ef7906a6c767653a20ec2d3278e9a4a/routes/user.js#L27)。
+2. 在进行深度学习模型训练时，在每个 epoch 结束后[将关键数据发送到微信](https://github.com/songquanpeng/pytorch-template/blob/b2ba113659056080d3009b3014a67e977e2851bf/solver/solver.py#L223)以方便及时监控。
+3. 在各种脚本运行结束后发消息提醒，例如[监控 Github Star 数量的脚本](https://github.com/songquanpeng/scripts/blob/main/star_watcher.py)，又例如[自动健康填报的脚本](https://github.com/songquanpeng/daily-report)，用来通知运行结果。
 
 ## 部署
 1. 从 [GitHub Releases](https://github.com/songquanpeng/message-pusher/releases/latest) 下载可执行文件或者从源码编译：
