@@ -73,6 +73,12 @@ type wechatCorpMessageRequest struct {
 		Description string `json:"description"`
 		URL         string `json:"url"`
 	} `json:"textcard"`
+	Text struct {
+		Content string `json:"content"`
+	} `json:"text"`
+	Markdown struct {
+		Content string `json:"content"`
+	} `json:"markdown"`
 }
 
 type wechatCorpMessageResponse struct {
@@ -84,16 +90,27 @@ func SendWeChatCorpMessage(message *Message, user *model.User) error {
 	if user.WeChatCorpAccountId == "" {
 		return errors.New("未配置微信企业号消息推送方式")
 	}
-	values := wechatCorpMessageRequest{
-		MessageType: "textcard",
-		ToUser:      user.WeChatCorpAccountUserId,
-		AgentId:     user.WeChatCorpAccountAgentId,
+	// https://developer.work.weixin.qq.com/document/path/90236
+	messageRequest := wechatCorpMessageRequest{
+		ToUser:  user.WeChatCorpAccountUserId,
+		AgentId: user.WeChatCorpAccountAgentId,
 	}
-	values.TextCard.Title = message.Title
-	values.TextCard.Description = message.Description
-	// TODO: render content and set URL
-	values.TextCard.URL = common.ServerAddress
-	jsonData, err := json.Marshal(values)
+	if message.Content == "" {
+		messageRequest.MessageType = "text"
+		messageRequest.Text.Content = message.Description
+	} else {
+		if user.WeChatCorpAccountClientType == "plugin" {
+			messageRequest.MessageType = "textcard"
+			messageRequest.TextCard.Title = message.Title
+			messageRequest.TextCard.Description = message.Description
+			// TODO: render content and set URL
+			messageRequest.TextCard.URL = common.ServerAddress
+		} else {
+			messageRequest.MessageType = "markdown"
+			messageRequest.Markdown.Content = message.Content
+		}
+	}
+	jsonData, err := json.Marshal(messageRequest)
 	if err != nil {
 		return err
 	}

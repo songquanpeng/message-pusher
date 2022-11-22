@@ -27,6 +27,7 @@ type User struct {
 	WeChatCorpAccountSecret            string `json:"wechat_corp_account_secret" gorm:"column:wechat_corp_account_secret"`
 	WeChatCorpAccountAgentId           string `json:"wechat_corp_account_agent_id" gorm:"column:wechat_corp_account_agent_id"`
 	WeChatCorpAccountUserId            string `json:"wechat_corp_account_user_id" gorm:"column:wechat_corp_account_user_id"`
+	WeChatCorpAccountClientType        string `json:"wechat_corp_account_client_type" gorm:"wechat_corp_account_client_type;default=plugin"`
 	LarkWebhookURL                     string `json:"lark_webhook_url"`
 	LarkWebhookSecret                  string `json:"lark_webhook_secret"`
 	DingWebhookURL                     string `json:"ding_webhook_url"`
