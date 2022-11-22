@@ -78,17 +78,86 @@ func TokenStoreInit() {
 	}()
 }
 
-func TokenStoreAddItem(item *TokenStoreItem) {
-	(*item).Refresh()
+func TokenStoreAddItem(item TokenStoreItem) {
+	item.Refresh()
 	s.Mutex.RLock()
-	s.Map[(*item).Key()] = item
+	s.Map[item.Key()] = &item
 	s.Mutex.RUnlock()
 }
 
-func TokenStoreRemoveItem(item *TokenStoreItem) {
+func TokenStoreRemoveItem(item TokenStoreItem) {
 	s.Mutex.RLock()
-	delete(s.Map, (*item).Key())
+	delete(s.Map, item.Key())
 	s.Mutex.RUnlock()
+}
+
+func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
+	// TODO: check if this token is shared!
+	if cleanUser.WeChatTestAccountId == originUser.WeChatTestAccountId {
+		cleanUser.WeChatTestAccountId = ""
+	}
+	if cleanUser.WeChatTestAccountSecret == originUser.WeChatTestAccountSecret {
+		cleanUser.WeChatTestAccountSecret = ""
+	}
+	if cleanUser.WeChatTestAccountId != "" || cleanUser.WeChatTestAccountSecret != "" {
+		oldWeChatTestAccountTokenStoreItem := WeChatTestAccountTokenStoreItem{
+			AppID:     originUser.WeChatTestAccountId,
+			AppSecret: originUser.WeChatTestAccountSecret,
+		}
+		newWeChatTestAccountTokenStoreItem := oldWeChatTestAccountTokenStoreItem
+		if cleanUser.WeChatTestAccountId != "" {
+			newWeChatTestAccountTokenStoreItem.AppID = cleanUser.WeChatTestAccountId
+		}
+		if cleanUser.WeChatTestAccountSecret != "" {
+			newWeChatTestAccountTokenStoreItem.AppSecret = cleanUser.WeChatTestAccountSecret
+		}
+		TokenStoreRemoveItem(&oldWeChatTestAccountTokenStoreItem)
+		TokenStoreAddItem(&newWeChatTestAccountTokenStoreItem)
+	}
+	if cleanUser.WeChatCorpAccountId == originUser.WeChatCorpAccountId {
+		cleanUser.WeChatCorpAccountId = ""
+	}
+	if cleanUser.WeChatCorpAccountAgentId == originUser.WeChatCorpAccountAgentId {
+		cleanUser.WeChatCorpAccountAgentId = ""
+	}
+	if cleanUser.WeChatCorpAccountSecret == originUser.WeChatCorpAccountSecret {
+		cleanUser.WeChatCorpAccountSecret = ""
+	}
+	if cleanUser.WeChatCorpAccountId != "" || cleanUser.WeChatCorpAccountAgentId != "" || cleanUser.WeChatCorpAccountSecret != "" {
+		oldWeChatCorpAccountTokenStoreItem := WeChatCorpAccountTokenStoreItem{
+			CorpId:     cleanUser.WeChatCorpAccountId,
+			CorpSecret: cleanUser.WeChatCorpAccountSecret,
+			AgentId:    cleanUser.WeChatCorpAccountAgentId,
+		}
+		newWeChatCorpAccountTokenStoreItem := oldWeChatCorpAccountTokenStoreItem
+		if cleanUser.WeChatCorpAccountId != "" {
+			newWeChatCorpAccountTokenStoreItem.CorpId = cleanUser.WeChatCorpAccountId
+		}
+		if cleanUser.WeChatCorpAccountSecret != "" {
+			newWeChatCorpAccountTokenStoreItem.CorpSecret = cleanUser.WeChatCorpAccountSecret
+		}
+		if cleanUser.WeChatCorpAccountAgentId != "" {
+			newWeChatCorpAccountTokenStoreItem.AgentId = cleanUser.WeChatCorpAccountAgentId
+		}
+		TokenStoreRemoveItem(&oldWeChatCorpAccountTokenStoreItem)
+		TokenStoreAddItem(&newWeChatCorpAccountTokenStoreItem)
+	}
+}
+
+// TokenStoreRemoveUser user must be filled
+func TokenStoreRemoveUser(user *model.User) {
+	// TODO: check if this token is shared!
+	testAccountTokenStoreItem := WeChatTestAccountTokenStoreItem{
+		AppID:     user.WeChatTestAccountId,
+		AppSecret: user.WeChatTestAccountSecret,
+	}
+	TokenStoreRemoveItem(&testAccountTokenStoreItem)
+	corpAccountTokenStoreItem := WeChatCorpAccountTokenStoreItem{
+		CorpId:     user.WeChatCorpAccountId,
+		CorpSecret: user.WeChatCorpAccountSecret,
+		AgentId:    user.WeChatCorpAccountAgentId,
+	}
+	TokenStoreRemoveItem(&corpAccountTokenStoreItem)
 }
 
 func TokenStoreGetToken(key string) string {

@@ -71,8 +71,7 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 
 func DeleteUserById(id int) (err error) {
 	user := User{Id: id}
-	err = DB.Delete(&user).Error
-	return err
+	return user.Delete()
 }
 
 func (user *User) Insert() error {
@@ -100,8 +99,7 @@ func (user *User) Update(updatePassword bool) error {
 }
 
 func (user *User) Delete() error {
-	var err error
-	err = DB.Delete(user).Error
+	err := DB.Delete(user).Error
 	return err
 }
 

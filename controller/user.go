@@ -5,6 +5,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"message-pusher/channel"
 	"message-pusher/common"
 	"message-pusher/model"
 	"net/http"
@@ -376,13 +377,35 @@ func UpdateSelf(c *gin.Context) {
 		})
 		return
 	}
-
-	cleanUser := model.User{
-		Id:          c.GetInt("id"),
-		Username:    user.Username,
-		Password:    user.Password,
-		DisplayName: user.DisplayName,
+	originUser, err := model.GetUserById(c.GetInt("id"), true)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
 	}
+	cleanUser := model.User{
+		Id:                                 c.GetInt("id"),
+		Username:                           user.Username,
+		Password:                           user.Password,
+		WeChatTestAccountId:                user.WeChatTestAccountId,
+		WeChatTestAccountSecret:            user.WeChatTestAccountSecret,
+		WeChatTestAccountTemplateId:        user.WeChatTestAccountTemplateId,
+		WeChatTestAccountOpenId:            user.WeChatTestAccountOpenId,
+		WeChatTestAccountVerificationToken: user.WeChatTestAccountVerificationToken,
+		WeChatCorpAccountId:                user.WeChatCorpAccountId,
+		WeChatCorpAccountSecret:            user.WeChatCorpAccountSecret,
+		WeChatCorpAccountAgentId:           user.WeChatCorpAccountAgentId,
+		WeChatCorpAccountUserId:            user.WeChatCorpAccountUserId,
+		WeChatCorpAccountClientType:        user.WeChatCorpAccountClientType,
+		LarkWebhookURL:                     user.LarkWebhookURL,
+		LarkWebhookSecret:                  user.LarkWebhookSecret,
+		DingWebhookURL:                     user.DingWebhookURL,
+		DingWebhookSecret:                  user.DingWebhookSecret,
+	}
+	channel.TokenStoreUpdateUser(&cleanUser, originUser)
+
 	if user.Password == "$I_LOVE_U" {
 		user.Password = "" // rollback to what it should be
 		cleanUser.Password = ""
@@ -428,6 +451,7 @@ func DeleteUser(c *gin.Context) {
 		})
 		return
 	}
+	channel.TokenStoreRemoveUser(originUser)
 	err = model.DeleteUserById(id)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
@@ -440,6 +464,9 @@ func DeleteUser(c *gin.Context) {
 
 func DeleteSelf(c *gin.Context) {
 	id := c.GetInt("id")
+	user := model.User{Id: id}
+	user.FillUserById()
+	channel.TokenStoreRemoveUser(&user)
 	err := model.DeleteUserById(id)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
