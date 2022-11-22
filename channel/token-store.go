@@ -110,7 +110,7 @@ func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
 		if cleanUser.WeChatTestAccountSecret != "" {
 			newWeChatTestAccountTokenStoreItem.AppSecret = cleanUser.WeChatTestAccountSecret
 		}
-		if !model.IsWeChatTestAccountTokenShared(&oldWeChatTestAccountTokenStoreItem) {
+		if !oldWeChatTestAccountTokenStoreItem.IsShared() {
 			TokenStoreRemoveItem(&oldWeChatTestAccountTokenStoreItem)
 		}
 		TokenStoreAddItem(&newWeChatTestAccountTokenStoreItem)
@@ -140,7 +140,7 @@ func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
 		if cleanUser.WeChatCorpAccountAgentId != "" {
 			newWeChatCorpAccountTokenStoreItem.AgentId = cleanUser.WeChatCorpAccountAgentId
 		}
-		if !model.IsWeChatCorpAccountTokenShared(&oldWeChatCorpAccountTokenStoreItem) {
+		if !oldWeChatCorpAccountTokenStoreItem.IsShared() {
 			TokenStoreRemoveItem(&oldWeChatCorpAccountTokenStoreItem)
 		}
 		TokenStoreAddItem(&newWeChatCorpAccountTokenStoreItem)
@@ -153,7 +153,7 @@ func TokenStoreRemoveUser(user *model.User) {
 		AppID:     user.WeChatTestAccountId,
 		AppSecret: user.WeChatTestAccountSecret,
 	}
-	if !model.IsWeChatTestAccountTokenShared(&testAccountTokenStoreItem) {
+	if !testAccountTokenStoreItem.IsShared() {
 		TokenStoreRemoveItem(&testAccountTokenStoreItem)
 	}
 	corpAccountTokenStoreItem := WeChatCorpAccountTokenStoreItem{
@@ -161,7 +161,7 @@ func TokenStoreRemoveUser(user *model.User) {
 		CorpSecret: user.WeChatCorpAccountSecret,
 		AgentId:    user.WeChatCorpAccountAgentId,
 	}
-	if !model.IsWeChatCorpAccountTokenShared(&corpAccountTokenStoreItem) {
+	if !corpAccountTokenStoreItem.IsShared() {
 		TokenStoreRemoveItem(&corpAccountTokenStoreItem)
 	}
 }

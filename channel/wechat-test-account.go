@@ -28,6 +28,11 @@ func (i *WeChatTestAccountTokenStoreItem) Key() string {
 	return i.AppID + i.AppSecret
 }
 
+func (i *WeChatTestAccountTokenStoreItem) IsShared() bool {
+	return model.DB.Where("wechat_test_account_id = ? and wechat_test_account_secret = ?",
+		i.AppID, i.AppSecret).Find(&model.User{}).RowsAffected != 1
+}
+
 func (i *WeChatTestAccountTokenStoreItem) Token() string {
 	return i.AccessToken
 }

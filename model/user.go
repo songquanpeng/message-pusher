@@ -2,7 +2,6 @@ package model
 
 import (
 	"errors"
-	"message-pusher/channel"
 	"message-pusher/common"
 	"strings"
 )
@@ -167,16 +166,6 @@ func IsGitHubIdAlreadyTaken(githubId string) bool {
 
 func IsUsernameAlreadyTaken(username string) bool {
 	return DB.Where("username = ?", username).Find(&User{}).RowsAffected == 1
-}
-
-func IsWeChatTestAccountTokenShared(item *channel.WeChatTestAccountTokenStoreItem) bool {
-	return DB.Where("wechat_test_account_id = ? and wechat_test_account_secret = ?",
-		item.AppID, item.AppSecret).Find(&User{}).RowsAffected != 1
-}
-
-func IsWeChatCorpAccountTokenShared(item *channel.WeChatCorpAccountTokenStoreItem) bool {
-	return DB.Where("wechat_corp_account_id = ? and wechat_corp_account_secret = ? and wechat_corp_account_agent_id = ?",
-		item.CorpId, item.CorpSecret, item.AgentId).Find(&User{}).RowsAffected != 1
 }
 
 func ResetUserPasswordByEmail(email string, password string) error {

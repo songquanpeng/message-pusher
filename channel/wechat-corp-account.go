@@ -29,6 +29,11 @@ func (i *WeChatCorpAccountTokenStoreItem) Key() string {
 	return i.CorpId + i.AgentId + i.CorpSecret
 }
 
+func (i *WeChatCorpAccountTokenStoreItem) IsShared() bool {
+	return model.DB.Where("wechat_corp_account_id = ? and wechat_corp_account_secret = ? and wechat_corp_account_agent_id = ?",
+		i.CorpId, i.CorpSecret, i.AgentId).Find(&model.User{}).RowsAffected != 1
+}
+
 func (i *WeChatCorpAccountTokenStoreItem) Token() string {
 	return i.AccessToken
 }
