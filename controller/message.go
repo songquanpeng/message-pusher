@@ -85,13 +85,7 @@ func pushMessageHelper(c *gin.Context, message *channel.Message) {
 		if err != nil {
 			common.SysLog(err.Error())
 		} else {
-			message.Content = buf.String()
-		}
-	} else {
-		if message.Description != "" {
-			message.Content = message.Description
-		} else {
-			message.Content = "无内容"
+			message.HTMLContent = buf.String()
 		}
 	}
 	if message.Channel == "" {

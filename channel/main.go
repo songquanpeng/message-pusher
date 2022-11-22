@@ -21,6 +21,7 @@ type Message struct {
 	URL         string `json:"url"`
 	Channel     string `json:"channel"`
 	Token       string `json:"token"`
+	HTMLContent string `json:"html_content"`
 }
 
 func (message *Message) Send(user *model.User) error {
@@ -32,6 +33,7 @@ func (message *Message) Send(user *model.User) error {
 	case TypeWeChatCorpAccount:
 		return SendWeChatCorpMessage(message, user)
 	case TypeLark:
+		return SendLarkMessage(message, user)
 	case TypeDingTalk:
 	case TypeTelegram:
 	default:

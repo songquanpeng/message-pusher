@@ -27,6 +27,8 @@ type User struct {
 	WeChatCorpAccountSecret            string `json:"wechat_corp_account_secret" gorm:"column:wechat_corp_account_secret"`
 	WeChatCorpAccountAgentId           string `json:"wechat_corp_account_agent_id" gorm:"column:wechat_corp_account_agent_id"`
 	WeChatCorpAccountUserId            string `json:"wechat_corp_account_user_id" gorm:"column:wechat_corp_account_user_id"`
+	LarkWebhookURL                     string `json:"lark_webhook_url"`
+	LarkWebhookSecret                  string `json:"lark_webhook_secret"`
 }
 
 func GetMaxUserId() int {
