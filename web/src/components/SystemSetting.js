@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Divider, Form, Grid, Header } from 'semantic-ui-react';
+import { Divider, Form, Grid, Header, Message } from 'semantic-ui-react';
 import { API, showError } from '../helpers';
 
 const SystemSetting = () => {
@@ -271,6 +271,11 @@ const SystemSetting = () => {
               管理你的 GitHub OAuth App
             </Header.Subheader>
           </Header>
+          <Message>
+            Homepage URL 填 <code>{inputs.ServerAddress}</code>
+            ，Authorization callback URL 填{' '}
+            <code>{`${inputs.ServerAddress}/oauth/github`}</code>
+          </Message>
           <Form.Group widths={3}>
             <Form.Input
               label='GitHub Client ID'
