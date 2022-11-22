@@ -15,7 +15,7 @@ type User struct {
 	DisplayName                        string `json:"display_name" gorm:"index" validate:"max=20"`
 	Role                               int    `json:"role" gorm:"type:int;default:1"`   // admin, common
 	Status                             int    `json:"status" gorm:"type:int;default:1"` // enabled, disabled
-	Token                              string `json:"token" gorm:"index"`
+	Token                              string `json:"token"`
 	Email                              string `json:"email" gorm:"index" validate:"max=50"`
 	GitHubId                           string `json:"github_id" gorm:"column:github_id;index"`
 	WeChatId                           string `json:"wechat_id" gorm:"column:wechat_id;index"`
@@ -27,10 +27,10 @@ type User struct {
 	WeChatTestAccountOpenId            string `json:"wechat_test_account_open_id" gorm:"column:wechat_test_account_open_id"`
 	WeChatTestAccountVerificationToken string `json:"wechat_test_account_verification_token" gorm:"column:wechat_test_account_verification_token"`
 	WeChatCorpAccountId                string `json:"wechat_corp_account_id" gorm:"column:wechat_corp_account_id"`
-	WeChatCorpAccountSecret            string `json:"wechat_corp_account_secret" gorm:"column:wechat_corp_account_secret"`
+	WeChatCorpAccountAgentSecret       string `json:"wechat_corp_account_agent_secret" gorm:"column:wechat_corp_account_agent_secret"`
 	WeChatCorpAccountAgentId           string `json:"wechat_corp_account_agent_id" gorm:"column:wechat_corp_account_agent_id"`
 	WeChatCorpAccountUserId            string `json:"wechat_corp_account_user_id" gorm:"column:wechat_corp_account_user_id"`
-	WeChatCorpAccountClientType        string `json:"wechat_corp_account_client_type" gorm:"wechat_corp_account_client_type;default=plugin"`
+	WeChatCorpAccountClientType        string `json:"wechat_corp_account_client_type" gorm:"column:wechat_corp_account_client_type;default=plugin"`
 	LarkWebhookURL                     string `json:"lark_webhook_url"`
 	LarkWebhookSecret                  string `json:"lark_webhook_secret"`
 	DingWebhookURL                     string `json:"ding_webhook_url"`
@@ -64,7 +64,13 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 	if selectAll {
 		err = DB.First(&user, "id = ?", id).Error
 	} else {
-		err = DB.Select([]string{"id", "username", "display_name", "role", "status", "email", "wechat_id", "github_id"}).First(&user, "id = ?", id).Error
+		err = DB.Select([]string{"id", "username", "display_name", "role", "status", "email", "wechat_id", "github_id",
+			"channel", "token",
+			"wechat_test_account_id", "wechat_test_account_template_id", "wechat_test_account_open_id",
+			"wechat_corp_account_id", "wechat_corp_account_agent_id", "wechat_corp_account_user_id", "wechat_corp_account_client_type",
+			"lark_webhook_url",
+			"ding_webhook_url",
+		}).First(&user, "id = ?", id).Error
 	}
 	return &user, err
 }

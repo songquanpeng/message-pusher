@@ -22,6 +22,10 @@ func GetPushMessage(c *gin.Context) {
 		// Keep compatible with ServerChan
 		message.Description = c.Query("desp")
 	}
+	if message.Channel == "" {
+		// Keep compatible with old version
+		message.Channel = c.Query("type")
+	}
 	pushMessageHelper(c, &message)
 }
 

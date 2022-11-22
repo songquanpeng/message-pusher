@@ -342,8 +342,15 @@ func UpdateUser(c *gin.Context) {
 	if updatedUser.Password == "$I_LOVE_U" {
 		updatedUser.Password = "" // rollback to what it should be
 	}
-	updatePassword := updatedUser.Password != ""
-	if err := updatedUser.Update(updatePassword); err != nil {
+	// We only allow admin change those fields.
+	cleanUser := model.User{
+		Id:          updatedUser.Id,
+		Username:    updatedUser.Username,
+		Password:    updatedUser.Password,
+		DisplayName: updatedUser.DisplayName,
+	}
+	updatePassword := cleanUser.Password != ""
+	if err := cleanUser.Update(updatePassword); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": err.Error(),
@@ -389,13 +396,16 @@ func UpdateSelf(c *gin.Context) {
 		Id:                                 c.GetInt("id"),
 		Username:                           user.Username,
 		Password:                           user.Password,
+		DisplayName:                        user.DisplayName,
+		Token:                              user.Token,
+		Channel:                            user.Channel,
 		WeChatTestAccountId:                user.WeChatTestAccountId,
 		WeChatTestAccountSecret:            user.WeChatTestAccountSecret,
 		WeChatTestAccountTemplateId:        user.WeChatTestAccountTemplateId,
 		WeChatTestAccountOpenId:            user.WeChatTestAccountOpenId,
 		WeChatTestAccountVerificationToken: user.WeChatTestAccountVerificationToken,
 		WeChatCorpAccountId:                user.WeChatCorpAccountId,
-		WeChatCorpAccountSecret:            user.WeChatCorpAccountSecret,
+		WeChatCorpAccountAgentSecret:       user.WeChatCorpAccountAgentSecret,
 		WeChatCorpAccountAgentId:           user.WeChatCorpAccountAgentId,
 		WeChatCorpAccountUserId:            user.WeChatCorpAccountUserId,
 		WeChatCorpAccountClientType:        user.WeChatCorpAccountClientType,

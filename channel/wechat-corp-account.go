@@ -20,18 +20,18 @@ type wechatCorpAccountResponse struct {
 
 type WeChatCorpAccountTokenStoreItem struct {
 	CorpId      string
-	CorpSecret  string
+	AgentSecret string
 	AgentId     string
 	AccessToken string
 }
 
 func (i *WeChatCorpAccountTokenStoreItem) Key() string {
-	return i.CorpId + i.AgentId + i.CorpSecret
+	return i.CorpId + i.AgentId + i.AgentSecret
 }
 
 func (i *WeChatCorpAccountTokenStoreItem) IsShared() bool {
-	return model.DB.Where("wechat_corp_account_id = ? and wechat_corp_account_secret = ? and wechat_corp_account_agent_id = ?",
-		i.CorpId, i.CorpSecret, i.AgentId).Find(&model.User{}).RowsAffected != 1
+	return model.DB.Where("wechat_corp_account_id = ? and wechat_corp_account_agent_secret = ? and wechat_corp_account_agent_id = ?",
+		i.CorpId, i.AgentSecret, i.AgentId).Find(&model.User{}).RowsAffected != 1
 }
 
 func (i *WeChatCorpAccountTokenStoreItem) Token() string {
@@ -44,7 +44,7 @@ func (i *WeChatCorpAccountTokenStoreItem) Refresh() {
 		Timeout: 5 * time.Second,
 	}
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=%s&corpsecret=%s",
-		i.CorpId, i.CorpSecret), nil)
+		i.CorpId, i.AgentSecret), nil)
 	if err != nil {
 		common.SysError(err.Error())
 		return
@@ -119,7 +119,7 @@ func SendWeChatCorpMessage(message *Message, user *model.User) error {
 	if err != nil {
 		return err
 	}
-	key := fmt.Sprintf("%s%s%s", user.WeChatCorpAccountId, user.WeChatCorpAccountAgentId, user.WeChatCorpAccountSecret)
+	key := fmt.Sprintf("%s%s%s", user.WeChatCorpAccountId, user.WeChatCorpAccountAgentId, user.WeChatCorpAccountAgentSecret)
 	accessToken := TokenStoreGetToken(key)
 	resp, err := http.Post(fmt.Sprintf("https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s", accessToken), "application/json",
 		bytes.NewBuffer(jsonData))

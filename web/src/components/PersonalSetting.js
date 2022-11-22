@@ -106,7 +106,7 @@ const PersonalSetting = () => {
       <Button as={Link} to={`/user/edit/`}>
         更新个人信息
       </Button>
-      <Button onClick={generateToken}>生成访问令牌</Button>
+      {/*<Button onClick={generateToken}>生成访问令牌</Button>*/}
       <Divider />
       <Header as='h3'>账号绑定</Header>
       <Button

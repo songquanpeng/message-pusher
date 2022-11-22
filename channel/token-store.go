@@ -40,9 +40,9 @@ func TokenStoreInit() {
 			}
 			if user.WeChatCorpAccountId != "" {
 				item := &WeChatCorpAccountTokenStoreItem{
-					CorpId:     user.WeChatCorpAccountId,
-					CorpSecret: user.WeChatCorpAccountSecret,
-					AgentId:    user.WeChatCorpAccountAgentId,
+					CorpId:      user.WeChatCorpAccountId,
+					AgentSecret: user.WeChatCorpAccountAgentSecret,
+					AgentId:     user.WeChatCorpAccountAgentId,
 				}
 				items = append(items, item)
 			}
@@ -121,21 +121,21 @@ func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
 	if cleanUser.WeChatCorpAccountAgentId == originUser.WeChatCorpAccountAgentId {
 		cleanUser.WeChatCorpAccountAgentId = ""
 	}
-	if cleanUser.WeChatCorpAccountSecret == originUser.WeChatCorpAccountSecret {
-		cleanUser.WeChatCorpAccountSecret = ""
+	if cleanUser.WeChatCorpAccountAgentSecret == originUser.WeChatCorpAccountAgentSecret {
+		cleanUser.WeChatCorpAccountAgentSecret = ""
 	}
-	if cleanUser.WeChatCorpAccountId != "" || cleanUser.WeChatCorpAccountAgentId != "" || cleanUser.WeChatCorpAccountSecret != "" {
+	if cleanUser.WeChatCorpAccountId != "" || cleanUser.WeChatCorpAccountAgentId != "" || cleanUser.WeChatCorpAccountAgentSecret != "" {
 		oldWeChatCorpAccountTokenStoreItem := WeChatCorpAccountTokenStoreItem{
-			CorpId:     cleanUser.WeChatCorpAccountId,
-			CorpSecret: cleanUser.WeChatCorpAccountSecret,
-			AgentId:    cleanUser.WeChatCorpAccountAgentId,
+			CorpId:      cleanUser.WeChatCorpAccountId,
+			AgentSecret: cleanUser.WeChatCorpAccountAgentSecret,
+			AgentId:     cleanUser.WeChatCorpAccountAgentId,
 		}
 		newWeChatCorpAccountTokenStoreItem := oldWeChatCorpAccountTokenStoreItem
 		if cleanUser.WeChatCorpAccountId != "" {
 			newWeChatCorpAccountTokenStoreItem.CorpId = cleanUser.WeChatCorpAccountId
 		}
-		if cleanUser.WeChatCorpAccountSecret != "" {
-			newWeChatCorpAccountTokenStoreItem.CorpSecret = cleanUser.WeChatCorpAccountSecret
+		if cleanUser.WeChatCorpAccountAgentSecret != "" {
+			newWeChatCorpAccountTokenStoreItem.AgentSecret = cleanUser.WeChatCorpAccountAgentSecret
 		}
 		if cleanUser.WeChatCorpAccountAgentId != "" {
 			newWeChatCorpAccountTokenStoreItem.AgentId = cleanUser.WeChatCorpAccountAgentId
@@ -157,9 +157,9 @@ func TokenStoreRemoveUser(user *model.User) {
 		TokenStoreRemoveItem(&testAccountTokenStoreItem)
 	}
 	corpAccountTokenStoreItem := WeChatCorpAccountTokenStoreItem{
-		CorpId:     user.WeChatCorpAccountId,
-		CorpSecret: user.WeChatCorpAccountSecret,
-		AgentId:    user.WeChatCorpAccountAgentId,
+		CorpId:      user.WeChatCorpAccountId,
+		AgentSecret: user.WeChatCorpAccountAgentSecret,
+		AgentId:     user.WeChatCorpAccountAgentId,
 	}
 	if !corpAccountTokenStoreItem.IsShared() {
 		TokenStoreRemoveItem(&corpAccountTokenStoreItem)
