@@ -19,6 +19,7 @@ func authHelper(c *gin.Context, minRole int) {
 			"message": "无权进行此操作，未登录",
 		})
 		c.Abort()
+		return
 	}
 	if status.(int) == common.UserStatusDisabled {
 		c.JSON(http.StatusOK, gin.H{
