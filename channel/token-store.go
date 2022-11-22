@@ -92,7 +92,6 @@ func TokenStoreRemoveItem(item TokenStoreItem) {
 }
 
 func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
-	// TODO: check if this token is shared!
 	if cleanUser.WeChatTestAccountId == originUser.WeChatTestAccountId {
 		cleanUser.WeChatTestAccountId = ""
 	}
@@ -111,7 +110,9 @@ func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
 		if cleanUser.WeChatTestAccountSecret != "" {
 			newWeChatTestAccountTokenStoreItem.AppSecret = cleanUser.WeChatTestAccountSecret
 		}
-		TokenStoreRemoveItem(&oldWeChatTestAccountTokenStoreItem)
+		if !model.IsWeChatTestAccountTokenShared(&oldWeChatTestAccountTokenStoreItem) {
+			TokenStoreRemoveItem(&oldWeChatTestAccountTokenStoreItem)
+		}
 		TokenStoreAddItem(&newWeChatTestAccountTokenStoreItem)
 	}
 	if cleanUser.WeChatCorpAccountId == originUser.WeChatCorpAccountId {
@@ -139,25 +140,30 @@ func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
 		if cleanUser.WeChatCorpAccountAgentId != "" {
 			newWeChatCorpAccountTokenStoreItem.AgentId = cleanUser.WeChatCorpAccountAgentId
 		}
-		TokenStoreRemoveItem(&oldWeChatCorpAccountTokenStoreItem)
+		if !model.IsWeChatCorpAccountTokenShared(&oldWeChatCorpAccountTokenStoreItem) {
+			TokenStoreRemoveItem(&oldWeChatCorpAccountTokenStoreItem)
+		}
 		TokenStoreAddItem(&newWeChatCorpAccountTokenStoreItem)
 	}
 }
 
 // TokenStoreRemoveUser user must be filled
 func TokenStoreRemoveUser(user *model.User) {
-	// TODO: check if this token is shared!
 	testAccountTokenStoreItem := WeChatTestAccountTokenStoreItem{
 		AppID:     user.WeChatTestAccountId,
 		AppSecret: user.WeChatTestAccountSecret,
 	}
-	TokenStoreRemoveItem(&testAccountTokenStoreItem)
+	if !model.IsWeChatTestAccountTokenShared(&testAccountTokenStoreItem) {
+		TokenStoreRemoveItem(&testAccountTokenStoreItem)
+	}
 	corpAccountTokenStoreItem := WeChatCorpAccountTokenStoreItem{
 		CorpId:     user.WeChatCorpAccountId,
 		CorpSecret: user.WeChatCorpAccountSecret,
 		AgentId:    user.WeChatCorpAccountAgentId,
 	}
-	TokenStoreRemoveItem(&corpAccountTokenStoreItem)
+	if !model.IsWeChatCorpAccountTokenShared(&corpAccountTokenStoreItem) {
+		TokenStoreRemoveItem(&corpAccountTokenStoreItem)
+	}
 }
 
 func TokenStoreGetToken(key string) string {
