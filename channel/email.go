@@ -14,5 +14,5 @@ func SendEmailMessage(message *Message, user *model.User) error {
 	if subject == "" {
 		subject = message.Title
 	}
-	return common.SendEmail(subject, user.Email, message.Content)
+	return common.SendEmail(subject, user.Email, message.HTMLContent)
 }

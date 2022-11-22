@@ -10,7 +10,7 @@ const (
 	TypeWeChatTestAccount = "test"
 	TypeWeChatCorpAccount = "corp"
 	TypeLark              = "lark"
-	TypeDingTalk          = "ding"
+	TypeDing              = "ding"
 	TypeTelegram          = "telegram"
 )
 
@@ -34,10 +34,9 @@ func (message *Message) Send(user *model.User) error {
 		return SendWeChatCorpMessage(message, user)
 	case TypeLark:
 		return SendLarkMessage(message, user)
-	case TypeDingTalk:
-	case TypeTelegram:
+	case TypeDing:
+		return SendDingMessage(message, user)
 	default:
 		return errors.New("不支持的消息通道：" + message.Channel)
 	}
-	return nil
 }
