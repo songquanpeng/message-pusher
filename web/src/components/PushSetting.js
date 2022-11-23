@@ -7,7 +7,7 @@ import {
   Header,
   Message,
 } from 'semantic-ui-react';
-import { API, showError, showSuccess } from '../helpers';
+import { API, removeTrailingSlash, showError, showSuccess } from '../helpers';
 
 const PushSetting = () => {
   let [inputs, setInputs] = useState({
@@ -102,7 +102,7 @@ const PushSetting = () => {
         data.ding_webhook_secret = inputs.ding_webhook_secret;
         break;
       case 'bark':
-        data.bark_server = inputs.bark_server;
+        data.bark_server = removeTrailingSlash(inputs.bark_server);
         data.bark_secret = inputs.bark_secret;
         break;
       default:

@@ -89,3 +89,11 @@ export function showNotice(message) {
 export function openPage(url) {
   window.open(url);
 }
+
+export function removeTrailingSlash(url) {
+  if (url.endsWith('/')) {
+    return url.slice(0, -1);
+  } else {
+    return url;
+  }
+}

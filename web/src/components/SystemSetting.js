@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Divider, Form, Grid, Header, Message } from 'semantic-ui-react';
-import { API, showError } from '../helpers';
+import { API, removeTrailingSlash, showError } from '../helpers';
 
 const SystemSetting = () => {
   let [inputs, setInputs] = useState({
@@ -95,10 +95,7 @@ const SystemSetting = () => {
   };
 
   const submitServerAddress = async () => {
-    let ServerAddress = inputs.ServerAddress;
-    if (ServerAddress.endsWith('/')) {
-      ServerAddress = ServerAddress.slice(0, ServerAddress.length - 1);
-    }
+    let ServerAddress = removeTrailingSlash(inputs.ServerAddress);
     await updateOption('ServerAddress', ServerAddress);
   };
 
@@ -119,7 +116,10 @@ const SystemSetting = () => {
 
   const submitWeChat = async () => {
     if (originInputs['WeChatServerAddress'] !== inputs.WeChatServerAddress) {
-      await updateOption('WeChatServerAddress', inputs.WeChatServerAddress);
+      await updateOption(
+        'WeChatServerAddress',
+        removeTrailingSlash(inputs.WeChatServerAddress)
+      );
     }
     if (
       originInputs['WeChatAccountQRCodeImageURL'] !==
@@ -170,7 +170,7 @@ const SystemSetting = () => {
           <Form.Group widths='equal'>
             <Form.Input
               label='服务器地址'
-              placeholder='例如：https://yourdomain.com（注意没有最后的斜杠）'
+              placeholder='例如：https://yourdomain.com'
               value={inputs.ServerAddress}
               name='ServerAddress'
               onChange={handleInputChange}
@@ -316,7 +316,7 @@ const SystemSetting = () => {
             <Form.Input
               label='WeChat Server 服务器地址'
               name='WeChatServerAddress'
-              placeholder='例如：https://yourdomain.com（注意没有最后的斜杠）'
+              placeholder='例如：https://yourdomain.com'
               onChange={handleInputChange}
               autoComplete='off'
               value={inputs.WeChatServerAddress}
