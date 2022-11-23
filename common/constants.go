@@ -15,7 +15,7 @@ var Footer = ""
 // Any options with "Secret", "Token" in its key won't be return by GetOptions
 
 var SessionSecret = uuid.New().String()
-var SQLitePath = ".message-pusher.db"
+var SQLitePath = "message-pusher.db"
 
 var OptionMap map[string]string
 var OptionMapRWMutex sync.RWMutex
