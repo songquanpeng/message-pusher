@@ -37,9 +37,10 @@ function App() {
       localStorage.setItem('status', JSON.stringify(data));
       statusDispatch({ type: 'set', payload: data });
       localStorage.setItem('footer_html', data.footer_html);
-      let currentVersion = localStorage.getItem('version');
-      if (currentVersion && currentVersion !== data.version) {
-        localStorage.setItem('version', data.version);
+      if (
+        data.version !== process.env.REACT_APP_VERSION &&
+        data.version !== 'v0.0.0'
+      ) {
         showNotice(
           `新版本可用：${data.version}，请使用快捷键 Shift + F5 刷新页面`
         );
