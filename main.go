@@ -10,7 +10,6 @@ import (
 	"log"
 	"message-pusher/channel"
 	"message-pusher/common"
-	"message-pusher/middleware"
 	"message-pusher/model"
 	"message-pusher/router"
 	"os"
@@ -56,7 +55,6 @@ func main() {
 	// Initialize HTTP server
 	server := gin.Default()
 	server.Use(gzip.Gzip(gzip.DefaultCompression))
-	server.Use(middleware.CORS())
 
 	// Initialize session store
 	if common.RedisEnabled {
