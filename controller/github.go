@@ -167,8 +167,10 @@ func GitHubBind(c *gin.Context) {
 		})
 		return
 	}
-	id := c.GetInt("id")
-	user.Id = id
+	session := sessions.Default(c)
+	id := session.Get("id")
+	// id := c.GetInt("id")  // critical bug!
+	user.Id = id.(int)
 	user.FillUserById()
 	user.GitHubId = githubUser.Login
 	err = user.Update(false)
