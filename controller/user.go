@@ -413,6 +413,8 @@ func UpdateSelf(c *gin.Context) {
 		LarkWebhookSecret:                  user.LarkWebhookSecret,
 		DingWebhookURL:                     user.DingWebhookURL,
 		DingWebhookSecret:                  user.DingWebhookSecret,
+		BarkServer:                         user.BarkServer,
+		BarkSecret:                         user.BarkSecret,
 	}
 	channel.TokenStoreUpdateUser(&cleanUser, originUser)
 

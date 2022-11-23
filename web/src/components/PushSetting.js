@@ -29,6 +29,8 @@ const PushSetting = () => {
     lark_webhook_secret: '',
     ding_webhook_url: '',
     ding_webhook_secret: '',
+    bark_server: '',
+    bark_secret: '',
   });
   let [loading, setLoading] = useState(false);
 
@@ -48,6 +50,9 @@ const PushSetting = () => {
       }
       if (data.token === ' ') {
         data.token = '';
+      }
+      if (data.bark_server === '') {
+        data.bark_server = 'https://api.day.app';
       }
       setInputs(data);
     } else {
@@ -96,6 +101,10 @@ const PushSetting = () => {
         data.ding_webhook_url = inputs.ding_webhook_url;
         data.ding_webhook_secret = inputs.ding_webhook_secret;
         break;
+      case 'bark':
+        data.bark_server = inputs.bark_server;
+        data.bark_secret = inputs.bark_secret;
+        break;
       default:
         showError(`无效的参数：${which}`);
         return;
@@ -137,6 +146,7 @@ const PushSetting = () => {
                 { key: 'corp', text: '企业微信', value: 'corp' },
                 { key: 'lark', text: '飞书群机器人', value: 'lark' },
                 { key: 'ding', text: '钉钉群机器人', value: 'ding' },
+                { key: 'bark', text: 'Bark', value: 'bark' },
               ]}
               value={inputs.channel}
               onChange={handleInputChange}
@@ -375,6 +385,36 @@ const PushSetting = () => {
             保存
           </Button>
           <Button onClick={() => test('ding')}>测试</Button>
+          <Divider />
+          <Header as='h3'>
+            Bark 设置（bark）
+            <Header.Subheader>
+              通过 Bark 进行推送，下载 Bark 后按提示注册设备即可。
+            </Header.Subheader>
+          </Header>
+          <Form.Group widths={2}>
+            <Form.Input
+              label='Bark 地址服务器地址'
+              name='bark_server'
+              onChange={handleInputChange}
+              autoComplete='off'
+              value={inputs.bark_server}
+              placeholder='在此填写 Bark 服务器地址'
+            />
+            <Form.Input
+              label='签名校验密钥'
+              name='bark_secret'
+              type='password'
+              onChange={handleInputChange}
+              autoComplete='off'
+              value={inputs.bark_secret}
+              placeholder='在此填写 Bark 推送 key'
+            />
+          </Form.Group>
+          <Button onClick={() => submit('bark')} loading={loading}>
+            保存
+          </Button>
+          <Button onClick={() => test('bark')}>测试</Button>
         </Form>
       </Grid.Column>
     </Grid>

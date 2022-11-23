@@ -35,6 +35,8 @@ type User struct {
 	LarkWebhookSecret                  string `json:"lark_webhook_secret"`
 	DingWebhookURL                     string `json:"ding_webhook_url"`
 	DingWebhookSecret                  string `json:"ding_webhook_secret"`
+	BarkServer                         string `json:"bark_server"`
+	BarkSecret                         string `json:"bark_secret"`
 }
 
 func GetMaxUserId() int {
@@ -68,8 +70,7 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 			"channel", "token",
 			"wechat_test_account_id", "wechat_test_account_template_id", "wechat_test_account_open_id",
 			"wechat_corp_account_id", "wechat_corp_account_agent_id", "wechat_corp_account_user_id", "wechat_corp_account_client_type",
-			"lark_webhook_url",
-			"ding_webhook_url",
+			"lark_webhook_url", "ding_webhook_url", "bark_server",
 		}).First(&user, "id = ?", id).Error
 	}
 	return &user, err
