@@ -17,7 +17,7 @@ COPY --from=builder /build/build ./web/build
 RUN go mod download
 RUN go build -ldflags "-s -w -extldflags '-static'" -o message-pusher
 
-FROM scratch
+FROM alpine
 
 ENV PORT=3000
 COPY --from=builder2 /build/message-pusher /
