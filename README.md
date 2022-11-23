@@ -44,8 +44,8 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
    + 企业微信，
    + 飞书群机器人，
    + 钉钉群机器人，
-   + 桌面客户端（WIP）
-   + Bark（WIP）
+   + Bark,
+   + [桌面客户端](https://github.com/songquanpeng/personal-assistant)（WIP）
 2. 多种用户登录注册方式：
    + 邮箱登录注册以及通过邮箱进行密码重置。
    + [GitHub 开放授权](https://github.com/settings/applications/new)。
