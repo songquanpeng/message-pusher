@@ -13,9 +13,10 @@ const EditUser = () => {
     password: '',
     github_id: '',
     wechat_id: '',
-    email:''
+    email: '',
   });
-  const { username, display_name, password, github_id, wechat_id, email } = inputs;
+  const { username, display_name, password, github_id, wechat_id, email } =
+    inputs;
   const handleInputChange = (e, { name, value }) => {
     setInputs((inputs) => ({ ...inputs, [name]: value }));
   };
@@ -58,63 +59,66 @@ const EditUser = () => {
   return (
     <>
       <Segment loading={loading}>
-        <Header as="h3">更新用户信息</Header>
-        <Form autoComplete="off">
+        <Header as='h3'>更新用户信息</Header>
+        <Form autoComplete='off'>
           <Form.Field>
             <Form.Input
-              label="用户名"
-              name="username"
+              label='用户名'
+              name='username'
               placeholder={'请输入新的用户名'}
               onChange={handleInputChange}
               value={username}
-              autoComplete="off"
+              autoComplete='off'
             />
           </Form.Field>
           <Form.Field>
             <Form.Input
-              label="密码"
-              name="password"
+              label='密码'
+              name='password'
               type={'password'}
               placeholder={'请输入新的密码'}
               onChange={handleInputChange}
               value={password}
-              autoComplete="off"
+              autoComplete='off'
             />
           </Form.Field>
           <Form.Field>
             <Form.Input
-              label="显示名称"
-              name="display_name"
+              label='显示名称'
+              name='display_name'
               placeholder={'请输入新的显示名称'}
               onChange={handleInputChange}
               value={display_name}
-              autoComplete="off"
+              autoComplete='off'
             />
           </Form.Field>
           <Form.Field>
             <Form.Input
-              label="已绑定的 GitHub 账户"
-              name="github_id"
+              label='已绑定的 GitHub 账户'
+              name='github_id'
               value={github_id}
-              autoComplete="off"
+              autoComplete='off'
+              placeholder='此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改'
               readOnly
             />
           </Form.Field>
           <Form.Field>
             <Form.Input
-              label="已绑定的微信账户"
-              name="wechat_id"
+              label='已绑定的微信账户'
+              name='wechat_id'
               value={wechat_id}
-              autoComplete="off"
+              autoComplete='off'
+              placeholder='此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改'
               readOnly
             />
           </Form.Field>
           <Form.Field>
             <Form.Input
-              label="已绑定的邮箱账户"
-              name="email"
+              label='已绑定的邮箱账户'
+              name='email'
               value={email}
-              autoComplete="off"
+              autoComplete='off'
+              placeholder='此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改'
               readOnly
             />
           </Form.Field>
