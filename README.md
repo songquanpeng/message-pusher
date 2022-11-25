@@ -20,8 +20,8 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
   <a href="https://github.com/songquanpeng/message-pusher/releases/latest">
     <img src="https://img.shields.io/github/downloads/songquanpeng/message-pusher/total?color=brightgreen&include_prereleases" alt="release">
   </a>
-  <a href="https://goreportcard.com/report/github.com/songquanpeng/message-pusher">
-    <img src="https://goreportcard.com/badge/github.com/songquanpeng/message-pusher" alt="GoReportCard">
+  <a href="https://hub.docker.com/repository/docker/justsong/message-pusher">
+    <img src="https://img.shields.io/docker/pulls/justsong/message-pusher?color=brightgreen" alt="docker pull">
   </a>
 </p>
 
@@ -62,6 +62,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 4. 为[其他系统](https://github.com/songquanpeng/personal-assistant#个人助理应用)提供消息推送功能。
 
 ## 部署
+### 手动部署
 1. 从 [GitHub Releases](https://github.com/songquanpeng/message-pusher/releases/latest) 下载可执行文件或者从源码编译：
    ```shell
    git clone https://github.com/songquanpeng/message-pusher.git
@@ -76,6 +77,13 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 3. 访问 [http://localhost:3000/](http://localhost:3000/) 并登录。初始账号用户名为 `root`，密码为 `123456`。
 
 如果服务需要长久运行，只是单纯地启动是不够的，[详细部署教程](https://iamazing.cn/page/how-to-deploy-a-website)。
+
+### 通过 Docker 部署
+执行：`docker run -d --restart always -p 3000:3000 -v /home/ubuntu/data/message-pusher:/data -v /etc/ssl/certs:/etc/ssl/certs:ro justsong/message-pusher`
+
+开放的端口号为 3000，之后用 Nginx 配置域名，反代以及 SSL 证书即可。
+
+数据将会保存在宿主机的 `/home/ubuntu/data/message-pusher` 目录（只有一个 SQLite 数据库文件）。
 
 ## 配置
 系统本身仅需要下载一个可执行文件即可开始使用，无其他依赖。
