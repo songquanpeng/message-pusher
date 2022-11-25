@@ -105,7 +105,14 @@ func GitHubOAuth(c *gin.Context) {
 		GitHubId: githubUser.Login,
 	}
 	if model.IsGitHubIdAlreadyTaken(user.GitHubId) {
-		user.FillUserByGitHubId()
+		err := user.FillUserByGitHubId()
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": err.Error(),
+			})
+			return
+		}
 	} else {
 		if common.RegisterEnabled {
 			user.Username = "github_" + strconv.Itoa(model.GetMaxUserId()+1)
@@ -171,7 +178,14 @@ func GitHubBind(c *gin.Context) {
 	id := session.Get("id")
 	// id := c.GetInt("id")  // critical bug!
 	user.Id = id.(int)
-	user.FillUserById()
+	err = user.FillUserById()
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
 	user.GitHubId = githubUser.Login
 	err = user.Update(false)
 	if err != nil {

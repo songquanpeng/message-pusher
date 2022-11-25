@@ -44,7 +44,14 @@ func PostPushMessage(c *gin.Context) {
 
 func pushMessageHelper(c *gin.Context, message *channel.Message) {
 	user := model.User{Username: c.Param("username")}
-	user.FillUserByUsername()
+	err := user.FillUserByUsername()
+	if err != nil {
+		c.JSON(http.StatusForbidden, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
 	if user.Status == common.UserStatusNonExisted {
 		c.JSON(http.StatusForbidden, gin.H{
 			"success": false,
@@ -87,7 +94,7 @@ func pushMessageHelper(c *gin.Context, message *channel.Message) {
 			message.Channel = channel.TypeEmail
 		}
 	}
-	err := message.Send(&user)
+	err = message.Send(&user)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,

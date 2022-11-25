@@ -62,6 +62,9 @@ func SearchUsers(keyword string) (users []*User, err error) {
 }
 
 func GetUserById(id int, selectAll bool) (*User, error) {
+	if id == 0 {
+		return nil, errors.New("id 为空！")
+	}
 	user := User{Id: id}
 	var err error = nil
 	if selectAll {
@@ -78,6 +81,9 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 }
 
 func DeleteUserById(id int) (err error) {
+	if id == 0 {
+		return errors.New("id 为空！")
+	}
 	user := User{Id: id}
 	return user.Delete()
 }
@@ -107,6 +113,9 @@ func (user *User) Update(updatePassword bool) error {
 }
 
 func (user *User) Delete() error {
+	if user.Id == 0 {
+		return errors.New("id 为空！")
+	}
 	err := DB.Delete(user).Error
 	return err
 }
@@ -117,8 +126,8 @@ func (user *User) ValidateAndFill() (err error) {
 	// that means if your field’s value is 0, '', false or other zero values,
 	// it won’t be used to build query conditions
 	password := user.Password
-	if password == "" {
-		return errors.New("密码为空")
+	if user.Username == "" || password == "" {
+		return errors.New("用户名或密码为空")
 	}
 	DB.Where(User{Username: user.Username}).First(user)
 	okay := common.ValidatePasswordAndHash(password, user.Password)
@@ -128,24 +137,44 @@ func (user *User) ValidateAndFill() (err error) {
 	return nil
 }
 
-func (user *User) FillUserById() {
+func (user *User) FillUserById() error {
+	if user.Id == 0 {
+		return errors.New("id 为空！")
+	}
 	DB.Where(User{Id: user.Id}).First(user)
+	return nil
 }
 
-func (user *User) FillUserByEmail() {
+func (user *User) FillUserByEmail() error {
+	if user.Email == "" {
+		return errors.New("email 为空！")
+	}
 	DB.Where(User{Email: user.Email}).First(user)
+	return nil
 }
 
-func (user *User) FillUserByGitHubId() {
+func (user *User) FillUserByGitHubId() error {
+	if user.GitHubId == "" {
+		return errors.New("GitHub id 为空！")
+	}
 	DB.Where(User{GitHubId: user.GitHubId}).First(user)
+	return nil
 }
 
-func (user *User) FillUserByWeChatId() {
+func (user *User) FillUserByWeChatId() error {
+	if user.WeChatId == "" {
+		return errors.New("WeChat id 为空！")
+	}
 	DB.Where(User{WeChatId: user.WeChatId}).First(user)
+	return nil
 }
 
-func (user *User) FillUserByUsername() {
+func (user *User) FillUserByUsername() error {
+	if user.Username == "" {
+		return errors.New("username 为空！")
+	}
 	DB.Where(User{Username: user.Username}).First(user)
+	return nil
 }
 
 func ValidateUserToken(token string) (user *User) {
@@ -177,6 +206,9 @@ func IsUsernameAlreadyTaken(username string) bool {
 }
 
 func ResetUserPasswordByEmail(email string, password string) error {
+	if email == "" || password == "" {
+		return errors.New("邮箱地址或密码为空！")
+	}
 	hashedPassword, err := common.Password2Hash(password)
 	if err != nil {
 		return err

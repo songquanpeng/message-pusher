@@ -70,7 +70,14 @@ func WeChatAuth(c *gin.Context) {
 		WeChatId: wechatId,
 	}
 	if model.IsWeChatIdAlreadyTaken(wechatId) {
-		user.FillUserByWeChatId()
+		err := user.FillUserByWeChatId()
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": err.Error(),
+			})
+			return
+		}
 	} else {
 		if common.RegisterEnabled {
 			user.Username = "wechat_" + strconv.Itoa(model.GetMaxUserId()+1)
@@ -132,7 +139,14 @@ func WeChatBind(c *gin.Context) {
 	user := model.User{
 		Id: id,
 	}
-	user.FillUserById()
+	err = user.FillUserById()
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
 	user.WeChatId = wechatId
 	err = user.Update(false)
 	if err != nil {
