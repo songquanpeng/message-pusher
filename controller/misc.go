@@ -1,16 +1,12 @@
 package controller
 
 import (
-	"crypto/sha1"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"message-pusher/common"
 	"message-pusher/model"
 	"net/http"
-	"sort"
-	"strings"
 )
 
 func GetStatus(c *gin.Context) {
@@ -170,24 +166,4 @@ func ResetPassword(c *gin.Context) {
 		"data":    password,
 	})
 	return
-}
-
-func WeChatTestAccountVerification(c *gin.Context) {
-	user := model.User{Username: c.Param("username")}
-	user.FillUserByUsername()
-	// https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Access_Overview.html
-	signature := c.Query("signature")
-	timestamp := c.Query("timestamp")
-	nonce := c.Query("nonce")
-	echoStr := c.Query("echostr")
-	arr := []string{user.WeChatTestAccountVerificationToken, timestamp, nonce}
-	sort.Strings(arr)
-	str := strings.Join(arr, "")
-	hash := sha1.Sum([]byte(str))
-	hexStr := hex.EncodeToString(hash[:])
-	if signature == hexStr {
-		c.String(http.StatusOK, echoStr)
-	} else {
-		c.Status(http.StatusForbidden)
-	}
 }
