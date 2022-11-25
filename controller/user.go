@@ -409,6 +409,7 @@ func UpdateSelf(c *gin.Context) {
 		WeChatCorpAccountAgentId:           user.WeChatCorpAccountAgentId,
 		WeChatCorpAccountUserId:            user.WeChatCorpAccountUserId,
 		WeChatCorpAccountClientType:        user.WeChatCorpAccountClientType,
+		CorpWebhookURL:                     user.CorpWebhookURL,
 		LarkWebhookURL:                     user.LarkWebhookURL,
 		LarkWebhookSecret:                  user.LarkWebhookSecret,
 		DingWebhookURL:                     user.DingWebhookURL,

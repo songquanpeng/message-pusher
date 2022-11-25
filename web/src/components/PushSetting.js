@@ -24,6 +24,7 @@ const PushSetting = () => {
     wechat_corp_account_agent_id: '',
     wechat_corp_account_user_id: '',
     wechat_corp_account_client_type: '',
+    corp_webhook_url: '',
     lark_webhook_url: '',
     lark_webhook_secret: '',
     ding_webhook_url: '',
@@ -81,7 +82,7 @@ const PushSetting = () => {
           inputs.wechat_test_account_template_id;
         data.wechat_test_account_open_id = inputs.wechat_test_account_open_id;
         break;
-      case 'corp':
+      case 'corp_app':
         data.wechat_corp_account_id = inputs.wechat_corp_account_id;
         data.wechat_corp_account_agent_secret =
           inputs.wechat_corp_account_agent_secret;
@@ -89,6 +90,9 @@ const PushSetting = () => {
         data.wechat_corp_account_user_id = inputs.wechat_corp_account_user_id;
         data.wechat_corp_account_client_type =
           inputs.wechat_corp_account_client_type;
+        break;
+      case 'corp':
+        data.corp_webhook_url = inputs.corp_webhook_url;
         break;
       case 'lark':
         data.lark_webhook_url = inputs.lark_webhook_url;
@@ -142,10 +146,11 @@ const PushSetting = () => {
               options={[
                 { key: 'email', text: '邮件', value: 'email' },
                 { key: 'test', text: '微信测试号', value: 'test' },
-                { key: 'corp', text: '企业微信', value: 'corp' },
+                { key: 'corp_app', text: '企业微信应用号', value: 'corp_app' },
+                { key: 'corp', text: '企业微信群机器人', value: 'corp' },
                 { key: 'lark', text: '飞书群机器人', value: 'lark' },
                 { key: 'ding', text: '钉钉群机器人', value: 'ding' },
-                { key: 'bark', text: 'Bark', value: 'bark' },
+                { key: 'bark', text: 'Bark App', value: 'bark' },
               ]}
               value={inputs.channel}
               onChange={handleInputChange}
@@ -231,9 +236,9 @@ const PushSetting = () => {
           <Button onClick={() => test('test')}>测试</Button>
           <Divider />
           <Header as='h3'>
-            企业微信设置（corp）
+            企业微信应用号设置（corp_app）
             <Header.Subheader>
-              通过企业微信进行推送，点击前往配置：
+              通过企业微信应用号进行推送，点击前往配置：
               <a
                 target='_blank'
                 href='https://work.weixin.qq.com/wework_admin/frame#apps'
@@ -302,13 +307,36 @@ const PushSetting = () => {
               onChange={handleInputChange}
             />
           </Form.Group>
+          <Button onClick={() => submit('corp_app')} loading={loading}>
+            保存
+          </Button>
+          <Button onClick={() => test('corp_app')}>测试</Button>
+          <Divider />
+          <Header as='h3'>
+            企业微信群机器人设置（corp）
+            <Header.Subheader>
+              通过企业微信群机器人进行推送，配置流程：选择一个群聊 -> 设置 ->
+              群机器人 -> 添加 -> 新建 -> 输入名字，点击添加 -> 点击复制 Webhook
+              地址
+            </Header.Subheader>
+          </Header>
+          <Form.Group widths={2}>
+            <Form.Input
+              label='Webhook 地址'
+              name='corp_webhook_url'
+              onChange={handleInputChange}
+              autoComplete='off'
+              value={inputs.corp_webhook_url}
+              placeholder='在此填写企业微信提供的 Webhook 地址'
+            />
+          </Form.Group>
           <Button onClick={() => submit('corp')} loading={loading}>
             保存
           </Button>
           <Button onClick={() => test('corp')}>测试</Button>
           <Divider />
           <Header as='h3'>
-            飞书设置（lark）
+            飞书群机器人设置（lark）
             <Header.Subheader>
               通过飞书群机器人进行推送，飞书桌面客户端的配置流程：选择一个群聊
               -> 设置 -> 群机器人 -> 添加机器人 -> 自定义机器人 -> 添加（
@@ -346,11 +374,11 @@ const PushSetting = () => {
           <Button onClick={() => test('lark')}>测试</Button>
           <Divider />
           <Header as='h3'>
-            钉钉设置（ding）
+            钉钉群机器人设置（ding）
             <Header.Subheader>
-              通过钉钉机器人进行推送，钉钉桌面客户端的配置流程：选择一个群聊 ->
-              群设置 -> 智能群助手 -> 添加机器人（点击右侧齿轮图标） -> 自定义
-              -> 添加（
+              通过钉钉群机器人进行推送，钉钉桌面客户端的配置流程：选择一个群聊
+              -> 群设置 -> 智能群助手 -> 添加机器人（点击右侧齿轮图标） ->
+              自定义 -> 添加（
               <strong>注意选中「加密」</strong>）。具体参见：
               <a
                 target='_blank'

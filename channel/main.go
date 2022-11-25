@@ -8,7 +8,8 @@ import (
 const (
 	TypeEmail             = "email"
 	TypeWeChatTestAccount = "test"
-	TypeWeChatCorpAccount = "corp"
+	TypeWeChatCorpAccount = "corp_app"
+	TypeCorp              = "corp"
 	TypeLark              = "lark"
 	TypeDing              = "ding"
 	TypeTelegram          = "telegram"
@@ -33,6 +34,8 @@ func (message *Message) Send(user *model.User) error {
 		return SendWeChatTestMessage(message, user)
 	case TypeWeChatCorpAccount:
 		return SendWeChatCorpMessage(message, user)
+	case TypeCorp:
+		return SendCorpMessage(message, user)
 	case TypeLark:
 		return SendLarkMessage(message, user)
 	case TypeDing:

@@ -31,6 +31,7 @@ type User struct {
 	WeChatCorpAccountAgentId           string `json:"wechat_corp_account_agent_id" gorm:"column:wechat_corp_account_agent_id"`
 	WeChatCorpAccountUserId            string `json:"wechat_corp_account_user_id" gorm:"column:wechat_corp_account_user_id"`
 	WeChatCorpAccountClientType        string `json:"wechat_corp_account_client_type" gorm:"column:wechat_corp_account_client_type;default=plugin"`
+	CorpWebhookURL                     string `json:"corp_webhook_url" gorm:"corp_webhook_url"`
 	LarkWebhookURL                     string `json:"lark_webhook_url"`
 	LarkWebhookSecret                  string `json:"lark_webhook_secret"`
 	DingWebhookURL                     string `json:"ding_webhook_url"`
@@ -70,7 +71,7 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 			"channel", "token",
 			"wechat_test_account_id", "wechat_test_account_template_id", "wechat_test_account_open_id",
 			"wechat_corp_account_id", "wechat_corp_account_agent_id", "wechat_corp_account_user_id", "wechat_corp_account_client_type",
-			"lark_webhook_url", "ding_webhook_url", "bark_server",
+			"corp_webhook_url", "lark_webhook_url", "ding_webhook_url", "bark_server",
 		}).First(&user, "id = ?", id).Error
 	}
 	return &user, err
