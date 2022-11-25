@@ -28,7 +28,9 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 <p align="center">
   <a href="https://github.com/songquanpeng/message-pusher/releases">程序下载</a>
   ·
-  <a href="https://github.com/songquanpeng/message-pusher#用法">使用教程</a>
+  <a href="#部署">部署教程</a>
+  ·
+  <a href="#用法">使用教程</a>
   ·
   <a href="https://github.com/songquanpeng/message-pusher/issues">意见反馈</a>
   ·
@@ -36,6 +38,8 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 </p>
 
 > 注意：Message Pusher 原本基于 Node.js 开发，当前版本为 Golang 重构版本，目前处于预发布阶段，可能不太稳定，如果需要稳定版请使用[旧版本](https://github.com/songquanpeng/message-pusher/releases/tag/v0.2.3)。
+
+> 公告：官方部署站 https://msgpusher.com 现已上线，当前开放注册，欢迎使用。如果收到积极反馈未来可以考虑换用延迟更低的服务器。
 
 ## 描述
 1. 多种消息推送方式：
