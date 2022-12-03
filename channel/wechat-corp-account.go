@@ -101,8 +101,15 @@ func SendWeChatCorpMessage(message *Message, user *model.User) error {
 		AgentId: user.WeChatCorpAccountAgentId,
 	}
 	if message.Content == "" {
-		messageRequest.MessageType = "text"
-		messageRequest.Text.Content = message.Description
+		if message.Title == "" {
+			messageRequest.MessageType = "text"
+			messageRequest.Text.Content = message.Description
+		} else {
+			messageRequest.MessageType = "textcard"
+			messageRequest.TextCard.Title = message.Title
+			messageRequest.TextCard.Description = message.Description
+			messageRequest.TextCard.URL = common.ServerAddress
+		}
 	} else {
 		if user.WeChatCorpAccountClientType == "plugin" {
 			messageRequest.MessageType = "textcard"
