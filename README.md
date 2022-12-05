@@ -145,6 +145,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
       7. `bark`：通过 Bark 进行推送。
    5. `token`：如果你在后台设置了推送 token，则此项必填。另外可以通过设置 HTTP `Authorization` 头部设置此项。
 3. `POST` 请求方式：字段与上面 `GET` 请求方式保持一致。
+   + 注意：请求体编码格式为 `application/json`。
 
 **示例：**
 ```python
@@ -154,7 +155,7 @@ import requests
 res = requests.get("https://your.domain.com/push/username?title={}&description={}&token={}".format("标题", "描述", "666"))
 
 # POST 方式
-res = requests.post("https://your.domain.com/push/username", data={
+res = requests.post("https://your.domain.com/push/username", json={
     "title": "标题",
     "description" : "描述",
     "content": "**Markdown 内容**",
