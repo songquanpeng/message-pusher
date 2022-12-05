@@ -157,7 +157,7 @@ res = requests.get("https://your.domain.com/push/username?title={}&description={
 # POST 方式
 res = requests.post("https://your.domain.com/push/username", json={
     "title": "标题",
-    "description" : "描述",
+    "description": "描述",
     "content": "**Markdown 内容**",
     "token": "6666"
 })
