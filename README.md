@@ -107,6 +107,9 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 3. `SQL_DSN`：设置之后将使用指定数据库而非 SQLite。
     + 例子：`SQL_DSN=root:123456@tcp(localhost:3306)/message-pusher`
 
+注意：使用 Docker 部署时，请使用 `-e key=value` 设置环境变量。
+   + 例子：`docker run -e SESSION_SECRET=random_string ...`
+
 ### 命令行参数
 1. `--port <port_number>`: 指定服务器监听的端口号，默认为 `3000`。
     + 例子：`--port 3000`
