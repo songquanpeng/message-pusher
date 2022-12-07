@@ -86,13 +86,9 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 ### 通过 Docker 部署
 执行：`docker run -d --restart always --name message-pusher -p 3000:3000 -v /home/ubuntu/data/message-pusher:/data -v /etc/ssl/certs:/etc/ssl/certs:ro justsong/message-pusher`
 
-更新：```
-docker stop message-pusher && docker rm message-pusher
-docker rmi justsong/message-pusher
-docker run -d --restart always --name message-pusher -p 3000:3000 -v /home/ubuntu/data/message-pusher:/data -v /etc/ssl/certs:/etc/ssl/certs:ro justsong/message-pusher
-```
+更新：`docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower -cR`
 
-开放的端口号为 3000，之后用 Nginx 配置域名，反代以及 SSL 证书即可。
+开放的端口号为 3000，之后用 Nginx 配置域名，反代以及 SSL 证书即可，具体仍可参考[详细部署教程](https://iamazing.cn/page/how-to-deploy-a-website)。
 
 数据将会保存在宿主机的 `/home/ubuntu/data/message-pusher` 目录（只有一个 SQLite 数据库文件）。
 
@@ -110,6 +106,8 @@ docker run -d --restart always --name message-pusher -p 3000:3000 -v /home/ubunt
     + 例子：`SESSION_SECRET=random_string`
 3. `SQL_DSN`：设置之后将使用指定数据库而非 SQLite。
     + 例子：`SQL_DSN=root:123456@tcp(localhost:3306)/message-pusher`
+4. `docker`环境变量: 需要在部署的时候使用`-e key=value`设置环境变量。
+    + 例子: `docker run -d --restart always --name message-pusher -e SESSION_SECRET=random_string ······`
 
 ### 命令行参数
 1. `--port <port_number>`: 指定服务器监听的端口号，默认为 `3000`。
