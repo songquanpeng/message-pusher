@@ -31,6 +31,7 @@ const PushSetting = () => {
     ding_webhook_secret: '',
     bark_server: '',
     bark_secret: '',
+    client_secret: '',
   });
   let [loading, setLoading] = useState(false);
 
@@ -106,6 +107,9 @@ const PushSetting = () => {
         data.bark_server = removeTrailingSlash(inputs.bark_server);
         data.bark_secret = inputs.bark_secret;
         break;
+      case 'client':
+        data.client_secret = inputs.client_secret;
+        break;
       default:
         showError(`无效的参数：${which}`);
         return;
@@ -151,6 +155,7 @@ const PushSetting = () => {
                 { key: 'lark', text: '飞书群机器人', value: 'lark' },
                 { key: 'ding', text: '钉钉群机器人', value: 'ding' },
                 { key: 'bark', text: 'Bark App', value: 'bark' },
+                { key: 'client', text: 'WebSocket 客户端', value: 'client' },
               ]}
               value={inputs.channel}
               onChange={handleInputChange}
@@ -443,6 +448,36 @@ const PushSetting = () => {
             保存
           </Button>
           <Button onClick={() => test('bark')}>测试</Button>
+          <Divider />
+          <Header as='h3'>
+            WebSocket 客户端设置（client）
+            <Header.Subheader>
+              通过 WebSocket
+              客户端进行推送，可以使用官方客户端实现，或者根据协议自行实现。官方客户端
+              <a
+                target='_blank'
+                href='https://github.com/songquanpeng/personal-assistant'
+              >
+                详见此处
+              </a>
+              。
+            </Header.Subheader>
+          </Header>
+          <Form.Group widths={2}>
+            <Form.Input
+              label='服务器连接密钥'
+              name='client_secret'
+              type='password'
+              onChange={handleInputChange}
+              autoComplete='off'
+              value={inputs.client_secret}
+              placeholder='在此设置服务器连接密钥'
+            />
+          </Form.Group>
+          <Button onClick={() => submit('client')} loading={loading}>
+            保存
+          </Button>
+          <Button onClick={() => test('client')}>测试</Button>
         </Form>
       </Grid.Column>
     </Grid>

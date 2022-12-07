@@ -38,6 +38,7 @@ type User struct {
 	DingWebhookSecret                  string `json:"ding_webhook_secret"`
 	BarkServer                         string `json:"bark_server"`
 	BarkSecret                         string `json:"bark_secret"`
+	ClientSecret                       string `json:"client_secret"`
 }
 
 func GetMaxUserId() int {
