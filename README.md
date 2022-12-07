@@ -84,9 +84,11 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 如果服务需要长久运行，只是单纯地启动是不够的，[详细部署教程](https://iamazing.cn/page/how-to-deploy-a-website)。
 
 ### 通过 Docker 部署
-执行：`docker run -d --restart always -p 3000:3000 -v /home/ubuntu/data/message-pusher:/data -v /etc/ssl/certs:/etc/ssl/certs:ro justsong/message-pusher`
+执行：`docker run -d --restart always --name message-pusher -p 3000:3000 -v /home/ubuntu/data/message-pusher:/data -v /etc/ssl/certs:/etc/ssl/certs:ro justsong/message-pusher`
 
-开放的端口号为 3000，之后用 Nginx 配置域名，反代以及 SSL 证书即可。
+更新：`docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower -cR`
+
+开放的端口号为 3000，之后用 Nginx 配置域名，反代以及 SSL 证书即可，具体仍可参考[详细部署教程](https://iamazing.cn/page/how-to-deploy-a-website)。
 
 数据将会保存在宿主机的 `/home/ubuntu/data/message-pusher` 目录（只有一个 SQLite 数据库文件）。
 
@@ -104,6 +106,8 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
     + 例子：`SESSION_SECRET=random_string`
 3. `SQL_DSN`：设置之后将使用指定数据库而非 SQLite。
     + 例子：`SQL_DSN=root:123456@tcp(localhost:3306)/message-pusher`
+4. `docker`环境变量: 需要在部署的时候使用`-e key=value`设置环境变量。
+    + 例子: `docker run -d --restart always --name message-pusher -e SESSION_SECRET=random_string ······`
 
 ### 命令行参数
 1. `--port <port_number>`: 指定服务器监听的端口号，默认为 `3000`。
@@ -130,7 +134,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 
 ## 用法
 1. 消息推送 API URL：`https://<domain>/push/<username>`
-   + 将上面的 `<domain>` 以及 `<username>` 替换为真实值，例如：`https://push.mydomain.cn/admin`
+   + 将上面的 `<domain>` 以及 `<username>` 替换为真实值，例如：`https://push.mydomain.cn/push/admin`
 2. `GET` 请求方式：`https://<domain>/push/<username>?title=<标题>&description=<描述>&content=<Markdown 文本>&channel=<推送方式>&token=<推送 token>`
    1. `title`：选填，受限于具体的消息推送方式，其可能被忽略。
    2. `description`：必填，可以替换为 `desp`。
