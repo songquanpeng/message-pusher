@@ -32,6 +32,9 @@ func GetPushMessage(c *gin.Context) {
 func PostPushMessage(c *gin.Context) {
 	message := channel.Message{}
 	err := json.NewDecoder(c.Request.Body).Decode(&message)
+	if message.Description == "" {
+		message.Description = message.Desp
+	}
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,

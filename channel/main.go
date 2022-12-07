@@ -20,6 +20,7 @@ const (
 type Message struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
+	Desp        string `json:"desp"` // alias for description
 	Content     string `json:"content"`
 	URL         string `json:"url"`
 	Channel     string `json:"channel"`
