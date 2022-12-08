@@ -8,7 +8,13 @@ import (
 	"net/http"
 )
 
-var upgrader = websocket.Upgrader{} // use default options
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
 
 func RegisterClient(c *gin.Context) {
 	secret := c.Query("secret")

@@ -50,7 +50,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
    + 飞书群机器人，
    + 钉钉群机器人，
    + Bark App,
-   + [桌面客户端](https://github.com/songquanpeng/personal-assistant)（WIP）
+   + WebSocket 客户端（[官方客户端](https://github.com/songquanpeng/personal-assistant)，[接入文档](./docs/API.md#WebSocket%20客户端)），
 2. 多种用户登录注册方式：
    + 邮箱登录注册以及通过邮箱进行密码重置。
    + [GitHub 开放授权](https://github.com/settings/applications/new)。
