@@ -465,13 +465,13 @@ const PushSetting = () => {
           </Header>
           <Form.Group widths={2}>
             <Form.Input
-              label='服务器连接密钥'
+              label='客户端连接密钥'
               name='client_secret'
               type='password'
               onChange={handleInputChange}
               autoComplete='off'
               value={inputs.client_secret}
-              placeholder='在此设置服务器连接密钥'
+              placeholder='在此设置客户端连接密钥'
             />
           </Form.Group>
           <Button onClick={() => submit('client')} loading={loading}>
