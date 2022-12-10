@@ -92,6 +92,16 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 
 数据将会保存在宿主机的 `/home/ubuntu/data/message-pusher` 目录（只有一个 SQLite 数据库文件）。
 
+
+### 注意
+如果需要使用 WebSocket 客户端推送功能，则 Nginx 的配置文件中 `proxy_read_timeout` 和 `proxy_send_timeout` 务必设置超过 1 分钟。
+
+推荐设置：
+```
+proxy_read_timeout 300s;
+proxy_send_timeout 300s;   
+```
+
 ## 配置
 系统本身仅需要下载一个可执行文件即可开始使用，无其他依赖。
 
