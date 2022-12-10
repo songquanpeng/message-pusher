@@ -30,7 +30,7 @@ jobs:
       - name: Build Backend
         run: |
           go mod download
-          go build -ldflags "-s -w -X 'message-pusher/common.Version=$(git describe --tags)'" -o message-pusher
+          go build -ldflags "-s -w -X 'message-pusher/common.Version=$(git describe --tags)' -extldflags '-static'" -o message-pusher
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
