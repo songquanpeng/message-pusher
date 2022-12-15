@@ -53,7 +53,7 @@ func GetAllUsers(startIdx int, num int) (users []*User, err error) {
 }
 
 func GetAllUsersWithSecrets() (users []*User, err error) {
-	err = DB.Find(&users).Error
+	err = DB.Where("status = ?", common.UserStatusEnabled).Where("wechat_test_account_id != '' or wechat_corp_account_id != ''").Find(&users).Error
 	return users, err
 }
 

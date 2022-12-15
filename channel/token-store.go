@@ -11,6 +11,7 @@ type TokenStoreItem interface {
 	Key() string
 	Token() string
 	Refresh()
+	IsFilled() bool
 }
 
 type tokenStore struct {
@@ -78,7 +79,11 @@ func TokenStoreInit() {
 	}()
 }
 
+// TokenStoreAddItem It's okay to add an incomplete item.
 func TokenStoreAddItem(item TokenStoreItem) {
+	if !item.IsFilled() {
+		return
+	}
 	item.Refresh()
 	s.Mutex.RLock()
 	s.Map[item.Key()] = &item
@@ -91,18 +96,36 @@ func TokenStoreRemoveItem(item TokenStoreItem) {
 	s.Mutex.RUnlock()
 }
 
+func TokenStoreAddUser(user *model.User) {
+	testItem := WeChatTestAccountTokenStoreItem{
+		AppID:     user.WeChatTestAccountId,
+		AppSecret: user.WeChatTestAccountSecret,
+	}
+	TokenStoreAddItem(&testItem)
+	corpItem := WeChatCorpAccountTokenStoreItem{
+		CorpId:      user.WeChatCorpAccountId,
+		AgentSecret: user.WeChatCorpAccountAgentSecret,
+		AgentId:     user.WeChatCorpAccountAgentId,
+	}
+	TokenStoreAddItem(&corpItem)
+}
+
 func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
+	// WeChat Test Account
+	// The fields of cleanUser may be incomplete!
 	if cleanUser.WeChatTestAccountId == originUser.WeChatTestAccountId {
 		cleanUser.WeChatTestAccountId = ""
 	}
 	if cleanUser.WeChatTestAccountSecret == originUser.WeChatTestAccountSecret {
 		cleanUser.WeChatTestAccountSecret = ""
 	}
+	// This means the user updated those fields.
 	if cleanUser.WeChatTestAccountId != "" || cleanUser.WeChatTestAccountSecret != "" {
 		oldWeChatTestAccountTokenStoreItem := WeChatTestAccountTokenStoreItem{
 			AppID:     originUser.WeChatTestAccountId,
 			AppSecret: originUser.WeChatTestAccountSecret,
 		}
+		// Yeah, it's a deep copy.
 		newWeChatTestAccountTokenStoreItem := oldWeChatTestAccountTokenStoreItem
 		if cleanUser.WeChatTestAccountId != "" {
 			newWeChatTestAccountTokenStoreItem.AppID = cleanUser.WeChatTestAccountId
@@ -115,6 +138,8 @@ func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
 		}
 		TokenStoreAddItem(&newWeChatTestAccountTokenStoreItem)
 	}
+
+	// WeChat Corp Account
 	if cleanUser.WeChatCorpAccountId == originUser.WeChatCorpAccountId {
 		cleanUser.WeChatCorpAccountId = ""
 	}
@@ -126,9 +151,9 @@ func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
 	}
 	if cleanUser.WeChatCorpAccountId != "" || cleanUser.WeChatCorpAccountAgentId != "" || cleanUser.WeChatCorpAccountAgentSecret != "" {
 		oldWeChatCorpAccountTokenStoreItem := WeChatCorpAccountTokenStoreItem{
-			CorpId:      cleanUser.WeChatCorpAccountId,
-			AgentSecret: cleanUser.WeChatCorpAccountAgentSecret,
-			AgentId:     cleanUser.WeChatCorpAccountAgentId,
+			CorpId:      originUser.WeChatCorpAccountId,
+			AgentSecret: originUser.WeChatCorpAccountAgentSecret,
+			AgentId:     originUser.WeChatCorpAccountAgentId,
 		}
 		newWeChatCorpAccountTokenStoreItem := oldWeChatCorpAccountTokenStoreItem
 		if cleanUser.WeChatCorpAccountId != "" {
@@ -147,7 +172,9 @@ func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
 	}
 }
 
-// TokenStoreRemoveUser user must be filled
+// TokenStoreRemoveUser
+// user must be filled.
+// It's okay to delete a user that don't have an item here.
 func TokenStoreRemoveUser(user *model.User) {
 	testAccountTokenStoreItem := WeChatTestAccountTokenStoreItem{
 		AppID:     user.WeChatTestAccountId,

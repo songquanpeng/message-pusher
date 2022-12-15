@@ -584,8 +584,24 @@ func ManageUser(c *gin.Context) {
 	}
 	switch req.Action {
 	case "disable":
+		if user.Status == common.UserStatusDisabled {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "该账户已经是封禁状态",
+			})
+			return
+		}
+		channel.TokenStoreRemoveUser(&user)
 		user.Status = common.UserStatusDisabled
 	case "enable":
+		if user.Status == common.UserStatusEnabled {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "该账户已经是启用状态",
+			})
+			return
+		}
+		channel.TokenStoreAddUser(&user)
 		user.Status = common.UserStatusEnabled
 	case "delete":
 		if err := user.Delete(); err != nil {

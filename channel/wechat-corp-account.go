@@ -34,6 +34,10 @@ func (i *WeChatCorpAccountTokenStoreItem) IsShared() bool {
 		i.CorpId, i.AgentSecret, i.AgentId).Find(&model.User{}).RowsAffected != 1
 }
 
+func (i *WeChatCorpAccountTokenStoreItem) IsFilled() bool {
+	return i.CorpId != "" && i.AgentSecret != "" && i.AgentId != ""
+}
+
 func (i *WeChatCorpAccountTokenStoreItem) Token() string {
 	return i.AccessToken
 }

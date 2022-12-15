@@ -33,6 +33,10 @@ func (i *WeChatTestAccountTokenStoreItem) IsShared() bool {
 		i.AppID, i.AppSecret).Find(&model.User{}).RowsAffected != 1
 }
 
+func (i *WeChatTestAccountTokenStoreItem) IsFilled() bool {
+	return i.AppID != "" && i.AppSecret != ""
+}
+
 func (i *WeChatTestAccountTokenStoreItem) Token() string {
 	return i.AccessToken
 }
