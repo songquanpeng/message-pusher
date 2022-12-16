@@ -37,8 +37,6 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
   <a href="https://message-pusher.onrender.com/">在线演示</a>
 </p>
 
-> 注意：Message Pusher 原本基于 Node.js 开发，当前版本为 Golang 重构版本，目前处于预发布阶段，可能不太稳定，如果需要稳定版请使用[旧版本](https://github.com/songquanpeng/message-pusher/tree/nodejs)。
-
 > 公告：官方部署站 https://msgpusher.com 现已上线，当前开放注册，欢迎使用。如果收到积极反馈未来可以考虑换用延迟更低的服务器。
 
 ## 描述
@@ -84,7 +82,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 如果服务需要长久运行，只是单纯地启动是不够的，[详细部署教程](https://iamazing.cn/page/how-to-deploy-a-website)。
 
 ### 通过 Docker 部署
-部署：`docker run -d --restart always --name message-pusher -p 3000:3000 -v /home/ubuntu/data/message-pusher:/data -v /etc/ssl/certs:/etc/ssl/certs:ro justsong/message-pusher`
+部署：`docker run -d --restart always --name message-pusher -p 3000:3000 -v /home/ubuntu/data/message-pusher:/data justsong/message-pusher`
 
 更新：`docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower -cR`
 
