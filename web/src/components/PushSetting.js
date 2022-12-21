@@ -32,6 +32,8 @@ const PushSetting = () => {
     bark_server: '',
     bark_secret: '',
     client_secret: '',
+    telegram_bot_token: '',
+    telegram_chat_id: '',
   });
   let [loading, setLoading] = useState(false);
 
@@ -110,6 +112,10 @@ const PushSetting = () => {
       case 'client':
         data.client_secret = inputs.client_secret;
         break;
+      case 'telegram':
+        data.telegram_bot_token = inputs.telegram_bot_token;
+        data.telegram_chat_id = inputs.telegram_chat_id;
+        break;
       default:
         showError(`无效的参数：${which}`);
         return;
@@ -156,6 +162,7 @@ const PushSetting = () => {
                 { key: 'ding', text: '钉钉群机器人', value: 'ding' },
                 { key: 'bark', text: 'Bark App', value: 'bark' },
                 { key: 'client', text: 'WebSocket 客户端', value: 'client' },
+                { key: 'telegram', text: 'Telegram 机器人', value: 'telegram' },
               ]}
               value={inputs.channel}
               onChange={handleInputChange}
@@ -478,6 +485,37 @@ const PushSetting = () => {
             保存
           </Button>
           <Button onClick={() => test('client')}>测试</Button>
+          <Divider />
+          <Header as='h3'>
+            Telegram 机器人设置（telegram）
+            <Header.Subheader>
+              通过 Telegram 机器人进行消息推送。
+            </Header.Subheader>
+          </Header>
+          <Form.Group widths={2}>
+            <Form.Input
+              label='Telegram 机器人令牌'
+              name='telegram_bot_token'
+              type='password'
+              onChange={handleInputChange}
+              autoComplete='off'
+              value={inputs.telegram_bot_token}
+              placeholder='在此设置 Telegram 机器人令牌'
+            />
+            <Form.Input
+              label='Telegram 会话 ID'
+              name='telegram_chat_id'
+              type='text'
+              onChange={handleInputChange}
+              autoComplete='off'
+              value={inputs.telegram_chat_id}
+              placeholder='在此设置 Telegram 会话 ID'
+            />
+          </Form.Group>
+          <Button onClick={() => submit('telegram')} loading={loading}>
+            保存
+          </Button>
+          <Button onClick={() => test('telegram')}>测试</Button>
         </Form>
       </Grid.Column>
     </Grid>

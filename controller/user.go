@@ -392,6 +392,7 @@ func UpdateSelf(c *gin.Context) {
 		})
 		return
 	}
+	// White list mode. For safe :)
 	cleanUser := model.User{
 		Id:                                 c.GetInt("id"),
 		Username:                           user.Username,
@@ -417,6 +418,8 @@ func UpdateSelf(c *gin.Context) {
 		BarkServer:                         user.BarkServer,
 		BarkSecret:                         user.BarkSecret,
 		ClientSecret:                       user.ClientSecret,
+		TelegramBotToken:                   user.TelegramBotToken,
+		TelegramChatId:                     user.TelegramChatId,
 	}
 	channel.TokenStoreUpdateUser(&cleanUser, originUser)
 
