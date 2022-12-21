@@ -49,6 +49,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
    + 钉钉群机器人，
    + Bark App,
    + WebSocket 客户端（[官方客户端](https://github.com/songquanpeng/personal-assistant)，[接入文档](./docs/API.md#websocket-客户端)），
+   + Telegram 机器人，
 2. 多种用户登录注册方式：
    + 邮箱登录注册以及通过邮箱进行密码重置。
    + [GitHub 开放授权](https://github.com/settings/applications/new)。
@@ -158,6 +159,7 @@ proxy_send_timeout 300s;
       6. `ding`：通过钉钉群机器人进行推送。
       7. `bark`：通过 Bark 进行推送。
       8. `client`：通过 WebSocket 客户端进行推送。
+      9. `telegram`：通过 Telegram 机器人进行推送（`description` 或 `content` 字段均可，支持 Markdown 的子集）。
    5. `token`：如果你在后台设置了推送 token，则此项必填。另外可以通过设置 HTTP `Authorization` 头部设置此项。
 3. `POST` 请求方式：字段与上面 `GET` 请求方式保持一致。
    + 注意：请求体编码格式为 `application/json`。

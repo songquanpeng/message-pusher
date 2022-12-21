@@ -8,6 +8,7 @@ import {
   Message,
 } from 'semantic-ui-react';
 import { API, removeTrailingSlash, showError, showSuccess } from '../helpers';
+import axios from 'axios';
 
 const PushSetting = () => {
   let [inputs, setInputs] = useState({
@@ -138,6 +139,30 @@ const PushSetting = () => {
       showSuccess('测试消息已发送');
     } else {
       showError(message);
+    }
+  };
+
+  const getTelegramChatId = async () => {
+    if (inputs.telegram_bot_token === '') {
+      showError('请先输入 Telegram 机器人令牌！');
+      return;
+    }
+    let res = await axios.get(
+      `https://api.telegram.org/bot${inputs.telegram_bot_token}/getUpdates`
+    );
+    const { ok } = res.data;
+    if (ok) {
+      let result = res.data.result;
+      if (result.length === 0) {
+        showError(`请先向你的机器人发送一条任意消息！`);
+      } else {
+        let id = result[0]?.message?.chat?.id;
+        id = id.toString();
+        setInputs((inputs) => ({ ...inputs, telegram_chat_id: id }));
+        showSuccess('会话 ID 获取成功，请点击保存按钮保存！');
+      }
+    } else {
+      showError(`发生错误：${res.description}`);
     }
   };
 
@@ -489,7 +514,14 @@ const PushSetting = () => {
           <Header as='h3'>
             Telegram 机器人设置（telegram）
             <Header.Subheader>
-              通过 Telegram 机器人进行消息推送。
+              通过 Telegram 机器人进行消息推送。首先向
+              <a href='https://t.me/botfather' target='_blank'>
+                {' '}
+                Bot Father{' '}
+              </a>
+              申请创建一个新的机器人，之后在下方输入获取到的令牌，然后点击你的机器人，随便发送一条消息，之后点击下方的「获取会话
+              ID」按钮，系统将自动为你填写会话
+              ID，最后点击保存按钮保存设置即可。
             </Header.Subheader>
           </Header>
           <Form.Group widths={2}>
@@ -512,6 +544,9 @@ const PushSetting = () => {
               placeholder='在此设置 Telegram 会话 ID'
             />
           </Form.Group>
+          <Button onClick={getTelegramChatId} loading={loading}>
+            获取会话 ID
+          </Button>
           <Button onClick={() => submit('telegram')} loading={loading}>
             保存
           </Button>
