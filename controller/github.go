@@ -116,7 +116,11 @@ func GitHubOAuth(c *gin.Context) {
 	} else {
 		if common.RegisterEnabled {
 			user.Username = "github_" + strconv.Itoa(model.GetMaxUserId()+1)
-			user.DisplayName = githubUser.Name
+			if githubUser.Name != "" {
+				user.DisplayName = githubUser.Name
+			} else {
+				user.DisplayName = "GitHub User"
+			}
 			user.Email = githubUser.Email
 			user.Role = common.RoleCommonUser
 			user.Status = common.UserStatusEnabled
