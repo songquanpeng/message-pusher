@@ -27,14 +27,21 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: '>=1.18.0'
-      - name: Build Backend
+      - name: Build Backend (amd64)
         run: |
           go mod download
           go build -ldflags "-s -w -X 'message-pusher/common.Version=$(git describe --tags)' -extldflags '-static'" -o message-pusher
+      - name: Build Backend (arm64)
+        run: |
+          sudo apt-get update
+          sudo apt-get install gcc-aarch64-linux-gnu
+          CC=aarch64-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm64 go build -ldflags "-s -w -X 'message-pusher/common.Version=$(git describe --tags)' -extldflags '-static'" -o message-pusher-arm64
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: message-pusher
+          files: |
+            message-pusher
+            message-pusher-arm64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
