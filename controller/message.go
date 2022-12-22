@@ -30,17 +30,28 @@ func GetPushMessage(c *gin.Context) {
 }
 
 func PostPushMessage(c *gin.Context) {
-	message := channel.Message{}
-	err := json.NewDecoder(c.Request.Body).Decode(&message)
+	message := channel.Message{
+		Title:       c.PostForm("title"),
+		Description: c.PostForm("description"),
+		Content:     c.PostForm("content"),
+		URL:         c.PostForm("url"),
+		Channel:     c.PostForm("channel"),
+		Token:       c.PostForm("token"),
+		Desp:        c.PostForm("desp"),
+	}
+	if message == (channel.Message{}) {
+		// Looks like the user is using JSON
+		err := json.NewDecoder(c.Request.Body).Decode(&message)
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "无法解析请求体，请检查其是否为合法 JSON",
+			})
+			return
+		}
+	}
 	if message.Description == "" {
 		message.Description = message.Desp
-	}
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"success": false,
-			"message": "无法解析请求体，请检查其是否为合法 JSON",
-		})
-		return
 	}
 	pushMessageHelper(c, &message)
 }
