@@ -32,6 +32,8 @@ func InitOptionMap() {
 	common.OptionMap["WeChatAuthEnabled"] = strconv.FormatBool(common.WeChatAuthEnabled)
 	common.OptionMap["TurnstileCheckEnabled"] = strconv.FormatBool(common.TurnstileCheckEnabled)
 	common.OptionMap["RegisterEnabled"] = strconv.FormatBool(common.RegisterEnabled)
+	common.OptionMap["MessagePersistenceEnabled"] = strconv.FormatBool(common.MessagePersistenceEnabled)
+	common.OptionMap["MessageRenderEnabled"] = strconv.FormatBool(common.MessageRenderEnabled)
 	common.OptionMap["SMTPServer"] = ""
 	common.OptionMap["SMTPAccount"] = ""
 	common.OptionMap["SMTPToken"] = ""
@@ -103,6 +105,10 @@ func updateOptionMap(key string, value string) {
 			common.TurnstileCheckEnabled = boolValue
 		case "RegisterEnabled":
 			common.RegisterEnabled = boolValue
+		case "MessagePersistenceEnabled":
+			common.MessagePersistenceEnabled = boolValue
+		case "MessageRenderEnabled":
+			common.MessageRenderEnabled = boolValue
 		}
 	}
 	switch key {

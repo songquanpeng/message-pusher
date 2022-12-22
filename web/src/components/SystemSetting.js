@@ -24,6 +24,8 @@ const SystemSetting = () => {
     TurnstileSiteKey: '',
     TurnstileSecretKey: '',
     RegisterEnabled: '',
+    MessagePersistenceEnabled: '',
+    MessageRenderEnabled: '',
   });
   let originInputs = {};
   let [loading, setLoading] = useState(false);
@@ -57,6 +59,8 @@ const SystemSetting = () => {
       case 'WeChatAuthEnabled':
       case 'TurnstileCheckEnabled':
       case 'RegisterEnabled':
+      case 'MessagePersistenceEnabled':
+      case 'MessageRenderEnabled':
         value = inputs[key] === 'true' ? 'false' : 'true';
         break;
       default:
@@ -179,6 +183,20 @@ const SystemSetting = () => {
           <Form.Button onClick={submitServerAddress}>
             更新服务器地址
           </Form.Button>
+          <Form.Group inline>
+            <Form.Checkbox
+              checked={inputs.MessagePersistenceEnabled === 'true'}
+              label='保存消息到数据库（此项为否时，用户推送的消息将不会保存到数据库）'
+              name='MessagePersistenceEnabled'
+              onChange={handleInputChange}
+            />
+            <Form.Checkbox
+              checked={inputs.MessageRenderEnabled === 'true'}
+              label='允许消息渲染（此项为否时，将禁用消息渲染）'
+              name='MessageRenderEnabled'
+              onChange={handleInputChange}
+            />
+          </Form.Group>
           <Divider />
           <Header as='h3'>配置登录注册</Header>
           <Form.Group inline>

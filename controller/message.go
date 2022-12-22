@@ -113,14 +113,18 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 			message.Channel = channel.TypeEmail
 		}
 	}
-	err = message.UpdateAndInsert(user.Id)
-	message.URL = fmt.Sprintf("%s/message/%s", common.ServerAddress, message.Link)
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"success": false,
-			"message": err.Error(),
-		})
-		return
+	if common.MessagePersistenceEnabled {
+		err = message.UpdateAndInsert(user.Id)
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": err.Error(),
+			})
+			return
+		}
+		message.URL = fmt.Sprintf("%s/message/%s", common.ServerAddress, message.Link)
+	} else {
+		message.URL = fmt.Sprintf("%s/message/unsaved", common.ServerAddress)
 	}
 	err = channel.SendMessage(message, &user)
 	if err != nil {
@@ -143,7 +147,25 @@ func GetStaticFile(c *gin.Context) {
 }
 
 func RenderMessage(c *gin.Context) {
+	if !common.MessageRenderEnabled {
+		c.HTML(http.StatusOK, "message.html", gin.H{
+			"title":       "无法渲染",
+			"time":        time.Now().Format("2006-01-02 15:04:05"),
+			"description": "超级管理员禁用了消息渲染",
+			"content":     "很抱歉，您所使用的消息推送服务的管理员禁用了消息渲染功能，因此您的消息无法渲染。",
+		})
+		return
+	}
 	link := c.Param("link")
+	if link == "unsaved" {
+		c.HTML(http.StatusOK, "message.html", gin.H{
+			"title":       "无法渲染",
+			"time":        time.Now().Format("2006-01-02 15:04:05"),
+			"description": "超级管理员禁用了消息持久化",
+			"content":     "很抱歉，您所使用的消息推送服务的管理员禁用了消息持久化功能，您的消息并没有存储到数据库中，因此无法渲染。",
+		})
+		return
+	}
 	message, err := model.GetMessageByLink(link)
 	if err != nil {
 		c.Status(http.StatusNotFound)
