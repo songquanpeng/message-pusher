@@ -162,6 +162,7 @@ proxy_send_timeout 300s;
       9. `telegram`：通过 Telegram 机器人进行推送（`description` 或 `content` 字段均可，支持 Markdown 的子集）。
       10. `none`：仅保存到数据库，不做推送。
    5. `token`：如果你在后台设置了推送 token，则此项必填。另外可以通过设置 HTTP `Authorization` 头部设置此项。
+   6. `url`：选填，如果不填则系统自动为消息生成 URL。
 3. `POST` 请求方式：字段与上面 `GET` 请求方式保持一致。
    + 注意：请求体编码格式为 `application/json`，`v0.3.2` 版本起支持 Post Form。
 
