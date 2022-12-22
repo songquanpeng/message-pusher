@@ -83,7 +83,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 如果服务需要长久运行，只是单纯地启动是不够的，[详细部署教程](https://iamazing.cn/page/how-to-deploy-a-website)。
 
 ### 通过 Docker 部署
-部署：`docker run -d --restart always --name message-pusher -p 3000:3000 -v /home/ubuntu/data/message-pusher:/data justsong/message-pusher`
+部署：`docker run -d --restart always --name message-pusher -p 3000:3000 -e TZ=Asia/Shanghai -v /home/ubuntu/data/message-pusher:/data justsong/message-pusher`
 
 更新：`docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower -cR`
 
@@ -160,6 +160,7 @@ proxy_send_timeout 300s;
       7. `bark`：通过 Bark 进行推送。
       8. `client`：通过 WebSocket 客户端进行推送。
       9. `telegram`：通过 Telegram 机器人进行推送（`description` 或 `content` 字段均可，支持 Markdown 的子集）。
+      10. `none`：仅保存到数据库，不做推送。
    5. `token`：如果你在后台设置了推送 token，则此项必填。另外可以通过设置 HTTP `Authorization` 头部设置此项。
 3. `POST` 请求方式：字段与上面 `GET` 请求方式保持一致。
    + 注意：请求体编码格式为 `application/json`，`v0.3.2` 版本起支持 Post Form。
