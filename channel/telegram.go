@@ -20,7 +20,7 @@ type telegramMessageResponse struct {
 	Description string `json:"description"`
 }
 
-func SendTelegramMessage(message *Message, user *model.User) error {
+func SendTelegramMessage(message *model.Message, user *model.User) error {
 	if user.TelegramBotToken == "" || user.TelegramChatId == "" {
 		return errors.New("未配置 Telegram 机器人消息推送方式")
 	}

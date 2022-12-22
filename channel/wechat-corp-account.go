@@ -95,7 +95,7 @@ type wechatCorpMessageResponse struct {
 	ErrorMessage string `json:"errmsg"`
 }
 
-func SendWeChatCorpMessage(message *Message, user *model.User) error {
+func SendWeChatCorpMessage(message *model.Message, user *model.User) error {
 	if user.WeChatCorpAccountId == "" {
 		return errors.New("未配置微信企业号消息推送方式")
 	}
@@ -119,8 +119,7 @@ func SendWeChatCorpMessage(message *Message, user *model.User) error {
 			messageRequest.MessageType = "textcard"
 			messageRequest.TextCard.Title = message.Title
 			messageRequest.TextCard.Description = message.Description
-			// TODO: render content and set URL
-			messageRequest.TextCard.URL = common.ServerAddress
+			messageRequest.TextCard.URL = message.URL
 		} else {
 			messageRequest.MessageType = "markdown"
 			messageRequest.Markdown.Content = message.Content

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/public/static/app.css">
+    <title>{{.title}}</title>
+    <meta name="description" content="{{.description}}">
+</head>
+<body>
+
+<div>
+    <div class="article-container" style="max-width: 960px">
+        <div class="columns is-desktop">
+            <div class="column">
+                <article id="article">
+                    <h1 class="title is-3 is-4-mobile">{{.title}}</h1>
+                    <div class="info">
+                        <span class="line">发布于：<span class="tag is-light">{{.time}}</span></span>
+                    </div>
+                    <blockquote>
+                        <p>{{.description}}</p>
+                    </blockquote>
+                    {{.content | unescape}}
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -24,7 +24,7 @@ type corpMessageResponse struct {
 	Message string `json:"errmsg"`
 }
 
-func SendCorpMessage(message *Message, user *model.User) error {
+func SendCorpMessage(message *model.Message, user *model.User) error {
 	if user.CorpWebhookURL == "" {
 		return errors.New("未配置企业微信群机器人消息推送方式")
 	}

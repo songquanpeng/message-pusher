@@ -8,7 +8,7 @@ import (
 	"message-pusher/model"
 )
 
-func SendEmailMessage(message *Message, user *model.User) error {
+func SendEmailMessage(message *model.Message, user *model.User) error {
 	if user.Email == "" {
 		return errors.New("未配置邮箱地址")
 	}

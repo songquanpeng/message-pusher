@@ -88,7 +88,7 @@ type wechatTestMessageResponse struct {
 	ErrorMessage string `json:"errmsg"`
 }
 
-func SendWeChatTestMessage(message *Message, user *model.User) error {
+func SendWeChatTestMessage(message *model.Message, user *model.User) error {
 	if user.WeChatTestAccountId == "" {
 		return errors.New("未配置微信测试号消息推送方式")
 	}
@@ -97,8 +97,8 @@ func SendWeChatTestMessage(message *Message, user *model.User) error {
 		TemplateId: user.WeChatTestAccountTemplateId,
 		URL:        "",
 	}
-	// TODO: render content and set URL
 	values.Data.Text.Value = message.Description
+	values.URL = message.URL
 	jsonData, err := json.Marshal(values)
 	if err != nil {
 		return err

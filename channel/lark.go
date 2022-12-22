@@ -45,7 +45,7 @@ type larkMessageResponse struct {
 	Message string `json:"msg"`
 }
 
-func SendLarkMessage(message *Message, user *model.User) error {
+func SendLarkMessage(message *model.Message, user *model.User) error {
 	if user.LarkWebhookURL == "" {
 		return errors.New("未配置飞书群机器人消息推送方式")
 	}

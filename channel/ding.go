@@ -30,7 +30,7 @@ type dingMessageResponse struct {
 	Message string `json:"errmsg"`
 }
 
-func SendDingMessage(message *Message, user *model.User) error {
+func SendDingMessage(message *model.Message, user *model.User) error {
 	if user.DingWebhookURL == "" {
 		return errors.New("未配置钉钉群机器人消息推送方式")
 	}

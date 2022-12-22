@@ -54,6 +54,7 @@ func main() {
 
 	// Initialize HTTP server
 	server := gin.Default()
+	server.SetHTMLTemplate(common.LoadTemplate())
 	server.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	// Initialize session store

@@ -19,7 +19,7 @@ const (
 type webSocketClient struct {
 	userId    int
 	conn      *websocket.Conn
-	message   chan *Message
+	message   chan *model.Message
 	pong      chan bool
 	stop      chan bool
 	timestamp int64
@@ -98,7 +98,7 @@ func (c *webSocketClient) handleDataWriting() {
 	}
 }
 
-func (c *webSocketClient) sendMessage(message *Message) {
+func (c *webSocketClient) sendMessage(message *model.Message) {
 	c.message <- message
 }
 
@@ -122,21 +122,21 @@ func RegisterClient(userId int, conn *websocket.Conn) {
 	oldClient, existed := clientMap[userId]
 	clientConnMapMutex.Unlock()
 	if existed {
-		byeMessage := &Message{
+		byeMessage := &model.Message{
 			Title:       common.SystemName,
 			Description: "其他客户端已连接服务器，本客户端已被挤下线！",
 		}
 		oldClient.sendMessage(byeMessage)
 		oldClient.close()
 	}
-	helloMessage := &Message{
+	helloMessage := &model.Message{
 		Title:       common.SystemName,
 		Description: "客户端连接成功！",
 	}
 	newClient := &webSocketClient{
 		userId:    userId,
 		conn:      conn,
-		message:   make(chan *Message),
+		message:   make(chan *model.Message),
 		pong:      make(chan bool),
 		stop:      make(chan bool),
 		timestamp: time.Now().UnixMilli(),
@@ -149,7 +149,7 @@ func RegisterClient(userId int, conn *websocket.Conn) {
 	clientConnMapMutex.Unlock()
 }
 
-func SendClientMessage(message *Message, user *model.User) error {
+func SendClientMessage(message *model.Message, user *model.User) error {
 	if user.ClientSecret == "" {
 		return errors.New("未配置 WebSocket 客户端消息推送方式")
 	}

@@ -15,20 +15,10 @@ const (
 	TypeTelegram          = "telegram"
 	TypeBark              = "bark"
 	TypeClient            = "client"
+	TypeNone              = "none"
 )
 
-type Message struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Desp        string `json:"desp"` // alias for description
-	Content     string `json:"content"`
-	URL         string `json:"url"`
-	Channel     string `json:"channel"`
-	Token       string `json:"token"`
-	HTMLContent string `json:"html_content"`
-}
-
-func (message *Message) Send(user *model.User) error {
+func SendMessage(message *model.Message, user *model.User) error {
 	switch message.Channel {
 	case TypeEmail:
 		return SendEmailMessage(message, user)
@@ -48,6 +38,8 @@ func (message *Message) Send(user *model.User) error {
 		return SendClientMessage(message, user)
 	case TypeTelegram:
 		return SendTelegramMessage(message, user)
+	case TypeNone:
+		return nil
 	default:
 		return errors.New("不支持的消息通道：" + message.Channel)
 	}

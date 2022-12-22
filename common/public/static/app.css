@@ -1,0 +1,399 @@
+body {
+    font-family: Verdana, Candara, Arial, Helvetica, Microsoft YaHei, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+}
+
+nav {
+    margin-bottom: 16px;
+}
+
+a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+a:hover {
+    text-decoration: none !important;
+    color: #007bff;
+}
+
+.page-card-title a {
+    color: #368CCB;
+    text-decoration: none;
+}
+
+.page-card-title a:hover {
+    color: #368CCB;
+    text-decoration: none;
+}
+
+.wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+#page-container {
+    position: relative;
+    min-height: 97vh;
+}
+
+#content-wrap {
+    padding-bottom: 4rem;
+}
+
+#footer {
+    height: 4rem;
+}
+
+#footer a {
+    /*color: black;*/
+}
+
+code {
+    font-family: Consolas, 'Courier New', monospace;
+}
+
+.page-card-list {
+    margin: 8px 8px;
+}
+
+.page-card-title {
+    font-size: x-large;
+    font-weight: 500;
+    color: #000000;
+    text-decoration: none;
+    margin-bottom: 4px;
+}
+
+.page-card-text {
+    margin-top: 16px;
+}
+
+.pagination {
+    margin: 16px 4px;
+}
+
+.pagination a {
+    border: none;
+    overflow: hidden;
+}
+
+.shadow {
+    box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
+}
+
+.nav-shadow {
+    box-shadow: 0 2px 3px rgba(26, 26, 26, .1);
+}
+
+.paginator div {
+    border: 2px solid #000;
+    cursor: pointer;
+    display: inline-block;
+    min-width: 100px;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.box article {
+    overflow-wrap: break-word;
+    /*font-size: larger;*/
+    word-break: break-word;
+    line-height: 1.6;
+    padding: 16px;
+    /*margin-bottom: 16px;*/
+    background-color: #ffffff;
+}
+
+.toc-level-1 {
+    list-style-type: none;
+}
+
+.toc-level-2 {
+    list-style-type: none;
+}
+
+.toc-level-3 {
+    list-style-type: disc;
+}
+
+.toc-level-4 {
+    list-style-type: circle;
+}
+
+.toc-level-5 {
+    list-style-type: square;
+}
+
+.toc-level-6 {
+    list-style-type: square;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.article-container {
+    margin: auto;
+    max-width: 960px;
+    padding: 16px 16px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.6;
+    /*font-size: larger;*/
+}
+
+article {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 16px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    color: #24292f;
+}
+
+article p, article blockquote, article ul, article ol, article dl, article table, article pre, article details {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+article ul, article ol {
+    padding-left: 2em;
+}
+
+article ul ul, article ul ol, article ol ol, article ol ul {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+article .tag {
+    font-family: Verdana, Candara, Arial, Helvetica, Microsoft YaHei, sans-serif;
+}
+
+article a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+article a:hover {
+    color: #007bff;
+    text-decoration: none;
+}
+
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-block-start: 1em;
+    margin-block-end: 0.2em;
+}
+
+article h1 {
+    font-size: 2em
+}
+
+article h2 {
+    padding-bottom: 0.3em;
+    font-size: 1.5em;
+}
+
+article h3 {
+    font-size: 1.25em
+}
+
+article h4 {
+    font-size: 1.25em;
+}
+
+article h5 {
+    font-size: 1.1em;
+}
+
+article h6 {
+    font-size: 1em;
+    font-weight: bold
+}
+
+@media screen and (max-width: 960px) {
+    article h1 {
+        font-size: 1.5em
+    }
+
+    article h2 {
+        font-size: 1.35em
+    }
+
+    article h3 {
+        font-size: 1.3em
+    }
+
+    article h4 {
+        font-size: 1.2em;
+    }
+}
+
+article p {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+article table {
+    margin: auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    vertical-align: middle;
+    text-align: left;
+    min-width: 66%;
+}
+
+article table td,
+article table th {
+    padding: 5px 8px;
+    border: 1px solid #bbb;
+}
+
+article blockquote {
+    margin-left: 0;
+    padding: 0 1em;
+    border-left: 0.25em solid #ddd;
+}
+
+article ol ul {
+    list-style-type: circle;
+}
+
+article pre {
+    max-width: 960px;
+    display: block;
+    overflow: auto;
+    padding: 0;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+}
+
+article pre code {
+    font-size: 14px;
+}
+
+article ol {
+    text-decoration: none;
+    padding-inline-start: 40px;
+    margin-bottom: 1.25rem;
+    padding-left: 2em;
+}
+
+article ul {
+    padding-left: 2em;
+}
+
+article li + li {
+    margin-top: 0.25em;
+}
+
+code {
+    font-family: "JetBrains Mono", "Cascadia Code", Consolas, Microsoft YaHei, monospace;
+}
+
+article code {
+    color: #24292f;
+    background-color: rgb(175 184 193 / 20%);
+    padding: .065em .4em;
+    border-radius: 6px;
+    font-family: "JetBrains Mono", "Cascadia Code", Consolas, Microsoft YaHei, monospace;
+}
+
+article .copyright {
+    display: none;
+}
+
+.info {
+    font-size: 14px;
+    line-height: 28px;
+    text-align: left;
+    color: #738292;
+    margin-bottom: 24px;
+}
+
+.info a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Code Page Style*/
+.code-page {
+    margin-top: 32px;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+.code-page code {
+    font-size: 16px;
+    width: 100%;
+    height: 100%;
+}
+
+.code-page pre {
+    margin-top: 2px;
+    overflow-x: auto;
+    padding: 0;
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.code-page .control-panel {
+    width: 100%;
+}
+
+#code-display {
+    padding: 16px 24px;
+}
+
+.discuss h1 {
+    font-size: 24px;
+    line-height: 36px;
+    text-align: left;
+}
+
+.discuss .time {
+    font-size: 12px;
+    line-height: 18px;
+    text-align: left;
+    color: #738292;
+}
+
+.discuss .content {
+    font-size: 16px;
+    line-height: 24px;
+    text-align: left;
+}
+
+.raw {
+    padding: 16px;
+}
+
+.raw .raw-content {
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
+
+.links {
+    margin: 16px;
+}
+
+span.line {
+    display: inline-block;
+}
+
+.toc {
+    position: sticky;
+    top: 24px;
+}

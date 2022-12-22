@@ -13,7 +13,7 @@ type barkMessageResponse struct {
 	Message string `json:"message"`
 }
 
-func SendBarkMessage(message *Message, user *model.User) error {
+func SendBarkMessage(message *model.Message, user *model.User) error {
 	if user.BarkServer == "" || user.BarkSecret == "" {
 		return errors.New("未配置 Bark 消息推送方式")
 	}
