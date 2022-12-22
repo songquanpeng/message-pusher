@@ -113,18 +113,20 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 			message.Channel = channel.TypeEmail
 		}
 	}
-	if common.MessagePersistenceEnabled {
-		err = message.UpdateAndInsert(user.Id)
-		if err != nil {
-			c.JSON(http.StatusOK, gin.H{
-				"success": false,
-				"message": err.Error(),
-			})
-			return
+	if message.URL == "" {
+		if common.MessagePersistenceEnabled {
+			err = message.UpdateAndInsert(user.Id)
+			if err != nil {
+				c.JSON(http.StatusOK, gin.H{
+					"success": false,
+					"message": err.Error(),
+				})
+				return
+			}
+			message.URL = fmt.Sprintf("%s/message/%s", common.ServerAddress, message.Link)
+		} else {
+			message.URL = fmt.Sprintf("%s/message/unsaved", common.ServerAddress)
 		}
-		message.URL = fmt.Sprintf("%s/message/%s", common.ServerAddress, message.Link)
-	} else {
-		message.URL = fmt.Sprintf("%s/message/unsaved", common.ServerAddress)
 	}
 	err = channel.SendMessage(message, &user)
 	if err != nil {
