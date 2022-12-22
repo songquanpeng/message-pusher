@@ -74,12 +74,17 @@ func setupLogin(user *model.User, c *gin.Context) {
 		})
 		return
 	}
-	user.Password = ""
-	user.Token = ""
+	cleanUser := model.User{
+		Id:          user.Id,
+		Username:    user.Username,
+		DisplayName: user.DisplayName,
+		Role:        user.Role,
+		Status:      user.Status,
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "",
 		"success": true,
-		"data":    user,
+		"data":    cleanUser,
 	})
 }
 
