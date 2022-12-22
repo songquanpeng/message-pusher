@@ -180,7 +180,7 @@ MESSAGE_PUSHER_TOKEN="666"
 function send_message {
   curl -s -X POST "$MESSAGE_PUSHER_SERVER/push/$MESSAGE_PUSHER_USERNAME" \
     -H 'Content-Type: application/json' \
-    -d '{"title":"'"$1"'","description":"'"$2"'", "content":"'"$3"'", "token":"'"$MESSAGE_PUSHER_TOKEN"'"}' \
+    -d '{"title":"'"$1"'","desp":"'"$2"'", "content":"'"$3"'", "token":"'"$MESSAGE_PUSHER_TOKEN"'"}' \
     >/dev/null
 }
 
