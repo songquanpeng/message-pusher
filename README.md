@@ -167,7 +167,7 @@ proxy_send_timeout 300s;
 **示例：**
 
 <details>
-<summary><strong>点击展开 Bash 示例 </strong></summary>
+<summary><strong>Bash 示例 </strong></summary>
 <div>
 
 ```shell
@@ -180,7 +180,8 @@ MESSAGE_PUSHER_TOKEN="666"
 function send_message {
   curl -s -X POST "$MESSAGE_PUSHER_SERVER/push/$MESSAGE_PUSHER_USERNAME" \
     -H 'Content-Type: application/json' \
-    -d '{"title":"'"$1"'","description":"'"$2"'", "content":"'"$3"'", "token":"'"$MESSAGE_PUSHER_TOKEN"'"}' > /dev/null
+    -d '{"title":"'"$1"'","description":"'"$2"'", "content":"'"$3"'", "token":"'"$MESSAGE_PUSHER_TOKEN"'"}' \
+    >/dev/null
 }
 
 send_message 'title' 'description' 'content'
@@ -190,32 +191,46 @@ send_message 'title' 'description' 'content'
 </details>
 
 <details>
-<summary><strong>点击展开 Python 示例 </strong></summary>
+<summary><strong>Python 示例 </strong></summary>
 <div>
 
 ```python
 import requests
 
-# GET 方式
-res = requests.get("https://your.domain.com/push/username?title={}&description={}&token={}".format("标题", "描述", "666"))
+SERVER = "https://msgpusher.com"
+USERNAME = "test"
+TOKEN = "666"
 
-# POST 方式
-res = requests.post("https://your.domain.com/push/username", json={
-"title": "标题",
-"description": "描述",
-"content": "**Markdown 内容**",
-"token": "6666"
-})
 
-print(res.text)
-# 输出为：{"success":true,"message":"ok"}
+def send_message(title, description, content):
+    # GET 方式
+    # res = requests.get(f"{SERVER}/push/{USERNAME}?title={title}"
+    #                    f"&description={description}&content={content}&token={TOKEN}")
+
+    # POST 方式
+    res = requests.post(f"{SERVER}/push/{USERNAME}", json={
+        "title": title,
+        "description": description,
+        "content": content,
+        "token": TOKEN
+    })
+    res = res.json()
+    if res["success"]:
+        return None
+    else:
+        return res["message"]
+
+
+error = send_message("标题", "描述", "**Markdown 内容**")
+if error:
+    print(error)
 ```
 
 </div>
 </details>
 
 <details>
-<summary><strong>点击展开 Python 示例 </strong></summary>
+<summary><strong>Go 示例 </strong></summary>
 <div>
 
 ```go
