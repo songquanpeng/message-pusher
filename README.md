@@ -162,7 +162,7 @@ proxy_send_timeout 300s;
       9. `telegram`：通过 Telegram 机器人进行推送（`description` 或 `content` 字段均可，支持 Markdown 的子集）。
    5. `token`：如果你在后台设置了推送 token，则此项必填。另外可以通过设置 HTTP `Authorization` 头部设置此项。
 3. `POST` 请求方式：字段与上面 `GET` 请求方式保持一致。
-   + 注意：请求体编码格式为 `application/json`。
+   + 注意：请求体编码格式为 `application/json`，`v0.3.2` 版本起支持 Post Form。
 
 **示例：**
 
@@ -178,6 +178,14 @@ MESSAGE_PUSHER_USERNAME="test"
 MESSAGE_PUSHER_TOKEN="666"
 
 function send_message {
+  # POST Form
+  curl -s -X POST "$MESSAGE_PUSHER_SERVER/push/$MESSAGE_PUSHER_USERNAME" \
+    -d "title=$1&description=$2&content=$3&token=$MESSAGE_PUSHER_TOKEN" \
+    >/dev/null
+}
+
+function send_message_with_json {
+  # POST JSON
   curl -s -X POST "$MESSAGE_PUSHER_SERVER/push/$MESSAGE_PUSHER_USERNAME" \
     -H 'Content-Type: application/json' \
     -d '{"title":"'"$1"'","desp":"'"$2"'", "content":"'"$3"'", "token":"'"$MESSAGE_PUSHER_TOKEN"'"}' \
@@ -237,11 +245,12 @@ if error:
 package main
 
 import (
-	"bytes"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"net/http"
+   "bytes"
+   "encoding/json"
+   "errors"
+   "fmt"
+   "net/http"
+   "net/url"
 )
 
 var serverAddress = "https://msgpusher.com"
@@ -249,53 +258,71 @@ var username = "test"
 var token = "666"
 
 type request struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Content     string `json:"content"`
-	URL         string `json:"url"`
-	Channel     string `json:"channel"`
-	Token       string `json:"token"`
+   Title       string `json:"title"`
+   Description string `json:"description"`
+   Content     string `json:"content"`
+   URL         string `json:"url"`
+   Channel     string `json:"channel"`
+   Token       string `json:"token"`
 }
 
 type response struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
+   Success bool   `json:"success"`
+   Message string `json:"message"`
 }
 
 func SendMessage(title string, description string, content string) error {
-	req := request{
-		Title:       title,
-		Description: description,
-		Content:     content,
-		Token:       token,
-	}
-	data, err := json.Marshal(req)
-	if err != nil {
-		return err
-	}
-	resp, err := http.Post(fmt.Sprintf("%s/push/%s", serverAddress, username),
-		"application/json", bytes.NewBuffer(data))
-	if err != nil {
-		return err
-	}
-	var res response
-	err = json.NewDecoder(resp.Body).Decode(&res)
-	if err != nil {
-		return err
-	}
-	if !res.Success {
-		return errors.New(res.Message)
-	}
-	return nil
+   req := request{
+      Title:       title,
+      Description: description,
+      Content:     content,
+      Token:       token,
+   }
+   data, err := json.Marshal(req)
+   if err != nil {
+      return err
+   }
+   resp, err := http.Post(fmt.Sprintf("%s/push/%s", serverAddress, username),
+      "application/json", bytes.NewBuffer(data))
+   if err != nil {
+      return err
+   }
+   var res response
+   err = json.NewDecoder(resp.Body).Decode(&res)
+   if err != nil {
+      return err
+   }
+   if !res.Success {
+      return errors.New(res.Message)
+   }
+   return nil
+}
+
+func SendMessageWithForm(title string, description string, content string) error {
+   resp, err := http.PostForm(fmt.Sprintf("%s/push/%s", serverAddress, username),
+      url.Values{"title": {title}, "description": {description}, "content": {content}, "token": {token}})
+   if err != nil {
+      return err
+   }
+   var res response
+   err = json.NewDecoder(resp.Body).Decode(&res)
+   if err != nil {
+      return err
+   }
+   if !res.Success {
+      return errors.New(res.Message)
+   }
+   return nil
 }
 
 func main() {
-	err := SendMessage("标题", "描述", "**Markdown 内容**")
-	if err != nil {
-		fmt.Println("推送失败：" + err.Error())
-	} else {
-		fmt.Println("推送成功！")
-	}
+   //err := SendMessage("标题", "描述", "**Markdown 内容**")
+   err := SendMessageWithForm("标题", "描述", "**Markdown 内容**")
+   if err != nil {
+      fmt.Println("推送失败：" + err.Error())
+   } else {
+      fmt.Println("推送成功！")
+   }
 }
 ```
 
