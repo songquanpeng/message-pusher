@@ -23,7 +23,7 @@ FROM alpine
 ENV PORT=3000
 RUN apk update \
     && apk upgrade \
-    && apk add --no-cache ca-certificates \
+    && apk add --no-cache ca-certificates tzdata \
     && update-ca-certificates 2>/dev/null || true
 COPY --from=builder2 /build/message-pusher /
 EXPOSE 3000
