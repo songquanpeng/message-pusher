@@ -331,6 +331,150 @@ func main() {
 </div>
 </details>
 
+<details>
+<summary><strong>C# 示例 </strong></summary>
+<div>
+
+```csharp
+using Newtonsoft.Json;
+using RestSharp;
+
+namespace Demo
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            //推送消息
+            var sendMsg = MessagePusherTool.SendMessage("标题", "描述", "**Markdown 内容**");
+            if(sendMsg.Success)
+            {
+                Console.WriteLine($"推送成功！");
+            }
+            else
+            {
+                Console.WriteLine($"推送失败：{sendMsg.Message}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 消息推送工具
+    /// 
+    /// <para>开源地址：https://github.com/songquanpeng/message-pusher</para>
+    /// <para>支持：Framework、Net3.1、Net5、Net6</para>
+    /// <para>引用包：</para>
+    /// <para>dotnet add package Newtonsoft.Json -v 13.0.2</para>
+    /// <para>dotnet add package RestSharp -v 108.0.3</para>
+    /// </summary>
+    public class MessagePusherTool
+    {
+        /// <summary>
+        /// ServerAddress
+        /// </summary>
+        public const string ServerAddress = "https://msgpusher.com";
+
+        /// <summary>
+        /// UserName
+        /// </summary>
+        public const string UserName = "test";
+
+        /// <summary>
+        /// Token
+        /// </summary>
+        public const string Token = "666";
+
+        /// <summary>
+        /// SendMessage
+        /// </summary>
+        /// <param name="title">title</param>
+        /// <param name="description">description</param>
+        /// <param name="content">content</param>
+        public static Response SendMessage(string title, string description, string content)
+        {
+            var requestData = new Request()
+            {
+                Title = title,
+                Description = description,
+                Content = content,
+                Token = Token,
+            };
+            var url = $"{ServerAddress}";
+            var client = new RestClient(url);
+            var request = new RestRequest($"push/{UserName}", Method.Post);
+            request.AddJsonBody(requestData);
+            var response = client.Execute(request);
+            var responseData = response.Content;
+            var responseJson = JsonConvert.DeserializeObject<Response>(responseData);
+            return responseJson;
+        }
+
+        /// <summary>
+        /// Request
+        /// </summary>
+        public class Request
+        {
+            /// <summary>
+            /// Title
+            /// </summary>
+            [JsonProperty(PropertyName = "title")]
+            public string Title { get; set; }
+
+            /// <summary>
+            /// Description
+            /// </summary>
+            [JsonProperty(PropertyName = "description")]
+            public string Description { get; set; }
+
+            /// <summary>
+            /// Content
+            /// </summary>
+            [JsonProperty(PropertyName = "content")]
+            public string Content { get; set; }
+
+            /// <summary>
+            /// URL
+            /// </summary>
+            [JsonProperty(PropertyName = "url")]
+            public string URL { get; set; }
+
+            /// <summary>
+            /// Channel
+            /// </summary>
+            [JsonProperty(PropertyName = "channel")]
+            public string Channel { get; set; }
+
+            /// <summary>
+            /// Token
+            /// </summary>
+            [JsonProperty(PropertyName = "token")]
+            public string Token { get; set; }
+        }
+
+        /// <summary>
+        /// Response
+        /// </summary>
+        public class Response
+        {
+            /// <summary>
+            /// Success
+            /// </summary>
+            [JsonProperty(PropertyName = "success")]
+            public bool Success { get; set; }
+
+            /// <summary>
+            /// Message
+            /// </summary>
+            [JsonProperty(PropertyName = "message")]
+            public string Message { get; set; }
+        }
+    }
+}
+```
+
+</div>
+</details>
+
 欢迎 PR 添加更多语言的示例。
 
 
