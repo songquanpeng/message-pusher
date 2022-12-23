@@ -13,7 +13,7 @@ type Message struct {
 	Description string `json:"description"`
 	Desp        string `json:"desp" gorm:"-:all"` // alias for description
 	Content     string `json:"content"`
-	URL         string `json:"url" gorm:"-:all"`
+	URL         string `json:"url" gorm:"column:url"`
 	Channel     string `json:"channel"`
 	Token       string `json:"token" gorm:"-:all"`
 	HTMLContent string `json:"html_content"  gorm:"-:all"`
