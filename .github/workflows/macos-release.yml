@@ -36,5 +36,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: message-pusher-macos
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
