@@ -1,11 +1,9 @@
 package controller
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/yuin/goldmark"
 	"message-pusher/channel"
 	"message-pusher/common"
 	"message-pusher/model"
@@ -173,13 +171,16 @@ func RenderMessage(c *gin.Context) {
 		c.Status(http.StatusNotFound)
 		return
 	}
-	if message.Content != "" {
-		var buf bytes.Buffer
-		err := goldmark.Convert([]byte(message.Content), &buf)
+	if message.Description != "" {
+		message.Description, err = common.Markdown2HTML(message.Description)
 		if err != nil {
 			common.SysLog(err.Error())
-		} else {
-			message.HTMLContent = buf.String()
+		}
+	}
+	if message.Content != "" {
+		message.HTMLContent, err = common.Markdown2HTML(message.Content)
+		if err != nil {
+			common.SysLog(err.Error())
 		}
 	}
 	c.HTML(http.StatusOK, "message.html", gin.H{

@@ -19,7 +19,7 @@
                         <span class="line">发布于：<span class="tag is-light">{{.time}}</span></span>
                     </div>
                     <blockquote>
-                        <p>{{.description}}</p>
+                        {{.description | unescape}}
                     </blockquote>
                     {{.content | unescape}}
                 </article>

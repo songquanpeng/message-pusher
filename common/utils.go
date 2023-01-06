@@ -1,8 +1,10 @@
 package common
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/yuin/goldmark"
 	"html/template"
 	"log"
 	"net"
@@ -138,4 +140,14 @@ func Max(a int, b int) int {
 	} else {
 		return b
 	}
+}
+
+func Markdown2HTML(markdown string) (HTML string, err error) {
+	var buf bytes.Buffer
+	err = goldmark.Convert([]byte(markdown), &buf)
+	if err != nil {
+		return fmt.Sprintf("Markdown 渲染出错：%s", err.Error()), err
+	}
+	HTML = buf.String()
+	return
 }
