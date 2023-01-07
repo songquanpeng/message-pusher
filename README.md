@@ -481,3 +481,4 @@ namespace Demo
 ## 其他
 1. `v0.3` 之前的版本基于 Node.js，你可以切换到 [`nodejs`](https://github.com/songquanpeng/message-pusher/tree/nodejs) 分支查看，该版本不再有功能性更新。
 2. `v0.3` 以及后续版本基于 Gin Template [`v0.2.1`](https://github.com/songquanpeng/gin-template) 版本开发。
+3. 如果想要自行编译，请首先[编译前端](./web/README.md)，之后再编译后端，否则会遇到 `pattern web/build: no matching files found` 问题。
