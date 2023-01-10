@@ -78,7 +78,7 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 			"channel", "token",
 			"wechat_test_account_id", "wechat_test_account_template_id", "wechat_test_account_open_id",
 			"wechat_corp_account_id", "wechat_corp_account_agent_id", "wechat_corp_account_user_id", "wechat_corp_account_client_type",
-			"corp_webhook_url", "lark_webhook_url", "ding_webhook_url", "bark_server", "telegram_chat_id", "discord_webhook_url",
+			"bark_server", "telegram_chat_id",
 		}).First(&user, "id = ?", id).Error
 	}
 	return &user, err

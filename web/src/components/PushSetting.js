@@ -176,7 +176,7 @@ const PushSetting = () => {
         <Form loading={loading}>
           <Header as='h3'>通用设置</Header>
           <Message>
-            注意：密钥类配置信息不会发送到前端显示。另外浏览器可能会错误填充账户和密钥信息，请留意。
+            注意：敏感配置信息不会发送到前端显示。另外浏览器可能会错误填充账户和密钥信息，请留意。
           </Message>
           <Form.Group widths={3}>
             <Form.Select
