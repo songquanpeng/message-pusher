@@ -50,7 +50,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
    + Bark App,
    + WebSocket 客户端（[官方客户端](https://github.com/songquanpeng/personal-assistant)，[接入文档](./docs/API.md#websocket-客户端)），
    + Telegram 机器人，
-   + Discord 群机器人（WIP），
+   + Discord 群机器人，
 2. 多种用户登录注册方式：
    + 邮箱登录注册以及通过邮箱进行密码重置。
    + [GitHub 开放授权](https://github.com/settings/applications/new)。

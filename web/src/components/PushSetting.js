@@ -35,6 +35,7 @@ const PushSetting = () => {
     client_secret: '',
     telegram_bot_token: '',
     telegram_chat_id: '',
+    discord_webhook_url: '',
   });
   let [loading, setLoading] = useState(false);
 
@@ -117,6 +118,9 @@ const PushSetting = () => {
         data.telegram_bot_token = inputs.telegram_bot_token;
         data.telegram_chat_id = inputs.telegram_chat_id;
         break;
+      case 'discord':
+        data.discord_webhook_url = inputs.discord_webhook_url;
+        break;
       default:
         showError(`无效的参数：${which}`);
         return;
@@ -188,6 +192,7 @@ const PushSetting = () => {
                 { key: 'bark', text: 'Bark App', value: 'bark' },
                 { key: 'client', text: 'WebSocket 客户端', value: 'client' },
                 { key: 'telegram', text: 'Telegram 机器人', value: 'telegram' },
+                { key: 'discord', text: 'Discord 群机器人', value: 'discord' },
               ]}
               value={inputs.channel}
               onChange={handleInputChange}
@@ -551,6 +556,28 @@ const PushSetting = () => {
             保存
           </Button>
           <Button onClick={() => test('telegram')}>测试</Button>
+          <Divider />
+          <Header as='h3'>
+            Discord 群机器人设置（discord）
+            <Header.Subheader>
+              通过 Discord 群机器人进行推送，配置流程：选择一个 channel -> 设置
+              -> 整合 -> 创建 Webhook -> 点击复制 Webhook URL
+            </Header.Subheader>
+          </Header>
+          <Form.Group widths={2}>
+            <Form.Input
+              label='Webhook 地址'
+              name='discord_webhook_url'
+              onChange={handleInputChange}
+              autoComplete='off'
+              value={inputs.discord_webhook_url}
+              placeholder='在此填写 Discord 提供的 Webhook 地址'
+            />
+          </Form.Group>
+          <Button onClick={() => submit('discord')} loading={loading}>
+            保存
+          </Button>
+          <Button onClick={() => test('discord')}>测试</Button>
         </Form>
       </Grid.Column>
     </Grid>

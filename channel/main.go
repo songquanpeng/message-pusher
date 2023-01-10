@@ -13,6 +13,7 @@ const (
 	TypeLark              = "lark"
 	TypeDing              = "ding"
 	TypeTelegram          = "telegram"
+	TypeDiscord           = "discord"
 	TypeBark              = "bark"
 	TypeClient            = "client"
 	TypeNone              = "none"
@@ -38,6 +39,8 @@ func SendMessage(message *model.Message, user *model.User) error {
 		return SendClientMessage(message, user)
 	case TypeTelegram:
 		return SendTelegramMessage(message, user)
+	case TypeDiscord:
+		return SendDiscordMessage(message, user)
 	case TypeNone:
 		return nil
 	default:

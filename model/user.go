@@ -41,6 +41,7 @@ type User struct {
 	ClientSecret                       string `json:"client_secret"`
 	TelegramBotToken                   string `json:"telegram_bot_token"`
 	TelegramChatId                     string `json:"telegram_chat_id"`
+	DiscordWebhookURL                  string `json:"discord_webhook_url"`
 }
 
 func GetMaxUserId() int {
@@ -77,7 +78,7 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 			"channel", "token",
 			"wechat_test_account_id", "wechat_test_account_template_id", "wechat_test_account_open_id",
 			"wechat_corp_account_id", "wechat_corp_account_agent_id", "wechat_corp_account_user_id", "wechat_corp_account_client_type",
-			"corp_webhook_url", "lark_webhook_url", "ding_webhook_url", "bark_server", "telegram_chat_id",
+			"corp_webhook_url", "lark_webhook_url", "ding_webhook_url", "bark_server", "telegram_chat_id", "discord_webhook_url",
 		}).First(&user, "id = ?", id).Error
 	}
 	return &user, err

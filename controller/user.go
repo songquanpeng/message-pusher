@@ -425,6 +425,7 @@ func UpdateSelf(c *gin.Context) {
 		ClientSecret:                       user.ClientSecret,
 		TelegramBotToken:                   user.TelegramBotToken,
 		TelegramChatId:                     user.TelegramChatId,
+		DiscordWebhookURL:                  user.DiscordWebhookURL,
 	}
 	channel.TokenStoreUpdateUser(&cleanUser, originUser)
 
