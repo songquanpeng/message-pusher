@@ -12,6 +12,7 @@ const SystemSetting = () => {
     GitHubClientSecret: '',
     Notice: '',
     SMTPServer: '',
+    SMTPPort: '',
     SMTPAccount: '',
     SMTPToken: '',
     ServerAddress: '',
@@ -109,6 +110,12 @@ const SystemSetting = () => {
     }
     if (originInputs['SMTPAccount'] !== inputs.SMTPAccount) {
       await updateOption('SMTPAccount', inputs.SMTPAccount);
+    }
+    if (
+        originInputs['SMTPPort'] !== inputs.SMTPPort &&
+        inputs.SMTPPort !== ''
+    ) {
+      await updateOption('SMTPPort', inputs.SMTPPort);
     }
     if (
       originInputs['SMTPToken'] !== inputs.SMTPToken &&
@@ -258,6 +265,14 @@ const SystemSetting = () => {
               autoComplete='off'
               value={inputs.SMTPServer}
               placeholder='例如：smtp.qq.com'
+            />
+            <Form.Input
+                label='SMTP 端口'
+                name='SMTPPort'
+                onChange={handleInputChange}
+                autoComplete='off'
+                value={inputs.SMTPPort}
+                placeholder='默认: 587'
             />
             <Form.Input
               label='SMTP 账户'

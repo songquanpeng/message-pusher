@@ -33,6 +33,7 @@ var MessagePersistenceEnabled = true
 var MessageRenderEnabled = true
 
 var SMTPServer = ""
+var SMTPPort = 587
 var SMTPAccount = ""
 var SMTPToken = ""
 

@@ -114,6 +114,9 @@ func updateOptionMap(key string, value string) {
 	switch key {
 	case "SMTPServer":
 		common.SMTPServer = value
+	case "SMTPPort":
+		intValue, _ := strconv.Atoi(value)
+		common.SMTPPort = intValue
 	case "SMTPAccount":
 		common.SMTPAccount = value
 	case "SMTPToken":
