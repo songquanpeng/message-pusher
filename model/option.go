@@ -36,6 +36,7 @@ func InitOptionMap() {
 	common.OptionMap["MessageRenderEnabled"] = strconv.FormatBool(common.MessageRenderEnabled)
 	common.OptionMap["SMTPServer"] = ""
 	common.OptionMap["SMTPAccount"] = ""
+	common.OptionMap["SMTPPort"] = strconv.Itoa(common.SMTPPort)
 	common.OptionMap["SMTPToken"] = ""
 	common.OptionMap["Notice"] = ""
 	common.OptionMap["About"] = ""
@@ -114,6 +115,9 @@ func updateOptionMap(key string, value string) {
 	switch key {
 	case "SMTPServer":
 		common.SMTPServer = value
+	case "SMTPPort":
+		intValue, _ := strconv.Atoi(value)
+		common.SMTPPort = intValue
 	case "SMTPAccount":
 		common.SMTPAccount = value
 	case "SMTPToken":
