@@ -10,5 +10,4 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./data:/data
-
       - /etc/localtime:/etc/localtime:ro
