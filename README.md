@@ -477,6 +477,60 @@ namespace Demo
 </div>
 </details>
 
+<details>
+<summary><strong>Node.js 示例 </strong></summary>
+<div>
+
+```javascript
+const axios = require('axios');
+const querystring = require('querystring');
+
+const MESSAGE_PUSHER_SERVER = 'https://msgpusher.com'
+const MESSAGE_PUSHER_USERNAME = 'test'
+const MESSAGE_PUSHER_TOKEN = '666'
+
+async function send_message(title, description, content) {
+  try {
+    const postData = querystring.stringify({
+      title: title,
+      desp: description,
+      content: content,
+      token: MESSAGE_PUSHER_TOKEN,
+    })
+
+    const response = await axios.post(`${MESSAGE_PUSHER_SERVER}/push/${MESSAGE_PUSHER_USERNAME}`, postData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+    if (response.data.success) {
+      return response.data
+    }
+  } catch (error) {
+    if (error.response) {
+      return error.response.data
+    } else {
+      throw error
+    }
+
+  }
+}
+
+send_message('标题', '描述', '**Markdown 内容**')
+  .then((response) => {
+    if (response.success) {
+      console.log('推送成功:', response)
+    } else {
+      console.log('推送失败:', response)
+    }
+  }, (error) => {
+    console.log(error.message);
+  })
+
+```
+</div>
+</details>
+
 欢迎 PR 添加更多语言的示例。
 
 
