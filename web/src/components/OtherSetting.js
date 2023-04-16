@@ -76,7 +76,7 @@ const OtherSetting = () => {
 
   const checkUpdate = async () => {
     const res = await API.get(
-      'https://api.github.com/repos/songquanpeng/gin-template/releases/latest'
+      'https://api.github.com/repos/songquanpeng/message-pusher/releases/latest'
     );
     const { tag_name, body } = res.data;
     if (tag_name === process.env.REACT_APP_VERSION) {
