@@ -21,6 +21,7 @@ type telegramMessageResponse struct {
 }
 
 func SendTelegramMessage(message *model.Message, user *model.User) error {
+	// https://core.telegram.org/bots/api#sendmessage
 	if user.TelegramBotToken == "" || user.TelegramChatId == "" {
 		return errors.New("未配置 Telegram 机器人消息推送方式")
 	}

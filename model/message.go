@@ -19,6 +19,7 @@ type Message struct {
 	HTMLContent string `json:"html_content"  gorm:"-:all"`
 	Timestamp   int64  `json:"timestamp" gorm:"type:int64"`
 	Link        string `json:"link" gorm:"unique;index"`
+	To          string `json:"to" gorm:"column:to"` // if specified, will send to this user(s)
 }
 
 func GetMessageById(id int, userId int) (*Message, error) {

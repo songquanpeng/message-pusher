@@ -6,6 +6,7 @@ import (
 	"errors"
 	"message-pusher/model"
 	"net/http"
+	"strings"
 )
 
 type discordMessageRequest struct {
@@ -26,6 +27,15 @@ func SendDiscordMessage(message *model.Message, user *model.User) error {
 	}
 	messageRequest := discordMessageRequest{
 		Content: message.Content,
+	}
+	// https://discord.com/developers/docs/reference#message-formatting
+	if message.To != "" {
+		messageRequest.Content = ""
+		ids := strings.Split(message.To, "|")
+		for _, id := range ids {
+			messageRequest.Content = "<@" + id + "> " + messageRequest.Content
+		}
+		messageRequest.Content = messageRequest.Content + message.Content
 	}
 
 	jsonData, err := json.Marshal(messageRequest)

@@ -11,6 +11,7 @@ import (
 	"message-pusher/model"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -23,6 +24,10 @@ type dingMessageRequest struct {
 		Title string `json:"title"`
 		Text  string `json:"text"`
 	} `json:"markdown"`
+	At struct {
+		AtUserIds []string `json:"atUserIds"`
+		IsAtAll   bool     `json:"isAtAll"`
+	}
 }
 
 type dingMessageResponse struct {
@@ -31,6 +36,7 @@ type dingMessageResponse struct {
 }
 
 func SendDingMessage(message *model.Message, user *model.User) error {
+	// https://open.dingtalk.com/document/robots/custom-robot-access#title-72m-8ag-pqw
 	if user.DingWebhookURL == "" {
 		return errors.New("未配置钉钉群机器人消息推送方式")
 	}
@@ -44,6 +50,13 @@ func SendDingMessage(message *model.Message, user *model.User) error {
 		messageRequest.MessageType = "markdown"
 		messageRequest.Markdown.Title = message.Title
 		messageRequest.Markdown.Text = message.Content
+	}
+	if message.To != "" {
+		if message.To == "@all" {
+			messageRequest.At.IsAtAll = true
+		} else {
+			messageRequest.At.AtUserIds = strings.Split(message.To, "|")
+		}
 	}
 
 	timestamp := time.Now().UnixMilli()

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"message-pusher/model"
 	"net/http"
+	"strings"
 )
 
 type corpMessageRequest struct {
@@ -17,6 +18,7 @@ type corpMessageRequest struct {
 	Markdown struct {
 		Content string `json:"content"`
 	} `json:"markdown"`
+	MentionedList []string `json:"mentioned_list"`
 }
 
 type corpMessageResponse struct {
@@ -25,6 +27,7 @@ type corpMessageResponse struct {
 }
 
 func SendCorpMessage(message *model.Message, user *model.User) error {
+	// https://developer.work.weixin.qq.com/document/path/91770
 	if user.CorpWebhookURL == "" {
 		return errors.New("未配置企业微信群机器人消息推送方式")
 	}
@@ -38,7 +41,9 @@ func SendCorpMessage(message *model.Message, user *model.User) error {
 		messageRequest.MessageType = "markdown"
 		messageRequest.Markdown.Content = message.Content
 	}
-
+	if message.To != "" {
+		messageRequest.MentionedList = strings.Split(message.To, "|")
+	}
 	jsonData, err := json.Marshal(messageRequest)
 	if err != nil {
 		return err

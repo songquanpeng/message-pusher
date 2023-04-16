@@ -20,6 +20,7 @@ func GetPushMessage(c *gin.Context) {
 		URL:         c.Query("url"),
 		Channel:     c.Query("channel"),
 		Token:       c.Query("token"),
+		To:          c.Query("to"),
 	}
 	if message.Description == "" {
 		// Keep compatible with ServerChan
@@ -41,6 +42,7 @@ func PostPushMessage(c *gin.Context) {
 		Channel:     c.PostForm("channel"),
 		Token:       c.PostForm("token"),
 		Desp:        c.PostForm("desp"),
+		To:          c.PostForm("to"),
 	}
 	if message == (model.Message{}) {
 		// Looks like the user is using JSON

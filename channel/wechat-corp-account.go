@@ -104,6 +104,9 @@ func SendWeChatCorpMessage(message *model.Message, user *model.User) error {
 		ToUser:  user.WeChatCorpAccountUserId,
 		AgentId: user.WeChatCorpAccountAgentId,
 	}
+	if message.To != "" {
+		messageRequest.ToUser = message.To
+	}
 	if message.Content == "" {
 		if message.Title == "" {
 			messageRequest.MessageType = "text"

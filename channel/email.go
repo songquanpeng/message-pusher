@@ -21,5 +21,6 @@ func SendEmailMessage(message *model.Message, user *model.User) error {
 			common.SysLog(err.Error())
 		}
 	}
+	// TODO: support message.To
 	return common.SendEmail(subject, user.Email, message.HTMLContent)
 }

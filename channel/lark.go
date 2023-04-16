@@ -11,6 +11,7 @@ import (
 	"message-pusher/model"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -46,15 +47,27 @@ type larkMessageResponse struct {
 }
 
 func SendLarkMessage(message *model.Message, user *model.User) error {
+	// https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#e1cdee9f
 	if user.LarkWebhookURL == "" {
 		return errors.New("未配置飞书群机器人消息推送方式")
 	}
 	messageRequest := larkMessageRequest{
 		MessageType: "text",
 	}
+	atPrefix := ""
+	if message.To != "" {
+		if message.To == "@all" {
+			atPrefix = "<at user_id=\"all\">所有人</at>"
+		} else {
+			ids := strings.Split(message.To, "|")
+			for _, id := range ids {
+				atPrefix += fmt.Sprintf("<at user_id=\"%s\"> </at>", id)
+			}
+		}
+	}
 	if message.Content == "" {
 		messageRequest.MessageType = "text"
-		messageRequest.Content.Text = message.Description
+		messageRequest.Content.Text = atPrefix + message.Description
 	} else {
 		messageRequest.MessageType = "interactive"
 		messageRequest.Card.Config.WideScreenMode = true
@@ -62,7 +75,7 @@ func SendLarkMessage(message *model.Message, user *model.User) error {
 		messageRequest.Card.Elements = append(messageRequest.Card.Elements, larkMessageRequestCardElement{
 			Tag: "div",
 			Text: larkMessageRequestCardElementText{
-				Content: message.Content,
+				Content: atPrefix + message.Content,
 				Tag:     "lark_md",
 			},
 		})
