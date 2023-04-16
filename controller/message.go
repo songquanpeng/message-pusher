@@ -134,12 +134,26 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 			"success": false,
 			"message": err.Error(),
 		})
+		// Update the status of the message
+		if common.MessagePersistenceEnabled {
+			err := message.UpdateStatus(common.MessageSendStatusFailed)
+			if err != nil {
+				common.SysError("failed to update the status of the message: " + err.Error())
+			}
+		}
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "ok",
 	})
+	// Update the status of the message
+	if common.MessagePersistenceEnabled {
+		err := message.UpdateStatus(common.MessageSendStatusSent)
+		if err != nil {
+			common.SysError("failed to update the status of the message: " + err.Error())
+		}
+	}
 	return
 }
 
@@ -231,6 +245,25 @@ func GetMessage(c *gin.Context) {
 		"success": true,
 		"message": "",
 		"data":    message,
+	})
+	return
+}
+
+func SearchMessages(c *gin.Context) {
+	// TODO: improve the search algorithm
+	keyword := c.Query("keyword")
+	messages, err := model.SearchMessages(keyword)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data":    messages,
 	})
 	return
 }

@@ -14,6 +14,11 @@ const headerButtons = [
     icon: 'home',
   },
   {
+    name: '消息',
+    to: '/message',
+    icon: 'mail',
+  },
+  {
     name: '用户',
     to: '/user',
     icon: 'user',

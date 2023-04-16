@@ -57,9 +57,10 @@ func SetApiRouter(router *gin.Engine) {
 		}
 		messageRoute := apiRouter.Group("/message")
 		{
-			messageRoute.GET("/all", middleware.UserAuth(), controller.GetUserMessages)
+			messageRoute.GET("/", middleware.UserAuth(), controller.GetUserMessages)
+			messageRoute.GET("/search", middleware.UserAuth(), controller.SearchMessages)
 			messageRoute.GET("/:id", middleware.UserAuth(), controller.GetMessage)
-			messageRoute.DELETE("/all", middleware.RootAuth(), controller.DeleteAllMessages)
+			messageRoute.DELETE("/", middleware.RootAuth(), controller.DeleteAllMessages)
 			messageRoute.DELETE("/:id", middleware.UserAuth(), controller.DeleteMessage)
 		}
 	}

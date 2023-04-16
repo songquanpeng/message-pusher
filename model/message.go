@@ -19,7 +19,8 @@ type Message struct {
 	HTMLContent string `json:"html_content"  gorm:"-:all"`
 	Timestamp   int64  `json:"timestamp" gorm:"type:int64"`
 	Link        string `json:"link" gorm:"unique;index"`
-	To          string `json:"to" gorm:"column:to"` // if specified, will send to this user(s)
+	To          string `json:"to" gorm:"column:to"`     // if specified, will send to this user(s)
+	Status      int    `json:"status" gorm:"default:0"` // pending, sent, failed
 }
 
 func GetMessageById(id int, userId int) (*Message, error) {
@@ -45,6 +46,11 @@ func GetMessagesByUserId(userId int, startIdx int, num int) (messages []*Message
 	return messages, err
 }
 
+func SearchMessages(keyword string) (messages []*Message, err error) {
+	err = DB.Select([]string{"id", "title", "channel", "status"}).Where("id = ? or title LIKE ? or channel = ? or status = ?", keyword, keyword+"%", keyword, keyword).Find(&messages).Error
+	return messages, err
+}
+
 func DeleteMessageById(id int, userId int) (err error) {
 	// Why we need userId here? In case user want to delete other's message.
 	if id == 0 || userId == 0 {
@@ -66,8 +72,14 @@ func (message *Message) UpdateAndInsert(userId int) error {
 	message.Link = common.GetUUID()
 	message.Timestamp = time.Now().Unix()
 	message.UserId = userId
+	message.Status = common.MessageSendStatusPending
 	var err error
 	err = DB.Create(message).Error
+	return err
+}
+
+func (message *Message) UpdateStatus(status int) error {
+	err := DB.Model(message).Update("status", status).Error
 	return err
 }
 

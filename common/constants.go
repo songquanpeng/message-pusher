@@ -92,3 +92,10 @@ const (
 	SendEmailToOthersAllowed    = 1
 	SendEmailToOthersDisallowed = 2
 )
+
+const (
+	MessageSendStatusUnknown = 0
+	MessageSendStatusPending = 1
+	MessageSendStatusSent    = 2
+	MessageSendStatusFailed  = 3
+)

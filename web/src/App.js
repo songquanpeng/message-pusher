@@ -15,6 +15,7 @@ import GitHubOAuth from './components/GitHubOAuth';
 import PasswordResetConfirm from './components/PasswordResetConfirm';
 import { UserContext } from './context/User';
 import { StatusContext } from './context/Status';
+import Message from './pages/Message';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -104,6 +105,14 @@ function App() {
           <Suspense fallback={<Loading></Loading>}>
             <PasswordResetConfirm />
           </Suspense>
+        }
+      />
+      <Route
+        path='/message'
+        element={
+          <PrivateRoute>
+            <Message />
+          </PrivateRoute>
         }
       />
       <Route
