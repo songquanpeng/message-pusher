@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Label, Pagination, Table } from 'semantic-ui-react';
+import {
+  Button,
+  Dropdown,
+  Form,
+  Label,
+  Pagination,
+  Table,
+} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { API, showError, showSuccess } from '../helpers';
 
@@ -77,6 +84,7 @@ const UsersTable = () => {
         } else {
           newUsers[realIdx].status = user.status;
           newUsers[realIdx].role = user.role;
+          newUsers[realIdx].send_email_to_others = user.send_email_to_others;
         }
         setUsers(newUsers);
       } else {
@@ -265,6 +273,30 @@ const UsersTable = () => {
                       >
                         编辑
                       </Button>
+                      <Dropdown
+                        size={'small'}
+                        text='更多'
+                        button
+                        className={'small'}
+                      >
+                        <Dropdown.Menu>
+                          <Dropdown.Item
+                            onClick={() => {
+                              manageUser(
+                                user.username,
+                                user.send_email_to_others === 1
+                                  ? 'disallow_send_email_to_others'
+                                  : 'allow_send_email_to_others',
+                                idx
+                              );
+                            }}
+                          >
+                            {user.send_email_to_others === 1
+                              ? '撤回发送任意邮件的权限'
+                              : '授予发送任意邮件的权限'}
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
                     </div>
                   </Table.Cell>
                 </Table.Row>

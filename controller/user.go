@@ -631,6 +631,10 @@ func ManageUser(c *gin.Context) {
 		user.Role = common.RoleAdminUser
 	case "demote":
 		user.Role = common.RoleCommonUser
+	case "allow_send_email_to_others":
+		user.SendEmailToOthers = common.SendEmailToOthersAllowed
+	case "disallow_send_email_to_others":
+		user.SendEmailToOthers = common.SendEmailToOthersDisallowed
 	}
 
 	if err := user.Update(false); err != nil {
@@ -641,8 +645,9 @@ func ManageUser(c *gin.Context) {
 		return
 	}
 	clearUser := model.User{
-		Role:   user.Role,
-		Status: user.Status,
+		Role:              user.Role,
+		Status:            user.Status,
+		SendEmailToOthers: user.SendEmailToOthers,
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,

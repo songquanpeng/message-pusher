@@ -7,6 +7,12 @@ import (
 )
 
 func SendEmailMessage(message *model.Message, user *model.User) error {
+	if message.To != "" {
+		if user.SendEmailToOthers != common.SendEmailToOthersAllowed && user.Role < common.RoleAdminUser {
+			return errors.New("没有权限发送邮件给其他人，请联系管理员为你添加该权限")
+		}
+		user.Email = message.To
+	}
 	if user.Email == "" {
 		return errors.New("未配置邮箱地址")
 	}
@@ -21,6 +27,5 @@ func SendEmailMessage(message *model.Message, user *model.User) error {
 			common.SysLog(err.Error())
 		}
 	}
-	// TODO: support message.To
 	return common.SendEmail(subject, user.Email, message.HTMLContent)
 }

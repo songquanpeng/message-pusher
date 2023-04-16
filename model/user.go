@@ -42,6 +42,7 @@ type User struct {
 	TelegramBotToken                   string `json:"telegram_bot_token"`
 	TelegramChatId                     string `json:"telegram_chat_id"`
 	DiscordWebhookURL                  string `json:"discord_webhook_url"`
+	SendEmailToOthers                  int    `json:"send_email_to_others" gorm:"type:int;default:0"`
 }
 
 func GetMaxUserId() int {
@@ -51,7 +52,7 @@ func GetMaxUserId() int {
 }
 
 func GetAllUsers(startIdx int, num int) (users []*User, err error) {
-	err = DB.Order("id desc").Limit(num).Offset(startIdx).Select([]string{"id", "username", "display_name", "role", "status", "email"}).Find(&users).Error
+	err = DB.Order("id desc").Limit(num).Offset(startIdx).Select([]string{"id", "username", "display_name", "role", "status", "email", "send_email_to_others"}).Find(&users).Error
 	return users, err
 }
 
