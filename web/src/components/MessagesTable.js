@@ -211,7 +211,7 @@ const MessagesTable = () => {
           icon='search'
           fluid
           iconPosition='left'
-          placeholder='搜索消息的 ID，标题，通道，以及发送状态 ...'
+          placeholder='搜索消息的 ID，标题，描述，以及消息内容 ...'
           value={searchKeyword}
           loading={searching}
           onChange={handleKeywordChange}

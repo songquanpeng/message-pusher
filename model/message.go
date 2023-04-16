@@ -47,7 +47,7 @@ func GetMessagesByUserId(userId int, startIdx int, num int) (messages []*Message
 }
 
 func SearchMessages(keyword string) (messages []*Message, err error) {
-	err = DB.Select([]string{"id", "title", "channel", "status"}).Where("id = ? or title LIKE ? or channel = ? or status = ?", keyword, keyword+"%", keyword, keyword).Find(&messages).Error
+	err = DB.Select([]string{"id", "title", "description", "content"}).Where("id = ? or title LIKE ? or description LIKE ? or content LIKE ?", keyword, keyword+"%", keyword+"%", keyword+"%").Find(&messages).Error
 	return messages, err
 }
 

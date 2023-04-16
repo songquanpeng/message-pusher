@@ -250,7 +250,6 @@ func GetMessage(c *gin.Context) {
 }
 
 func SearchMessages(c *gin.Context) {
-	// TODO: improve the search algorithm
 	keyword := c.Query("keyword")
 	messages, err := model.SearchMessages(keyword)
 	if err != nil {
