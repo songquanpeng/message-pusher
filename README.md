@@ -59,6 +59,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 4. 支持用户管理。
 5. Cloudflare Turnstile 用户校验。
 6. 支持在线发布公告，设置关于界面以及页脚。
+7. 支持在 Web 端管理发送的消息，支持自动刷新。
 
 ## 用途
 1. [整合进自己的博客系统，每当有人登录时发微信消息提醒](https://github.com/songquanpeng/blog/blob/486d63e96ef7906a6c767653a20ec2d3278e9a4a/routes/user.js#L27)。
