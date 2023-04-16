@@ -113,48 +113,51 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 			message.Channel = channel.TypeEmail
 		}
 	}
-	link := "unsaved"
-	if common.MessagePersistenceEnabled {
-		err = message.UpdateAndInsert(user.Id)
-		if err != nil {
-			c.JSON(http.StatusOK, gin.H{
-				"success": false,
-				"message": err.Error(),
-			})
-			return
-		}
-		link = message.Link
-	}
-	if message.URL == "" {
-		message.URL = fmt.Sprintf("%s/message/%s", common.ServerAddress, link)
-	}
-	err = channel.SendMessage(message, &user)
+	err = saveAndSendMessage(&user, message)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": err.Error(),
 		})
-		// Update the status of the message
-		if common.MessagePersistenceEnabled {
-			err := message.UpdateStatus(common.MessageSendStatusFailed)
-			if err != nil {
-				common.SysError("failed to update the status of the message: " + err.Error())
-			}
-		}
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"message": "ok",
+		"message": "",
 	})
-	// Update the status of the message
-	if common.MessagePersistenceEnabled {
-		err := message.UpdateStatus(common.MessageSendStatusSent)
-		if err != nil {
-			common.SysError("failed to update the status of the message: " + err.Error())
-		}
+}
+
+func saveAndSendMessage(user *model.User, message *model.Message) error {
+	message.Link = common.GetUUID()
+	if message.URL == "" {
+		message.URL = fmt.Sprintf("%s/message/%s", common.ServerAddress, message.Link)
 	}
-	return
+	success := false
+	if common.MessagePersistenceEnabled {
+		defer func() {
+			// Update the status of the message
+			status := common.MessageSendStatusFailed
+			if success {
+				status = common.MessageSendStatusSent
+			}
+			err := message.UpdateStatus(status)
+			if err != nil {
+				common.SysError("failed to update the status of the message: " + err.Error())
+			}
+		}()
+		err := message.UpdateAndInsert(user.Id)
+		if err != nil {
+			return err
+		}
+	} else {
+		message.Link = "unsaved" // This is for user to identify whether the message is saved
+	}
+	err := channel.SendMessage(message, user)
+	if err != nil {
+		return err
+	}
+	success = true
+	return nil // After this line, the message status will be updated
 }
 
 func GetStaticFile(c *gin.Context) {
@@ -263,6 +266,40 @@ func SearchMessages(c *gin.Context) {
 		"success": true,
 		"message": "",
 		"data":    messages,
+	})
+	return
+}
+
+func ResendMessage(c *gin.Context) {
+	messageId, _ := strconv.Atoi(c.Param("id"))
+	userId := c.GetInt("id")
+	helper := func() error {
+		message, err := model.GetMessageById(messageId, userId)
+		message.Id = 0
+		if err != nil {
+			return err
+		}
+		user, err := model.GetUserById(userId, true)
+		if err != nil {
+			return err
+		}
+		err = saveAndSendMessage(user, message)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	err := helper()
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
 	})
 	return
 }

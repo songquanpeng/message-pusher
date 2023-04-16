@@ -173,8 +173,15 @@ const MessagesTable = () => {
   };
 
   const resendMessage = async (id) => {
-    // TODO: Implement resendMessage
-    console.log('resendMessage', id);
+    setLoading(true);
+    const res = await API.post(`/api/message/resend/${id}`);
+    const { success, message } = res.data;
+    if (success) {
+      showSuccess('消息已重新发送！');
+    } else {
+      showError(message);
+    }
+    setLoading(false);
   };
 
   const deleteMessage = async (id, idx) => {
@@ -368,16 +375,20 @@ const MessagesTable = () => {
         size='tiny'
         open={viewModalOpen}
       >
-        <Modal.Header>{message.title ? message.title : "无标题"}</Modal.Header>
+        <Modal.Header>{message.title ? message.title : '无标题'}</Modal.Header>
         <Modal.Content>
-          {message.description ? <p className={'quote'}>{message.description}</p> : ""}
-          <p>{message.content ? message.content : "无内容"}</p>
+          {message.description ? <p className={'quote'}>{message.description}</p> : ''}
+          <p>{message.content ? message.content : '无内容'}</p>
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={() => {openPage(`/message/${message.link}`)}}>
+          <Button onClick={() => {
+            openPage(`/message/${message.link}`);
+          }}>
             打开
           </Button>
-          <Button onClick={() => {setViewModalOpen(false)}}>
+          <Button onClick={() => {
+            setViewModalOpen(false);
+          }}>
             关闭
           </Button>
         </Modal.Actions>

@@ -69,7 +69,6 @@ func DeleteAllMessages() error {
 }
 
 func (message *Message) UpdateAndInsert(userId int) error {
-	message.Link = common.GetUUID()
 	message.Timestamp = time.Now().Unix()
 	message.UserId = userId
 	message.Status = common.MessageSendStatusPending
