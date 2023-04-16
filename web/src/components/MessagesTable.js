@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Label, Modal, Pagination, Table } from 'semantic-ui-react';
-import { API, openPage, showError } from '../helpers';
+import { API, openPage, showError, showSuccess } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
 
@@ -172,14 +172,25 @@ const MessagesTable = () => {
     setLoading(false);
   };
 
-  const resendMessage = (id) => {
+  const resendMessage = async (id) => {
     // TODO: Implement resendMessage
     console.log('resendMessage', id);
   };
 
-  const deleteMessage = (id) => {
-    // TODO: Implement deleteMessage
-    console.log('deleteMessage', id);
+  const deleteMessage = async (id, idx) => {
+    setLoading(true);
+    const res = await API.delete(`/api/message/${id}`);
+    const { success, message } = res.data;
+    if (success) {
+      showSuccess('操作成功完成！');
+      let newMessages = [...messages];
+      let realIdx = (activePage - 1) * ITEMS_PER_PAGE + idx;
+      newMessages[realIdx].deleted = true;
+      setMessages(newMessages);
+    } else {
+      showError(message);
+    }
+    setLoading(false);
   };
 
   const searchMessages = async () => {
@@ -311,8 +322,9 @@ const MessagesTable = () => {
                       <Button
                         size={'small'}
                         color={'yellow'}
+                        loading={loading}
                         onClick={() => {
-                          resendMessage(message.id);
+                          resendMessage(message.id).then();
                         }}
                       >
                         重发
@@ -320,8 +332,9 @@ const MessagesTable = () => {
                       <Button
                         size={'small'}
                         negative
+                        loading={loading}
                         onClick={() => {
-                          deleteMessage(message.id);
+                          deleteMessage(message.id, idx).then();
                         }}
                       >
                         删除
