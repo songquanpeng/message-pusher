@@ -378,7 +378,7 @@ const MessagesTable = () => {
         <Modal.Header>{message.title ? message.title : '无标题'}</Modal.Header>
         <Modal.Content>
           {message.description ? <p className={'quote'}>{message.description}</p> : ''}
-          <p>{message.content ? message.content : '无内容'}</p>
+          {message.content ? <p>{message.content}</p> : ''}
         </Modal.Content>
         <Modal.Actions>
           <Button onClick={() => {
