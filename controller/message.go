@@ -133,7 +133,7 @@ func saveAndSendMessage(user *model.User, message *model.Message) error {
 		message.URL = fmt.Sprintf("%s/message/%s", common.ServerAddress, message.Link)
 	}
 	success := false
-	if common.MessagePersistenceEnabled {
+	if common.MessagePersistenceEnabled || user.SaveMessageToDatabase == common.SaveMessageToDatabaseAllowed {
 		defer func() {
 			// Update the status of the message
 			status := common.MessageSendStatusFailed

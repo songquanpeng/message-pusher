@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Label, Modal, Pagination, Table } from 'semantic-ui-react';
-import { API, openPage, showError, showSuccess } from '../helpers';
+import { API, openPage, showError, showSuccess, showWarning } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
 
@@ -149,14 +149,36 @@ const MessagesTable = () => {
     })();
   };
 
+  const checkPermission = async () => {
+    // Check global permission
+    let res = await API.get('/api/status');
+    const { success, data } = res.data;
+    if (success) {
+      if (data.message_persistence) {
+        return;
+      }
+    }
+    // Check user permission
+    {
+      let res = await API.get('/api/user/self');
+      const { success, message, data } = res.data;
+      if (success) {
+        if (data.save_message_to_database !== 1) {
+          showWarning('您没有消息持久化的权限，消息未保存，请联系管理员。');
+        }
+      } else {
+        showError(message);
+      }
+    }
+  }
+
   useEffect(() => {
-    // TODO: Prompt the user if message persistence is disabled
-    // TODO: Allow set persistence permission for each user
     loadMessages(0)
       .then()
       .catch((reason) => {
         showError(reason);
       });
+    checkPermission().then();
   }, []);
 
   const viewMessage = async (id) => {

@@ -43,6 +43,7 @@ type User struct {
 	TelegramChatId                     string `json:"telegram_chat_id"`
 	DiscordWebhookURL                  string `json:"discord_webhook_url"`
 	SendEmailToOthers                  int    `json:"send_email_to_others" gorm:"type:int;default:0"`
+	SaveMessageToDatabase              int    `json:"save_message_to_database" gorm:"type:int;default:0"`
 }
 
 func GetMaxUserId() int {
@@ -52,7 +53,7 @@ func GetMaxUserId() int {
 }
 
 func GetAllUsers(startIdx int, num int) (users []*User, err error) {
-	err = DB.Order("id desc").Limit(num).Offset(startIdx).Select([]string{"id", "username", "display_name", "role", "status", "email", "send_email_to_others"}).Find(&users).Error
+	err = DB.Order("id desc").Limit(num).Offset(startIdx).Select([]string{"id", "username", "display_name", "role", "status", "email", "send_email_to_others", "save_message_to_database"}).Find(&users).Error
 	return users, err
 }
 
@@ -79,7 +80,7 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 			"channel", "token",
 			"wechat_test_account_id", "wechat_test_account_template_id", "wechat_test_account_open_id",
 			"wechat_corp_account_id", "wechat_corp_account_agent_id", "wechat_corp_account_user_id", "wechat_corp_account_client_type",
-			"bark_server", "telegram_chat_id",
+			"bark_server", "telegram_chat_id", "save_message_to_database",
 		}).First(&user, "id = ?", id).Error
 	}
 	return &user, err

@@ -85,6 +85,7 @@ const UsersTable = () => {
           newUsers[realIdx].status = user.status;
           newUsers[realIdx].role = user.role;
           newUsers[realIdx].send_email_to_others = user.send_email_to_others;
+          newUsers[realIdx].save_message_to_database = user.save_message_to_database;
         }
         setUsers(newUsers);
       } else {
@@ -294,6 +295,21 @@ const UsersTable = () => {
                             {user.send_email_to_others === 1
                               ? '撤回发送任意邮件的权限'
                               : '授予发送任意邮件的权限'}
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onClick={() => {
+                              manageUser(
+                                user.username,
+                                user.save_message_to_database === 1
+                                  ? 'disallow_save_message_to_database'
+                                  : 'allow_save_message_to_database',
+                                idx
+                              );
+                            }}
+                          >
+                            {user.save_message_to_database === 1
+                              ? '撤回消息持久化的权限'
+                              : '授予消息持久化的权限'}
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
