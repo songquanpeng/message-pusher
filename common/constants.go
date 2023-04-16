@@ -94,6 +94,11 @@ const (
 )
 
 const (
+	SaveMessageToDatabaseAllowed    = 1
+	SaveMessageToDatabaseDisallowed = 2
+)
+
+const (
 	MessageSendStatusUnknown = 0
 	MessageSendStatusPending = 1
 	MessageSendStatusSent    = 2

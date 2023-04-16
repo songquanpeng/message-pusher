@@ -635,6 +635,10 @@ func ManageUser(c *gin.Context) {
 		user.SendEmailToOthers = common.SendEmailToOthersAllowed
 	case "disallow_send_email_to_others":
 		user.SendEmailToOthers = common.SendEmailToOthersDisallowed
+	case "allow_save_message_to_database":
+		user.SaveMessageToDatabase = common.SaveMessageToDatabaseAllowed
+	case "disallow_save_message_to_database":
+		user.SaveMessageToDatabase = common.SaveMessageToDatabaseDisallowed
 	}
 
 	if err := user.Update(false); err != nil {
@@ -645,9 +649,10 @@ func ManageUser(c *gin.Context) {
 		return
 	}
 	clearUser := model.User{
-		Role:              user.Role,
-		Status:            user.Status,
-		SendEmailToOthers: user.SendEmailToOthers,
+		Role:                  user.Role,
+		Status:                user.Status,
+		SendEmailToOthers:     user.SendEmailToOthers,
+		SaveMessageToDatabase: user.SaveMessageToDatabase,
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,

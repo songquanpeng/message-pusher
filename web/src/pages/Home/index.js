@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Card, Grid, Header, Segment } from 'semantic-ui-react';
-import { API, showError, showNotice } from '../../helpers';
+import { API, showError, showNotice, timestamp2string } from '../../helpers';
 import { StatusContext } from '../../context/Status';
 
 const Home = () => {
@@ -22,8 +22,7 @@ const Home = () => {
 
   const getStartTimeString = () => {
     const timestamp = statusState?.status?.start_time;
-    const date = new Date(timestamp * 1000);
-    return date.toLocaleString();
+    return timestamp2string(timestamp);
   };
 
   useEffect(() => {

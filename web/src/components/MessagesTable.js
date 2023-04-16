@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Label, Modal, Pagination, Table } from 'semantic-ui-react';
-import { API, openPage, showError, showSuccess, showWarning } from '../helpers';
+import { API, openPage, showError, showSuccess, showWarning, timestamp2string } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
 
@@ -70,13 +70,11 @@ function renderChannel(channel) {
 }
 
 function renderTimestamp(timestamp) {
-  const date = new Date(timestamp * 1000);
   return (
     <>
-      {date.getFullYear()}-{date.getMonth() + 1}-{date.getDate()}{' '}
-      {date.getHours()}:{date.getMinutes()}:{date.getSeconds()}
+      {timestamp2string(timestamp)}
     </>
-  );
+  )
 }
 
 function renderStatus(status) {
