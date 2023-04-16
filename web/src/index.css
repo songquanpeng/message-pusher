@@ -28,3 +28,9 @@ code {
         display: none !important;
     }
 }
+
+.quote {
+    margin-left: 0;
+    padding: 0 1em;
+    border-left: 0.25em solid #ddd;
+}

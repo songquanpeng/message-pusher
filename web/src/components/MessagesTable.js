@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Label, Pagination, Table } from 'semantic-ui-react';
-import { API, showError } from '../helpers';
+import { Button, Form, Label, Modal, Pagination, Table } from 'semantic-ui-react';
+import { API, openPage, showError } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
 
@@ -114,6 +114,13 @@ const MessagesTable = () => {
   const [activePage, setActivePage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searching, setSearching] = useState(false);
+  const [message, setMessage] = useState({
+    title: '消息标题',
+    description: '消息描述',
+    content: '消息内容',
+    link: '',
+  });  // Message to be viewed
+  const [viewModalOpen, setViewModalOpen] = useState(false);
 
   const loadMessages = async (startIdx) => {
     const res = await API.get(`/api/message/?p=${startIdx}`);
@@ -152,9 +159,17 @@ const MessagesTable = () => {
       });
   }, []);
 
-  const viewMessage = (id) => {
-    // TODO: Implement viewMessage
-    console.log('viewMessage', id);
+  const viewMessage = async (id) => {
+    setLoading(true);
+    const res = await API.get(`/api/message/${id}`);
+    const { success, message, data } = res.data;
+    if (success) {
+      setMessage(data);
+      setViewModalOpen(true);
+    } else {
+      showError(message);
+    }
+    setLoading(false);
   };
 
   const resendMessage = (id) => {
@@ -286,8 +301,9 @@ const MessagesTable = () => {
                       <Button
                         size={'small'}
                         positive
+                        loading={loading}
                         onClick={() => {
-                          viewMessage(message.id);
+                          viewMessage(message.id).then();
                         }}
                       >
                         查看
@@ -335,6 +351,24 @@ const MessagesTable = () => {
           </Table.Row>
         </Table.Footer>
       </Table>
+      <Modal
+        size='tiny'
+        open={viewModalOpen}
+      >
+        <Modal.Header>{message.title ? message.title : "无标题"}</Modal.Header>
+        <Modal.Content>
+          {message.description ? <p className={'quote'}>{message.description}</p> : ""}
+          <p>{message.content ? message.content : "无内容"}</p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button onClick={() => {openPage(`/message/${message.link}`)}}>
+            打开
+          </Button>
+          <Button onClick={() => {setViewModalOpen(false)}}>
+            关闭
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </>
   );
 };
