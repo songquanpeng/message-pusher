@@ -382,7 +382,11 @@ const MessagesTable = () => {
         </Modal.Content>
         <Modal.Actions>
           <Button onClick={() => {
-            openPage(`/message/${message.link}`);
+            if (message.URL) {
+              openPage(message.URL);
+            } else {
+              openPage(`/message/${message.link}`);
+            }
           }}>
             打开
           </Button>
