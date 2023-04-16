@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form, Label, Modal, Pagination, Table } from 'semantic-ui-react';
 import { API, openPage, showError, showSuccess, showWarning, timestamp2string } from '../helpers';
 
@@ -74,7 +74,7 @@ function renderTimestamp(timestamp) {
     <>
       {timestamp2string(timestamp)}
     </>
-  )
+  );
 }
 
 function renderStatus(status) {
@@ -109,6 +109,9 @@ function renderStatus(status) {
 const MessagesTable = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [autoRefreshSeconds, setAutoRefreshSeconds] = useState(10);
+  const autoRefreshSecondsRef = useRef(autoRefreshSeconds);
   const [activePage, setActivePage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searching, setSearching] = useState(false);
@@ -116,11 +119,12 @@ const MessagesTable = () => {
     title: '消息标题',
     description: '消息描述',
     content: '消息内容',
-    link: '',
+    link: ''
   });  // Message to be viewed
   const [viewModalOpen, setViewModalOpen] = useState(false);
 
   const loadMessages = async (startIdx) => {
+    setLoading(true);
     const res = await API.get(`/api/message/?p=${startIdx}`);
     const { success, message, data } = res.data;
     if (success) {
@@ -168,7 +172,7 @@ const MessagesTable = () => {
         showError(message);
       }
     }
-  }
+  };
 
   useEffect(() => {
     loadMessages(0)
@@ -256,6 +260,31 @@ const MessagesTable = () => {
     setMessages(sortedMessages);
     setLoading(false);
   };
+
+  const refresh = async () => {
+    await loadMessages(0);
+    setActivePage(1);
+  };
+
+  useEffect(() => {
+    let intervalId;
+
+    if (autoRefresh) {
+      intervalId = setInterval(() => {
+        if (autoRefreshSecondsRef.current === 0) {
+          refresh().then();
+          setAutoRefreshSeconds(10);
+          autoRefreshSecondsRef.current = 10;
+        } else {
+          autoRefreshSecondsRef.current -= 1;
+          setAutoRefreshSeconds(autoRefreshSeconds => autoRefreshSeconds - 1); // Important!
+        }
+      }, 1000);
+    }
+
+    return () => clearInterval(intervalId);
+  }, [autoRefresh]);
+
 
   return (
     <>
@@ -376,6 +405,17 @@ const MessagesTable = () => {
         <Table.Footer>
           <Table.Row>
             <Table.HeaderCell colSpan='6'>
+              <Button size='small' loading={loading} onClick={() => {
+                refresh().then();
+              }}>
+                手动刷新
+              </Button>
+              <Button size='small' loading={loading} onClick={() => {
+                setAutoRefresh(!autoRefresh);
+                setAutoRefreshSeconds(10);
+              }}>
+                {autoRefresh ? `自动刷新中（${autoRefreshSeconds} 秒后刷新）` : '自动刷新'}
+              </Button>
               <Pagination
                 floated='right'
                 activePage={activePage}
