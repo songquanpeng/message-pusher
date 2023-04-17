@@ -24,7 +24,9 @@ var s tokenStore
 
 func TokenStoreInit() {
 	s.Map = make(map[string]*TokenStoreItem)
-	s.ExpirationSeconds = 2 * 60 * 60
+	// https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
+	// https://developer.work.weixin.qq.com/document/path/91039
+	s.ExpirationSeconds = 2 * 55 * 60 // 2 hours - 5 minutes
 	go func() {
 		users, err := model.GetAllUsersWithSecrets()
 		if err != nil {
