@@ -24,7 +24,7 @@ var indexPage []byte
 
 func main() {
 	common.SetupGinLog()
-	common.SysLog("system started")
+	common.SysLog("Message Pusher " + common.Version + " started")
 	if os.Getenv("GIN_MODE") != "debug" {
 		gin.SetMode(gin.ReleaseMode)
 	}
