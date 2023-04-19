@@ -17,7 +17,7 @@ type Message struct {
 	Channel     string `json:"channel"`
 	Token       string `json:"token" gorm:"-:all"`
 	HTMLContent string `json:"html_content"  gorm:"-:all"`
-	Timestamp   int64  `json:"timestamp" gorm:"type:int64"`
+	Timestamp   int64  `json:"timestamp" gorm:"type:bigint"`
 	Link        string `json:"link" gorm:"unique;index"`
 	To          string `json:"to" gorm:"column:to"`     // if specified, will send to this user(s)
 	Status      int    `json:"status" gorm:"default:0"` // pending, sent, failed
