@@ -59,14 +59,15 @@ func InitOptionMap() {
 func UpdateOption(key string, value string) error {
 	// Save to database first
 	option := Option{
-		Key:   key,
-		Value: value,
+		Key: key,
 	}
-	// When updating with struct it will only update non-zero fields by default
-	// So we have to use Select here
-	if DB.Model(&option).Where("key = ?", key).Update("value", option.Value).RowsAffected == 0 {
-		DB.Create(&option)
-	}
+	// https://gorm.io/docs/update.html#Save-All-Fields
+	DB.FirstOrCreate(&option, Option{Key: key})
+	option.Value = value
+	// Save is a combination function.
+	// If save value does not contain primary key, it will execute Create,
+	// otherwise it will execute Update (with all fields).
+	DB.Save(&option)
 	// Update OptionMap
 	updateOptionMap(key, value)
 	return nil
