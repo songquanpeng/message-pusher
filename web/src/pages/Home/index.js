@@ -47,10 +47,12 @@ const Home = () => {
                       href='https://github.com/songquanpeng/message-pusher'
                       target='_blank'
                     >
-                      GitHub 仓库地址
+                      https://github.com/songquanpeng/message-pusher
                     </a>
                   </p>
                   <p>启动时间：{getStartTimeString()}</p>
+                  <p>自从上次启动已发送消息数目：{statusState?.status?.message_count}</p>
+                  <p>自从上次启动新注册用户数目：{statusState?.status?.user_count}</p>
                 </Card.Description>
               </Card.Content>
             </Card>
@@ -82,6 +84,18 @@ const Home = () => {
                   <p>
                     Turnstile 用户校验：
                     {statusState?.status?.turnstile_check === true
+                      ? '已启用'
+                      : '未启用'}
+                  </p>
+                  <p>
+                    全局消息持久化：
+                    {statusState?.status?.message_persistence === true
+                      ? '已启用'
+                      : '未启用'}
+                  </p>
+                  <p>
+                    全局消息渲染：
+                    {statusState?.status?.message_render === true
                       ? '已启用'
                       : '未启用'}
                   </p>

@@ -11,6 +11,8 @@ var Version = "v0.0.0"
 var SystemName = "消息推送服务"
 var ServerAddress = "http://localhost:3000"
 var Footer = ""
+var MessageCount = 0 // Non critical value, no need to use atomic
+var UserCount = 0    // Non critical value, no need to use atomic
 
 // Any options with "Secret", "Token" in its key won't be return by GetOptions
 

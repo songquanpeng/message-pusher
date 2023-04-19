@@ -28,6 +28,8 @@ func GetStatus(c *gin.Context) {
 			"turnstile_site_key":  common.TurnstileSiteKey,
 			"message_persistence": common.MessagePersistenceEnabled,
 			"message_render":      common.MessageRenderEnabled,
+			"message_count":       common.MessageCount,
+			"user_count":          common.UserCount,
 		},
 	})
 	return

@@ -153,6 +153,7 @@ func saveAndSendMessage(user *model.User, message *model.Message) error {
 		message.Link = "unsaved" // This is for user to identify whether the message is saved
 	}
 	err := channel.SendMessage(message, user)
+	common.MessageCount += 1 // We don't need to use atomic here because it's not a critical value
 	if err != nil {
 		return err
 	}
