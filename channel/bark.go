@@ -1,12 +1,19 @@
 package channel
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"message-pusher/model"
 	"net/http"
 )
+
+type barkMessageRequest struct {
+	Title string `json:"title"`
+	Body  string `json:"body"`
+	URL   string `json:"url"`
+}
 
 type barkMessageResponse struct {
 	Code    int    `json:"code"`
@@ -17,13 +24,20 @@ func SendBarkMessage(message *model.Message, user *model.User) error {
 	if user.BarkServer == "" || user.BarkSecret == "" {
 		return errors.New("未配置 Bark 消息推送方式")
 	}
-	url := ""
-	if message.Title != "" {
-		url = fmt.Sprintf("%s/%s/%s/%s", user.BarkServer, user.BarkSecret, message.Title, message.Description)
-	} else {
-		url = fmt.Sprintf("%s/%s/%s", user.BarkServer, user.BarkSecret, message.Description)
+	url := fmt.Sprintf("%s/%s", user.BarkServer, user.BarkSecret)
+	req := barkMessageRequest{
+		Title: message.Title,
+		Body:  message.Content,
+		URL:   message.URL,
 	}
-	resp, err := http.Get(url)
+	if message.Content == "" {
+		req.Body = message.Description
+	}
+	reqBody, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+	resp, err := http.Post(url, "application/json", bytes.NewReader(reqBody))
 	if err != nil {
 		return err
 	}
