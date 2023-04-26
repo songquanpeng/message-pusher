@@ -3,6 +3,8 @@
 ## Basic Usages
 
 ```shell
+Installs any packages that it depends on
+npm install 
 # Runs the app in the development mode
 npm start
 
