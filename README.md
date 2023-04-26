@@ -72,6 +72,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 1. 从 [GitHub Releases](https://github.com/songquanpeng/message-pusher/releases/latest) 下载可执行文件或者从源码编译：
    ```shell
    git clone https://github.com/songquanpeng/message-pusher.git
+   cd message-pusher
    go mod download
    go build -ldflags "-s -w" -o message-pusher
    ````
