@@ -17,11 +17,14 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
   <a href="https://github.com/songquanpeng/message-pusher/releases/latest">
     <img src="https://img.shields.io/github/v/release/songquanpeng/message-pusher?color=brightgreen&include_prereleases" alt="release">
   </a>
+  <a href="https://hub.docker.com/repository/docker/justsong/message-pusher">
+    <img src="https://img.shields.io/docker/pulls/justsong/message-pusher?color=brightgreen" alt="docker pull">
+  </a>
   <a href="https://github.com/songquanpeng/message-pusher/releases/latest">
     <img src="https://img.shields.io/github/downloads/songquanpeng/message-pusher/total?color=brightgreen&include_prereleases" alt="release">
   </a>
-  <a href="https://hub.docker.com/repository/docker/justsong/message-pusher">
-    <img src="https://img.shields.io/docker/pulls/justsong/message-pusher?color=brightgreen" alt="docker pull">
+  <a href="https://goreportcard.com/report/github.com/songquanpeng/message-pusher">
+    <img src="https://goreportcard.com/badge/github.com/songquanpeng/message-pusher" alt="GoReportCard">
   </a>
 </p>
 
