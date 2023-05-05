@@ -46,11 +46,8 @@ type larkMessageResponse struct {
 	Message string `json:"msg"`
 }
 
-func SendLarkMessage(message *model.Message, user *model.User) error {
+func SendLarkMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	// https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#e1cdee9f
-	if user.LarkWebhookURL == "" {
-		return errors.New("未配置飞书群机器人消息推送方式")
-	}
 	messageRequest := larkMessageRequest{
 		MessageType: "text",
 	}
@@ -83,7 +80,7 @@ func SendLarkMessage(message *model.Message, user *model.User) error {
 
 	now := time.Now()
 	timestamp := now.Unix()
-	sign, err := larkSign(user.LarkWebhookSecret, timestamp)
+	sign, err := larkSign(channel_.Secret, timestamp)
 	if err != nil {
 		return err
 	}
@@ -93,7 +90,7 @@ func SendLarkMessage(message *model.Message, user *model.User) error {
 	if err != nil {
 		return err
 	}
-	resp, err := http.Post(user.LarkWebhookURL, "application/json",
+	resp, err := http.Post(channel_.URL, "application/json",
 		bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err

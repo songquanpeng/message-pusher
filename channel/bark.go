@@ -20,11 +20,8 @@ type barkMessageResponse struct {
 	Message string `json:"message"`
 }
 
-func SendBarkMessage(message *model.Message, user *model.User) error {
-	if user.BarkServer == "" || user.BarkSecret == "" {
-		return errors.New("未配置 Bark 消息推送方式")
-	}
-	url := fmt.Sprintf("%s/%s", user.BarkServer, user.BarkSecret)
+func SendBarkMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
+	url := fmt.Sprintf("%s/%s", channel_.URL, channel_.Secret)
 	req := barkMessageRequest{
 		Title: message.Title,
 		Body:  message.Content,

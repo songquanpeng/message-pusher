@@ -64,6 +64,16 @@ func SetApiRouter(router *gin.Engine) {
 			messageRoute.DELETE("/", middleware.RootAuth(), controller.DeleteAllMessages)
 			messageRoute.DELETE("/:id", middleware.UserAuth(), controller.DeleteMessage)
 		}
+		channelRoute := apiRouter.Group("/token")
+		channelRoute.Use(middleware.UserAuth())
+		{
+			channelRoute.GET("/", controller.GetAllChannels)
+			channelRoute.GET("/search", controller.SearchChannels)
+			channelRoute.GET("/:id", controller.GetChannel)
+			channelRoute.POST("/", controller.AddChannel)
+			channelRoute.PUT("/", controller.UpdateChannel)
+			channelRoute.DELETE("/:id", controller.DeleteChannel)
+		}
 	}
 	pushRouter := router.Group("/push")
 	pushRouter.Use(middleware.GlobalAPIRateLimit())

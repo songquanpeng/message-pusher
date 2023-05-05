@@ -12,6 +12,7 @@ type TokenStoreItem interface {
 	Token() string
 	Refresh()
 	IsFilled() bool
+	IsShared() bool
 }
 
 type tokenStore struct {
@@ -22,34 +23,51 @@ type tokenStore struct {
 
 var s tokenStore
 
+func channel2item(channel_ *model.Channel) TokenStoreItem {
+	if channel_.Type == model.TypeWeChatTestAccount {
+		item := &WeChatTestAccountTokenStoreItem{
+			AppID:     channel_.AppId,
+			AppSecret: channel_.Secret,
+		}
+		return item
+	} else if channel_.Type == model.TypeWeChatCorpAccount {
+		corpId, agentId, err := parseWechatCorpAccountAppId(channel_.AppId)
+		if err != nil {
+			common.SysError(err.Error())
+			return nil
+		}
+		item := &WeChatCorpAccountTokenStoreItem{
+			CorpId:      corpId,
+			AgentSecret: channel_.Secret,
+			AgentId:     agentId,
+		}
+		return item
+	}
+	return nil
+}
+
+func channels2items(channels []*model.Channel) []TokenStoreItem {
+	var items []TokenStoreItem
+	for _, channel_ := range channels {
+		item := channel2item(channel_)
+		if item != nil {
+			items = append(items, item)
+		}
+	}
+	return items
+}
+
 func TokenStoreInit() {
 	s.Map = make(map[string]*TokenStoreItem)
 	// https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
 	// https://developer.work.weixin.qq.com/document/path/91039
 	s.ExpirationSeconds = 2 * 55 * 60 // 2 hours - 5 minutes
 	go func() {
-		users, err := model.GetAllUsersWithSecrets()
+		channels, err := model.GetTokenStoreChannels()
 		if err != nil {
 			common.FatalLog(err.Error())
 		}
-		var items []TokenStoreItem
-		for _, user := range users {
-			if user.WeChatTestAccountId != "" {
-				item := &WeChatTestAccountTokenStoreItem{
-					AppID:     user.WeChatTestAccountId,
-					AppSecret: user.WeChatTestAccountSecret,
-				}
-				items = append(items, item)
-			}
-			if user.WeChatCorpAccountId != "" {
-				item := &WeChatCorpAccountTokenStoreItem{
-					CorpId:      user.WeChatCorpAccountId,
-					AgentSecret: user.WeChatCorpAccountAgentSecret,
-					AgentId:     user.WeChatCorpAccountAgentId,
-				}
-				items = append(items, item)
-			}
-		}
+		items := channels2items(channels)
 		s.Mutex.RLock()
 		for i := range items {
 			// s.Map[item.Key()] = &item  // This is wrong, you are getting the address of a local variable!
@@ -99,78 +117,14 @@ func TokenStoreRemoveItem(item TokenStoreItem) {
 }
 
 func TokenStoreAddUser(user *model.User) {
-	testItem := WeChatTestAccountTokenStoreItem{
-		AppID:     user.WeChatTestAccountId,
-		AppSecret: user.WeChatTestAccountSecret,
+	channels, err := model.GetTokenStoreChannelsByUserId(user.Id)
+	if err != nil {
+		common.SysError(err.Error())
+		return
 	}
-	TokenStoreAddItem(&testItem)
-	corpItem := WeChatCorpAccountTokenStoreItem{
-		CorpId:      user.WeChatCorpAccountId,
-		AgentSecret: user.WeChatCorpAccountAgentSecret,
-		AgentId:     user.WeChatCorpAccountAgentId,
-	}
-	TokenStoreAddItem(&corpItem)
-}
-
-func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
-	// WeChat Test Account
-	// The fields of cleanUser may be incomplete!
-	if cleanUser.WeChatTestAccountId == originUser.WeChatTestAccountId {
-		cleanUser.WeChatTestAccountId = ""
-	}
-	if cleanUser.WeChatTestAccountSecret == originUser.WeChatTestAccountSecret {
-		cleanUser.WeChatTestAccountSecret = ""
-	}
-	// This means the user updated those fields.
-	if cleanUser.WeChatTestAccountId != "" || cleanUser.WeChatTestAccountSecret != "" {
-		oldWeChatTestAccountTokenStoreItem := WeChatTestAccountTokenStoreItem{
-			AppID:     originUser.WeChatTestAccountId,
-			AppSecret: originUser.WeChatTestAccountSecret,
-		}
-		// Yeah, it's a deep copy.
-		newWeChatTestAccountTokenStoreItem := oldWeChatTestAccountTokenStoreItem
-		if cleanUser.WeChatTestAccountId != "" {
-			newWeChatTestAccountTokenStoreItem.AppID = cleanUser.WeChatTestAccountId
-		}
-		if cleanUser.WeChatTestAccountSecret != "" {
-			newWeChatTestAccountTokenStoreItem.AppSecret = cleanUser.WeChatTestAccountSecret
-		}
-		if !oldWeChatTestAccountTokenStoreItem.IsShared() {
-			TokenStoreRemoveItem(&oldWeChatTestAccountTokenStoreItem)
-		}
-		TokenStoreAddItem(&newWeChatTestAccountTokenStoreItem)
-	}
-
-	// WeChat Corp Account
-	if cleanUser.WeChatCorpAccountId == originUser.WeChatCorpAccountId {
-		cleanUser.WeChatCorpAccountId = ""
-	}
-	if cleanUser.WeChatCorpAccountAgentId == originUser.WeChatCorpAccountAgentId {
-		cleanUser.WeChatCorpAccountAgentId = ""
-	}
-	if cleanUser.WeChatCorpAccountAgentSecret == originUser.WeChatCorpAccountAgentSecret {
-		cleanUser.WeChatCorpAccountAgentSecret = ""
-	}
-	if cleanUser.WeChatCorpAccountId != "" || cleanUser.WeChatCorpAccountAgentId != "" || cleanUser.WeChatCorpAccountAgentSecret != "" {
-		oldWeChatCorpAccountTokenStoreItem := WeChatCorpAccountTokenStoreItem{
-			CorpId:      originUser.WeChatCorpAccountId,
-			AgentSecret: originUser.WeChatCorpAccountAgentSecret,
-			AgentId:     originUser.WeChatCorpAccountAgentId,
-		}
-		newWeChatCorpAccountTokenStoreItem := oldWeChatCorpAccountTokenStoreItem
-		if cleanUser.WeChatCorpAccountId != "" {
-			newWeChatCorpAccountTokenStoreItem.CorpId = cleanUser.WeChatCorpAccountId
-		}
-		if cleanUser.WeChatCorpAccountAgentSecret != "" {
-			newWeChatCorpAccountTokenStoreItem.AgentSecret = cleanUser.WeChatCorpAccountAgentSecret
-		}
-		if cleanUser.WeChatCorpAccountAgentId != "" {
-			newWeChatCorpAccountTokenStoreItem.AgentId = cleanUser.WeChatCorpAccountAgentId
-		}
-		if !oldWeChatCorpAccountTokenStoreItem.IsShared() {
-			TokenStoreRemoveItem(&oldWeChatCorpAccountTokenStoreItem)
-		}
-		TokenStoreAddItem(&newWeChatCorpAccountTokenStoreItem)
+	items := channels2items(channels)
+	for i := range items {
+		TokenStoreAddItem(items[i])
 	}
 }
 
@@ -178,20 +132,109 @@ func TokenStoreUpdateUser(cleanUser *model.User, originUser *model.User) {
 // user must be filled.
 // It's okay to delete a user that don't have an item here.
 func TokenStoreRemoveUser(user *model.User) {
-	testAccountTokenStoreItem := WeChatTestAccountTokenStoreItem{
-		AppID:     user.WeChatTestAccountId,
-		AppSecret: user.WeChatTestAccountSecret,
+	channels, err := model.GetTokenStoreChannelsByUserId(user.Id)
+	if err != nil {
+		common.SysError(err.Error())
+		return
 	}
-	if !testAccountTokenStoreItem.IsShared() {
-		TokenStoreRemoveItem(&testAccountTokenStoreItem)
+	items := channels2items(channels)
+	for i := range items {
+		if items[i].IsShared() {
+			continue
+		}
+		TokenStoreRemoveItem(items[i])
 	}
-	corpAccountTokenStoreItem := WeChatCorpAccountTokenStoreItem{
-		CorpId:      user.WeChatCorpAccountId,
-		AgentSecret: user.WeChatCorpAccountAgentSecret,
-		AgentId:     user.WeChatCorpAccountAgentId,
+}
+
+func TokenStoreAddChannel(channel *model.Channel) {
+	if channel.Type != model.TypeWeChatTestAccount && channel.Type != model.TypeWeChatCorpAccount {
+		return
 	}
-	if !corpAccountTokenStoreItem.IsShared() {
-		TokenStoreRemoveItem(&corpAccountTokenStoreItem)
+	item := channel2item(channel)
+	if item != nil {
+		TokenStoreAddItem(item)
+	}
+}
+
+func TokenStoreRemoveChannel(channel *model.Channel) {
+	if channel.Type != model.TypeWeChatTestAccount && channel.Type != model.TypeWeChatCorpAccount {
+		return
+	}
+	item := channel2item(channel)
+	if item != nil {
+		TokenStoreRemoveItem(item)
+	}
+}
+
+func TokenStoreUpdateChannel(newChannel *model.Channel, oldChannel *model.Channel) {
+	if oldChannel.Type != model.TypeWeChatTestAccount && oldChannel.Type != model.TypeWeChatCorpAccount {
+		return
+	}
+	if oldChannel.Type == model.TypeWeChatTestAccount {
+		// Only keep changed parts
+		if newChannel.AppId == oldChannel.AppId {
+			newChannel.AppId = ""
+		}
+		if newChannel.Secret == oldChannel.Secret {
+			newChannel.Secret = ""
+		}
+		oldItem := WeChatTestAccountTokenStoreItem{
+			AppID:     oldChannel.AppId,
+			AppSecret: oldChannel.Secret,
+		}
+		// Yeah, it's a deep copy.
+		newItem := oldItem
+		// This means the user updated those fields.
+		if newChannel.AppId != "" {
+			newItem.AppID = newChannel.AppId
+		}
+		if newChannel.Secret != "" {
+			newItem.AppSecret = newChannel.Secret
+		}
+		if !oldItem.IsShared() {
+			TokenStoreRemoveItem(&oldItem)
+		}
+		TokenStoreAddItem(&newItem)
+		return
+	}
+	if oldChannel.Type == model.TypeWeChatCorpAccount {
+		// Only keep changed parts
+		if newChannel.AppId == oldChannel.AppId {
+			newChannel.AppId = ""
+		}
+		if newChannel.Secret == oldChannel.Secret {
+			newChannel.Secret = ""
+		}
+		corpId, agentId, err := parseWechatCorpAccountAppId(oldChannel.AppId)
+		if err != nil {
+			common.SysError(err.Error())
+			return
+		}
+		oldItem := WeChatCorpAccountTokenStoreItem{
+			CorpId:      corpId,
+			AgentSecret: oldChannel.Secret,
+			AgentId:     agentId,
+		}
+		// Yeah, it's a deep copy.
+		newItem := oldItem
+		// This means the user updated those fields.
+		if newChannel.AppId != "" {
+			corpId, agentId, err := parseWechatCorpAccountAppId(oldChannel.AppId)
+			if err != nil {
+				common.SysError(err.Error())
+				return
+			}
+			newItem.CorpId = corpId
+			newItem.AgentId = agentId
+		}
+		if newChannel.Secret != "" {
+			newItem.AgentSecret = newChannel.Secret
+		}
+		if !oldItem.IsShared() {
+			TokenStoreRemoveItem(&oldItem)
+		}
+		TokenStoreAddItem(&newItem)
+		return
 	}
 }
 

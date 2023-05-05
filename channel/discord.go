@@ -18,10 +18,7 @@ type discordMessageResponse struct {
 	Message string `json:"message"`
 }
 
-func SendDiscordMessage(message *model.Message, user *model.User) error {
-	if user.DiscordWebhookURL == "" {
-		return errors.New("未配置 Discord 群机器人消息推送方式")
-	}
+func SendDiscordMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	if message.Content == "" {
 		message.Content = message.Description
 	}
@@ -42,7 +39,7 @@ func SendDiscordMessage(message *model.Message, user *model.User) error {
 	if err != nil {
 		return err
 	}
-	resp, err := http.Post(user.DiscordWebhookURL, "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post(channel_.URL, "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err
 	}

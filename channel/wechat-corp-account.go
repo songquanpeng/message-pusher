@@ -8,6 +8,7 @@ import (
 	"message-pusher/common"
 	"message-pusher/model"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -30,8 +31,9 @@ func (i *WeChatCorpAccountTokenStoreItem) Key() string {
 }
 
 func (i *WeChatCorpAccountTokenStoreItem) IsShared() bool {
-	return model.DB.Where("wechat_corp_account_id = ? and wechat_corp_account_agent_secret = ? and wechat_corp_account_agent_id = ?",
-		i.CorpId, i.AgentSecret, i.AgentId).Find(&model.User{}).RowsAffected != 1
+	appId := fmt.Sprintf("%s|%s", i.CorpId, i.AgentId)
+	return model.DB.Where("type = ? and app_id = ? and secret = ?",
+		model.TypeWeChatCorpAccount, appId, i.AgentSecret).Find(&model.Channel{}).RowsAffected != 1
 }
 
 func (i *WeChatCorpAccountTokenStoreItem) IsFilled() bool {
@@ -95,14 +97,26 @@ type wechatCorpMessageResponse struct {
 	ErrorMessage string `json:"errmsg"`
 }
 
-func SendWeChatCorpMessage(message *model.Message, user *model.User) error {
-	if user.WeChatCorpAccountId == "" {
-		return errors.New("未配置微信企业号消息推送方式")
+func parseWechatCorpAccountAppId(appId string) (string, string, error) {
+	parts := strings.Split(appId, "|")
+	if len(parts) != 2 {
+		return "", "", errors.New("无效的微信企业号配置")
 	}
+	return parts[0], parts[1], nil
+}
+
+func SendWeChatCorpMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	// https://developer.work.weixin.qq.com/document/path/90236
+	corpId, agentId, err := parseWechatCorpAccountAppId(channel_.AppId)
+	if err != nil {
+		return err
+	}
+	userId := channel_.AccountId
+	clientType := channel_.Other
+	agentSecret := channel_.Secret
 	messageRequest := wechatCorpMessageRequest{
-		ToUser:  user.WeChatCorpAccountUserId,
-		AgentId: user.WeChatCorpAccountAgentId,
+		ToUser:  userId,
+		AgentId: agentId,
 	}
 	if message.To != "" {
 		messageRequest.ToUser = message.To
@@ -118,7 +132,7 @@ func SendWeChatCorpMessage(message *model.Message, user *model.User) error {
 			messageRequest.TextCard.URL = common.ServerAddress
 		}
 	} else {
-		if user.WeChatCorpAccountClientType == "plugin" {
+		if clientType == "plugin" {
 			messageRequest.MessageType = "textcard"
 			messageRequest.TextCard.Title = message.Title
 			messageRequest.TextCard.Description = message.Description
@@ -132,7 +146,7 @@ func SendWeChatCorpMessage(message *model.Message, user *model.User) error {
 	if err != nil {
 		return err
 	}
-	key := fmt.Sprintf("%s%s%s", user.WeChatCorpAccountId, user.WeChatCorpAccountAgentId, user.WeChatCorpAccountAgentSecret)
+	key := fmt.Sprintf("%s%s%s", corpId, agentId, agentSecret)
 	accessToken := TokenStoreGetToken(key)
 	resp, err := http.Post(fmt.Sprintf("https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s", accessToken), "application/json",
 		bytes.NewBuffer(jsonData))
