@@ -34,6 +34,12 @@ type Channel struct {
 	CreatedTime int64  `json:"created_time" gorm:"bigint"`
 }
 
+type ChannelShort struct {
+	Id     int    `json:"id"`
+	Name   string `json:"name"`
+	Status int    `json:"status"` // enabled, disabled
+}
+
 func GetChannelById(id int, userId int) (*Channel, error) {
 	if id == 0 || userId == 0 {
 		return nil, errors.New("id 或 userId 为空！")
@@ -64,6 +70,11 @@ func GetTokenStoreChannelsByUserId(userId int) (channels []*Channel, err error) 
 
 func GetChannelsByUserId(userId int, startIdx int, num int) (channels []*Channel, err error) {
 	err = DB.Omit("secret").Where("user_id = ?", userId).Order("id desc").Limit(num).Offset(startIdx).Find(&channels).Error
+	return channels, err
+}
+
+func GetChannelsShortByUserId(userId int) (channels []*ChannelShort, err error) {
+	err = DB.Omit("secret").Select("id", "name", "status").Where("user_id = ?", userId).Order("id desc").Find(&channels).Error
 	return channels, err
 }
 

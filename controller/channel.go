@@ -32,6 +32,24 @@ func GetAllChannels(c *gin.Context) {
 	return
 }
 
+func GetAllChannelsShort(c *gin.Context) {
+	userId := c.GetInt("id")
+	channels, err := model.GetChannelsShortByUserId(userId)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data":    channels,
+	})
+	return
+}
+
 func SearchChannels(c *gin.Context) {
 	userId := c.GetInt("id")
 	keyword := c.Query("keyword")
