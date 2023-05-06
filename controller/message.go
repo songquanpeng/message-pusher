@@ -13,6 +13,19 @@ import (
 	"time"
 )
 
+func keepCompatible(message *model.Message) {
+	// Keep compatible with ServerChan: https://sct.ftqq.com/sendkey
+	if message.Description == "" {
+		message.Description = message.Short
+	}
+	if message.Content == "" {
+		message.Content = message.Desp
+	}
+	if message.To == "" {
+		message.To = message.OpenId
+	}
+}
+
 func GetPushMessage(c *gin.Context) {
 	message := model.Message{
 		Title:       c.Query("title"),
@@ -22,15 +35,11 @@ func GetPushMessage(c *gin.Context) {
 		Channel:     c.Query("channel"),
 		Token:       c.Query("token"),
 		To:          c.Query("to"),
+		Desp:        c.Query("desp"),
+		Short:       c.Query("short"),
+		OpenId:      c.Query("openid"),
 	}
-	if message.Description == "" {
-		// Keep compatible with ServerChan
-		message.Description = c.Query("desp")
-	}
-	if message.Channel == "" {
-		// Keep compatible with old version
-		message.Channel = c.Query("type")
-	}
+	keepCompatible(&message)
 	pushMessageHelper(c, &message)
 }
 
@@ -42,8 +51,10 @@ func PostPushMessage(c *gin.Context) {
 		URL:         c.PostForm("url"),
 		Channel:     c.PostForm("channel"),
 		Token:       c.PostForm("token"),
-		Desp:        c.PostForm("desp"),
 		To:          c.PostForm("to"),
+		Desp:        c.PostForm("desp"),
+		Short:       c.PostForm("short"),
+		OpenId:      c.PostForm("openid"),
 	}
 	if message == (model.Message{}) {
 		// Looks like the user is using JSON
@@ -56,9 +67,7 @@ func PostPushMessage(c *gin.Context) {
 			return
 		}
 	}
-	if message.Description == "" {
-		message.Description = message.Desp
-	}
+	keepCompatible(&message)
 	pushMessageHelper(c, &message)
 }
 

@@ -11,7 +11,6 @@ type Message struct {
 	UserId      int    `json:"user_id" gorm:"index"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Desp        string `json:"desp" gorm:"-:all"` // alias for description
 	Content     string `json:"content"`
 	URL         string `json:"url" gorm:"column:url"`
 	Channel     string `json:"channel"`
@@ -21,6 +20,9 @@ type Message struct {
 	Link        string `json:"link" gorm:"unique;index"`
 	To          string `json:"to" gorm:"column:to"`     // if specified, will send to this user(s)
 	Status      int    `json:"status" gorm:"default:0"` // pending, sent, failed
+	OpenId      string `json:"openid" gorm:"-:all"`     // alias for to
+	Desp        string `json:"desp" gorm:"-:all"`       // alias for content
+	Short       string `json:"short" gorm:"-:all"`      // alias for description
 }
 
 func GetMessageById(id int, userId int) (*Message, error) {
