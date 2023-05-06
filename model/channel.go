@@ -27,7 +27,7 @@ type Channel struct {
 	Name        string `json:"name" gorm:"type:varchar(32);uniqueIndex:name_user_id"`
 	Description string `json:"description"`
 	Status      int    `json:"status" gorm:"default:1"` // enabled, disabled
-	Secret      string `json:"secret"`
+	Secret      string `json:"secret" gorm:"index"`
 	AppId       string `json:"app_id"`
 	AccountId   string `json:"account_id"`
 	URL         string `json:"url" gorm:"column:url"`
