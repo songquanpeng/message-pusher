@@ -3,16 +3,17 @@ import { Button, Form, Grid, Header, Message } from 'semantic-ui-react';
 import { API, showError, showSuccess } from '../helpers';
 
 const PushSetting = () => {
-  let [inputs, setInputs] = useState({
+  let [user, setUser] = useState({
     id: '',
     username: '',
     channel: '',
     token: '',
   });
+  let [channels, setChannels] = useState([]);
   let [loading, setLoading] = useState(false);
 
   const handleInputChange = (e, { name, value }) => {
-    setInputs((inputs) => ({ ...inputs, [name]: value }));
+    setUser((inputs) => ({ ...inputs, [name]: value }));
   };
 
   const loadUser = async () => {
@@ -25,23 +26,42 @@ const PushSetting = () => {
       if (data.token === ' ') {
         data.token = '';
       }
-      setInputs(data);
+      setUser(data);
     } else {
       showError(message);
     }
     setLoading(false);
   };
 
+  const loadUserChannels = async () => {
+    let res = await API.get(`/api/channel?brief=true`);
+    const { success, message, data } = res.data;
+    if (success) {
+      data.forEach((channel) => {
+        channel.key = channel.name;
+        channel.text = channel.name;
+        channel.value = channel.name;
+        if (channel.description === '') {
+          channel.description = '无备注信息';
+        }
+      });
+      setChannels(data);
+    } else {
+      showError(message);
+    }
+  };
+
   useEffect(() => {
     loadUser().then();
+    loadUserChannels().then();
   }, []);
 
   const submit = async (which) => {
     let data = {};
     switch (which) {
       case 'general':
-        data.channel = inputs.channel;
-        data.token = inputs.token;
+        data.channel = user.channel;
+        data.token = user.token;
         if (data.token === '') {
           data.token = ' ';
         }
@@ -61,7 +81,7 @@ const PushSetting = () => {
 
   const test = async () => {
     let res = await API.get(
-      `/push/${inputs.username}?token=${inputs.token}&channel=${inputs.channel}&title=消息推送服务&description=配置成功！`
+      `/push/${user.username}?token=${user.token}&channel=${user.channel}&title=消息推送服务&description=配置成功！`
     );
     const { success, message } = res.data;
     if (success) {
@@ -83,25 +103,14 @@ const PushSetting = () => {
             <Form.Select
               label='默认推送方式'
               name='channel'
-              options={[
-                { key: 'email', text: '邮件', value: 'email' },
-                { key: 'test', text: '微信测试号', value: 'test' },
-                { key: 'corp_app', text: '企业微信应用号', value: 'corp_app' },
-                { key: 'corp', text: '企业微信群机器人', value: 'corp' },
-                { key: 'lark', text: '飞书群机器人', value: 'lark' },
-                { key: 'ding', text: '钉钉群机器人', value: 'ding' },
-                { key: 'bark', text: 'Bark App', value: 'bark' },
-                { key: 'client', text: 'WebSocket 客户端', value: 'client' },
-                { key: 'telegram', text: 'Telegram 机器人', value: 'telegram' },
-                { key: 'discord', text: 'Discord 群机器人', value: 'discord' },
-              ]}
-              value={inputs.channel}
+              options={channels}
+              value={user.channel}
               onChange={handleInputChange}
             />
             <Form.Input
               label='推送 token'
               placeholder='未设置则不检查 token'
-              value={inputs.token}
+              value={user.token}
               name='token'
               onChange={handleInputChange}
             />
