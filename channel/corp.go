@@ -26,11 +26,8 @@ type corpMessageResponse struct {
 	Message string `json:"errmsg"`
 }
 
-func SendCorpMessage(message *model.Message, user *model.User) error {
+func SendCorpMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	// https://developer.work.weixin.qq.com/document/path/91770
-	if user.CorpWebhookURL == "" {
-		return errors.New("未配置企业微信群机器人消息推送方式")
-	}
 	messageRequest := corpMessageRequest{
 		MessageType: "text",
 	}
@@ -48,7 +45,7 @@ func SendCorpMessage(message *model.Message, user *model.User) error {
 	if err != nil {
 		return err
 	}
-	resp, err := http.Post(fmt.Sprintf("%s", user.CorpWebhookURL), "application/json",
+	resp, err := http.Post(fmt.Sprintf("%s", channel_.URL), "application/json",
 		bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err

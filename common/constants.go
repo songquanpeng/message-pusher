@@ -106,3 +106,9 @@ const (
 	MessageSendStatusSent    = 2
 	MessageSendStatusFailed  = 3
 )
+
+const (
+	ChannelStatusUnknown  = 0
+	ChannelStatusEnabled  = 1
+	ChannelStatusDisabled = 2
+)

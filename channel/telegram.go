@@ -20,15 +20,15 @@ type telegramMessageResponse struct {
 	Description string `json:"description"`
 }
 
-func SendTelegramMessage(message *model.Message, user *model.User) error {
+func SendTelegramMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	// https://core.telegram.org/bots/api#sendmessage
-	if user.TelegramBotToken == "" || user.TelegramChatId == "" {
-		return errors.New("未配置 Telegram 机器人消息推送方式")
-	}
 	messageRequest := telegramMessageRequest{
-		ChatId:    user.TelegramChatId,
+		ChatId:    channel_.AccountId,
 		Text:      message.Content,
 		ParseMode: "markdown",
+	}
+	if message.To != "" {
+		messageRequest.ChatId = message.To
 	}
 	if messageRequest.Text == "" {
 		messageRequest.Text = message.Description
@@ -37,7 +37,7 @@ func SendTelegramMessage(message *model.Message, user *model.User) error {
 	if err != nil {
 		return err
 	}
-	resp, err := http.Post(fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", user.TelegramBotToken), "application/json",
+	resp, err := http.Post(fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", channel_.Secret), "application/json",
 		bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err

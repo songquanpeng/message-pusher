@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"message-pusher/channel"
@@ -65,21 +66,21 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 	user := model.User{Username: c.Param("username")}
 	err := user.FillUserByUsername()
 	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": err.Error(),
 		})
 		return
 	}
 	if user.Status == common.UserStatusNonExisted {
-		c.JSON(http.StatusForbidden, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "用户不存在",
 		})
 		return
 	}
 	if user.Status == common.UserStatusDisabled {
-		c.JSON(http.StatusForbidden, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "用户已被封禁",
 		})
@@ -89,7 +90,7 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 		if message.Token == "" {
 			message.Token = c.Request.Header.Get("Authorization")
 			if message.Token == "" {
-				c.JSON(http.StatusForbidden, gin.H{
+				c.JSON(http.StatusOK, gin.H{
 					"success": false,
 					"message": "token 为空",
 				})
@@ -97,7 +98,7 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 			}
 		}
 		if user.Token != message.Token {
-			c.JSON(http.StatusForbidden, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"success": false,
 				"message": "无效的 token",
 			})
@@ -110,10 +111,18 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 	if message.Channel == "" {
 		message.Channel = user.Channel
 		if message.Channel == "" {
-			message.Channel = channel.TypeEmail
+			message.Channel = model.TypeEmail
 		}
 	}
-	err = saveAndSendMessage(&user, message)
+	channel_, err := model.GetChannelByName(message.Channel, user.Id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "无效的渠道的名称",
+		})
+		return
+	}
+	err = saveAndSendMessage(&user, message, channel_)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -127,7 +136,10 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 	})
 }
 
-func saveAndSendMessage(user *model.User, message *model.Message) error {
+func saveAndSendMessage(user *model.User, message *model.Message, channel_ *model.Channel) error {
+	if channel_.Status != common.ChannelStatusEnabled {
+		return errors.New("该渠道已被禁用")
+	}
 	message.Link = common.GetUUID()
 	if message.URL == "" {
 		message.URL = fmt.Sprintf("%s/message/%s", common.ServerAddress, message.Link)
@@ -152,7 +164,7 @@ func saveAndSendMessage(user *model.User, message *model.Message) error {
 	} else {
 		message.Link = "unsaved" // This is for user to identify whether the message is saved
 	}
-	err := channel.SendMessage(message, user)
+	err := channel.SendMessage(message, user, channel_)
 	common.MessageCount += 1 // We don't need to use atomic here because it's not a critical value
 	if err != nil {
 		return err
@@ -284,7 +296,11 @@ func ResendMessage(c *gin.Context) {
 		if err != nil {
 			return err
 		}
-		err = saveAndSendMessage(user, message)
+		channel_, err := model.GetChannelByName(message.Channel, user.Id)
+		if err != nil {
+			return err
+		}
+		err = saveAndSendMessage(user, message, channel_)
 		if err != nil {
 			return err
 		}

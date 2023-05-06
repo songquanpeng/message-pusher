@@ -35,11 +35,8 @@ type dingMessageResponse struct {
 	Message string `json:"errmsg"`
 }
 
-func SendDingMessage(message *model.Message, user *model.User) error {
+func SendDingMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	// https://open.dingtalk.com/document/robots/custom-robot-access#title-72m-8ag-pqw
-	if user.DingWebhookURL == "" {
-		return errors.New("未配置钉钉群机器人消息推送方式")
-	}
 	messageRequest := dingMessageRequest{
 		MessageType: "text",
 	}
@@ -60,7 +57,7 @@ func SendDingMessage(message *model.Message, user *model.User) error {
 	}
 
 	timestamp := time.Now().UnixMilli()
-	sign, err := dingSign(user.DingWebhookSecret, timestamp)
+	sign, err := dingSign(channel_.Secret, timestamp)
 	if err != nil {
 		return err
 	}
@@ -68,7 +65,7 @@ func SendDingMessage(message *model.Message, user *model.User) error {
 	if err != nil {
 		return err
 	}
-	resp, err := http.Post(fmt.Sprintf("%s&timestamp=%d&sign=%s", user.DingWebhookURL, timestamp, sign), "application/json",
+	resp, err := http.Post(fmt.Sprintf("%s&timestamp=%d&sign=%s", channel_.URL, timestamp, sign), "application/json",
 		bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err

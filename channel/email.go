@@ -6,7 +6,7 @@ import (
 	"message-pusher/model"
 )
 
-func SendEmailMessage(message *model.Message, user *model.User) error {
+func SendEmailMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	if message.To != "" {
 		if user.SendEmailToOthers != common.SendEmailToOthersAllowed && user.Role < common.RoleAdminUser {
 			return errors.New("没有权限发送邮件给其他人，请联系管理员为你添加该权限")

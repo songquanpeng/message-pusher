@@ -27,10 +27,29 @@ func RegisterClient(c *gin.Context) {
 	}
 	user := model.User{Username: c.Param("username")}
 	err := user.FillUserByUsername()
-	if secret != user.ClientSecret {
+	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
-			"message": "用户名与密钥不匹配",
+			"message": "无效的用户名",
+		})
+		return
+	}
+	channelName := c.Query("channel")
+	if channelName == "" {
+		channelName = "client"
+	}
+	channel_, err := model.GetChannelByName(channelName, user.Id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "无效的通道名称",
+		})
+		return
+	}
+	if secret != channel_.Secret {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "通道名称与密钥不匹配",
 		})
 		return
 	}
@@ -42,6 +61,6 @@ func RegisterClient(c *gin.Context) {
 		})
 		return
 	}
-	channel.RegisterClient(user.Id, conn)
+	channel.RegisterClient(channelName, user.Id, conn)
 	return
 }

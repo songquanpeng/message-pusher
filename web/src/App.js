@@ -16,6 +16,8 @@ import PasswordResetConfirm from './components/PasswordResetConfirm';
 import { UserContext } from './context/User';
 import { StatusContext } from './context/Status';
 import Message from './pages/Message';
+import Channel from './pages/Channel';
+import EditChannel from './pages/Channel/EditChannel';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -104,6 +106,30 @@ function App() {
         element={
           <Suspense fallback={<Loading></Loading>}>
             <PasswordResetConfirm />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/channel'
+        element={
+          <PrivateRoute>
+            <Channel />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path='/channel/edit/:id'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditChannel />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/channel/add'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditChannel />
           </Suspense>
         }
       />

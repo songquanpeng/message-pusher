@@ -2,6 +2,7 @@ package channel
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gorilla/websocket"
 	"message-pusher/common"
 	"message-pusher/model"
@@ -17,7 +18,7 @@ const (
 )
 
 type webSocketClient struct {
-	userId    int
+	key       string
 	conn      *websocket.Conn
 	message   chan *model.Message
 	pong      chan bool
@@ -55,10 +56,10 @@ func (c *webSocketClient) handleDataWriting() {
 	defer func() {
 		pingTicker.Stop()
 		clientConnMapMutex.Lock()
-		client, ok := clientMap[c.userId]
+		client, ok := clientMap[c.key]
 		// otherwise we may delete the new added client!
 		if ok && client.timestamp == c.timestamp {
-			delete(clientMap, c.userId)
+			delete(clientMap, c.key)
 		}
 		clientConnMapMutex.Unlock()
 		err := c.conn.Close()
@@ -108,18 +109,19 @@ func (c *webSocketClient) close() {
 	// the defer function in handleDataWriting will do the cleanup
 }
 
-var clientMap map[int]*webSocketClient
+var clientMap map[string]*webSocketClient
 var clientConnMapMutex sync.Mutex
 
 func init() {
 	clientConnMapMutex.Lock()
-	clientMap = make(map[int]*webSocketClient)
+	clientMap = make(map[string]*webSocketClient)
 	clientConnMapMutex.Unlock()
 }
 
-func RegisterClient(userId int, conn *websocket.Conn) {
+func RegisterClient(channelName string, userId int, conn *websocket.Conn) {
+	key := fmt.Sprintf("%s:%d", channelName, userId)
 	clientConnMapMutex.Lock()
-	oldClient, existed := clientMap[userId]
+	oldClient, existed := clientMap[key]
 	clientConnMapMutex.Unlock()
 	if existed {
 		byeMessage := &model.Message{
@@ -134,7 +136,7 @@ func RegisterClient(userId int, conn *websocket.Conn) {
 		Description: "客户端连接成功！",
 	}
 	newClient := &webSocketClient{
-		userId:    userId,
+		key:       key,
 		conn:      conn,
 		message:   make(chan *model.Message),
 		pong:      make(chan bool),
@@ -145,16 +147,14 @@ func RegisterClient(userId int, conn *websocket.Conn) {
 	go newClient.handleDataReading()
 	defer newClient.sendMessage(helloMessage)
 	clientConnMapMutex.Lock()
-	clientMap[userId] = newClient
+	clientMap[key] = newClient
 	clientConnMapMutex.Unlock()
 }
 
-func SendClientMessage(message *model.Message, user *model.User) error {
-	if user.ClientSecret == "" {
-		return errors.New("未配置 WebSocket 客户端消息推送方式")
-	}
+func SendClientMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
+	key := fmt.Sprintf("%s:%d", channel_.Name, user.Id)
 	clientConnMapMutex.Lock()
-	client, existed := clientMap[user.Id]
+	client, existed := clientMap[key]
 	clientConnMapMutex.Unlock()
 	if !existed {
 		return errors.New("客户端未连接")

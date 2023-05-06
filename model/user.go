@@ -9,41 +9,20 @@ import (
 // User if you add sensitive fields, don't forget to clean them in setupLogin function.
 // Otherwise, the sensitive information will be saved on local storage in plain text!
 type User struct {
-	Id                                 int    `json:"id"`
-	Username                           string `json:"username" gorm:"unique;index" validate:"max=12"`
-	Password                           string `json:"password" gorm:"not null;" validate:"min=8,max=20"`
-	DisplayName                        string `json:"display_name" gorm:"index" validate:"max=20"`
-	Role                               int    `json:"role" gorm:"type:int;default:1"`   // admin, common
-	Status                             int    `json:"status" gorm:"type:int;default:1"` // enabled, disabled
-	Token                              string `json:"token"`
-	Email                              string `json:"email" gorm:"index" validate:"max=50"`
-	GitHubId                           string `json:"github_id" gorm:"column:github_id;index"`
-	WeChatId                           string `json:"wechat_id" gorm:"column:wechat_id;index"`
-	VerificationCode                   string `json:"verification_code" gorm:"-:all"` // this field is only for Email verification, don't save it to database!
-	Channel                            string `json:"channel"`
-	WeChatTestAccountId                string `json:"wechat_test_account_id" gorm:"column:wechat_test_account_id"`
-	WeChatTestAccountSecret            string `json:"wechat_test_account_secret" gorm:"column:wechat_test_account_secret"`
-	WeChatTestAccountTemplateId        string `json:"wechat_test_account_template_id" gorm:"column:wechat_test_account_template_id"`
-	WeChatTestAccountOpenId            string `json:"wechat_test_account_open_id" gorm:"column:wechat_test_account_open_id"`
-	WeChatTestAccountVerificationToken string `json:"wechat_test_account_verification_token" gorm:"column:wechat_test_account_verification_token"`
-	WeChatCorpAccountId                string `json:"wechat_corp_account_id" gorm:"column:wechat_corp_account_id"`
-	WeChatCorpAccountAgentSecret       string `json:"wechat_corp_account_agent_secret" gorm:"column:wechat_corp_account_agent_secret"`
-	WeChatCorpAccountAgentId           string `json:"wechat_corp_account_agent_id" gorm:"column:wechat_corp_account_agent_id"`
-	WeChatCorpAccountUserId            string `json:"wechat_corp_account_user_id" gorm:"column:wechat_corp_account_user_id"`
-	WeChatCorpAccountClientType        string `json:"wechat_corp_account_client_type" gorm:"column:wechat_corp_account_client_type;default=plugin"`
-	CorpWebhookURL                     string `json:"corp_webhook_url" gorm:"corp_webhook_url"`
-	LarkWebhookURL                     string `json:"lark_webhook_url"`
-	LarkWebhookSecret                  string `json:"lark_webhook_secret"`
-	DingWebhookURL                     string `json:"ding_webhook_url"`
-	DingWebhookSecret                  string `json:"ding_webhook_secret"`
-	BarkServer                         string `json:"bark_server"`
-	BarkSecret                         string `json:"bark_secret"`
-	ClientSecret                       string `json:"client_secret"`
-	TelegramBotToken                   string `json:"telegram_bot_token"`
-	TelegramChatId                     string `json:"telegram_chat_id"`
-	DiscordWebhookURL                  string `json:"discord_webhook_url"`
-	SendEmailToOthers                  int    `json:"send_email_to_others" gorm:"type:int;default:0"`
-	SaveMessageToDatabase              int    `json:"save_message_to_database" gorm:"type:int;default:0"`
+	Id                    int    `json:"id"`
+	Username              string `json:"username" gorm:"unique;index" validate:"max=12"`
+	Password              string `json:"password" gorm:"not null;" validate:"min=8,max=20"`
+	DisplayName           string `json:"display_name" gorm:"index" validate:"max=20"`
+	Role                  int    `json:"role" gorm:"type:int;default:1"`   // admin, common
+	Status                int    `json:"status" gorm:"type:int;default:1"` // enabled, disabled
+	Token                 string `json:"token"`
+	Email                 string `json:"email" gorm:"index" validate:"max=50"`
+	GitHubId              string `json:"github_id" gorm:"column:github_id;index"`
+	WeChatId              string `json:"wechat_id" gorm:"column:wechat_id;index"`
+	VerificationCode      string `json:"verification_code" gorm:"-:all"` // this field is only for Email verification, don't save it to database!
+	Channel               string `json:"channel"`
+	SendEmailToOthers     int    `json:"send_email_to_others" gorm:"type:int;default:0"`
+	SaveMessageToDatabase int    `json:"save_message_to_database" gorm:"type:int;default:0"`
 }
 
 func GetMaxUserId() int {
@@ -54,11 +33,6 @@ func GetMaxUserId() int {
 
 func GetAllUsers(startIdx int, num int) (users []*User, err error) {
 	err = DB.Order("id desc").Limit(num).Offset(startIdx).Select([]string{"id", "username", "display_name", "role", "status", "email", "send_email_to_others", "save_message_to_database"}).Find(&users).Error
-	return users, err
-}
-
-func GetAllUsersWithSecrets() (users []*User, err error) {
-	err = DB.Where("status = ?", common.UserStatusEnabled).Where("wechat_test_account_id != '' or wechat_corp_account_id != ''").Find(&users).Error
 	return users, err
 }
 
@@ -77,10 +51,7 @@ func GetUserById(id int, selectAll bool) (*User, error) {
 		err = DB.First(&user, "id = ?", id).Error
 	} else {
 		err = DB.Select([]string{"id", "username", "display_name", "role", "status", "email", "wechat_id", "github_id",
-			"channel", "token",
-			"wechat_test_account_id", "wechat_test_account_template_id", "wechat_test_account_open_id",
-			"wechat_corp_account_id", "wechat_corp_account_agent_id", "wechat_corp_account_user_id", "wechat_corp_account_client_type",
-			"bark_server", "telegram_chat_id", "save_message_to_database",
+			"channel", "token", "save_message_to_database",
 		}).First(&user, "id = ?", id).Error
 	}
 	return &user, err
