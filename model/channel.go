@@ -74,7 +74,7 @@ func GetChannelsByUserId(userId int, startIdx int, num int) (channels []*Channel
 }
 
 func GetChannelsShortByUserId(userId int) (channels []*ChannelShort, err error) {
-	err = DB.Omit("secret").Select("id", "name", "status").Where("user_id = ?", userId).Order("id desc").Find(&channels).Error
+	err = DB.Model(&Channel{}).Omit("secret").Select("id", "name", "status").Where("user_id = ?", userId).Order("id desc").Find(&channels).Error
 	return channels, err
 }
 
