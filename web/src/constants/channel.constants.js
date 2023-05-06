@@ -30,6 +30,12 @@ export const CHANNEL_OPTIONS = [
     color: '#404eed',
   },
   {
+    key: 'one_bot',
+    text: 'OneBot 协议',
+    value: 'one_bot',
+    color: '#616cff',
+  },
+  {
     key: 'none',
     text: '不推送',
     value: 'none',

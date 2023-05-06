@@ -61,7 +61,15 @@ const EditChannel = () => {
         localInputs.app_id = `${inputs.corp_id}|${inputs.agent_id}`;
         break;
       case 'bark':
-        localInputs.url = 'https://api.day.app';
+        if (localInputs.url === '') {
+          localInputs.url = 'https://api.day.app';
+        }
+        break;
+      case 'one_bot':
+        if (localInputs.url.endsWith('/')) {
+          localInputs.url = localInputs.url.slice(0, -1);
+        }
+        break;
     }
     if (isEditing) {
       res = await API.put(`/api/channel/`, {
@@ -449,6 +457,42 @@ const EditChannel = () => {
                 autoComplete='new-password'
                 value={inputs.url}
                 placeholder='在此填写 Discord 提供的 Webhook 地址'
+              />
+            </Form.Group>
+          </>
+        );
+      case 'one_bot':
+        return (
+          <>
+            <Message>
+              通过 OneBot 协议进行推送，可以使用 <a href='https://github.com/Mrs4s/go-cqhttp' target='_blank'>cqhttp</a> 等实现。
+              利用 OneBot 协议可以实现推送 QQ 消息。
+            </Message>
+            <Form.Group widths={2}>
+              <Form.Input
+                label='服务器地址'
+                name='url'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.url}
+                placeholder='在此填写服务器地址'
+              />
+              <Form.Input
+                label='推送 key'
+                name='secret'
+                type='password'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.secret}
+                placeholder='在此填写服务器的 access token'
+              />
+              <Form.Input
+                label='默认推送目标'
+                name='account_id'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.account_id}
+                placeholder='在此填写默认推送目标，例如 QQ 号，如果是群号则前面必须加上群号前缀，例如 group_123456789'
               />
             </Form.Group>
           </>
