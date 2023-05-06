@@ -10,7 +10,7 @@ import {
 import { API, openPage, showError, showSuccess, showWarning } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
-import { renderChannel, renderTimestamp } from '../helpers/render';
+import { renderTimestamp } from '../helpers/render';
 
 function renderStatus(status) {
   switch (status) {
@@ -294,7 +294,9 @@ const MessagesTable = () => {
                   <Table.Cell>
                     {message.title ? message.title : '无标题'}
                   </Table.Cell>
-                  <Table.Cell>{renderChannel(message.channel)}</Table.Cell>
+                  <Table.Cell>
+                    <Label>{message.channel}</Label>
+                  </Table.Cell>
                   <Table.Cell>{renderTimestamp(message.timestamp)}</Table.Cell>
                   <Table.Cell>{renderStatus(message.status)}</Table.Cell>
                   <Table.Cell>
