@@ -699,6 +699,16 @@ func EmailBind(c *gin.Context) {
 		})
 		return
 	}
+	// create email channel for this user
+	emailChannel := model.Channel{
+		Type:        model.TypeEmail,
+		UserId:      user.Id,
+		Name:        "email",
+		Description: "系统自动创建",
+		Status:      common.ChannelStatusEnabled,
+		CreatedTime: common.GetTimestamp(),
+	}
+	_ = emailChannel.Insert()
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",

@@ -118,7 +118,7 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
-			"message": "无效的渠道的名称",
+			"message": "无效的渠道名称：" + message.Channel,
 		})
 		return
 	}

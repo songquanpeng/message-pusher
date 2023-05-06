@@ -93,6 +93,13 @@ func AddChannel(c *gin.Context) {
 		})
 		return
 	}
+	if channel_.Name == "email" {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "不能使用系统保留名称",
+		})
+		return
+	}
 	cleanChannel := model.Channel{
 		Type:        channel_.Type,
 		UserId:      c.GetInt("id"),
