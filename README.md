@@ -554,6 +554,8 @@ send_message('标题', '描述', '**Markdown 内容**')
 4. 之后执行脚本：`./bin/migrate_v3_to_v4.py`，进行数据的迁移。
 5. 重新启动程序即可。
 
+注意，执行前请确保数据库中 `users` 表中字段的顺序和脚本中的一致，否则会出现数据错乱的情况。
+
 ## 其他
 1. `v0.3` 之前的版本基于 Node.js，你可以切换到 [`nodejs`](https://github.com/songquanpeng/message-pusher/tree/nodejs) 分支查看，该版本不再有功能性更新。
 2. `v0.3` 以及后续版本基于 Gin Template [`v0.2.1`](https://github.com/songquanpeng/gin-template) 版本开发。
