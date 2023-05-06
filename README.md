@@ -158,7 +158,7 @@ proxy_send_timeout 300s;
    1. `title`：选填，受限于具体的消息推送方式，其可能被忽略。
    2. `description`：必填，可以替换为 `desp`。
    3. `content`：选填，受限于具体的消息推送方式，Markdown 语法的支持有所区别。
-   4. `channel`：选填，如果不填则系统使用你在后台设置的默认推送方式。可选的推送方式有：
+   4. `channel`：选填，如果不填则系统使用你在后台设置的默认推送通道。注意，此处填的是消息通道的名称，而非类型。可选的推送通道类型有：
       1. `email`：通过发送邮件的方式进行推送（使用 `title` 或 `description` 字段设置邮件主题，使用 `content` 字段设置正文，支持完整的 Markdown 语法）。
       2. `test`：通过微信测试号进行推送（使用 `description` 字段设置模板消息内容，不支持 Markdown）。
       3. `corp_app`：通过企业微信应用号进行推送（仅当使用企业微信 APP 时，如果设置了 `content` 字段，`title` 和 `description` 字段会被忽略；使用微信中的企业微信插件时正常）。
@@ -169,7 +169,8 @@ proxy_send_timeout 300s;
       8. `client`：通过 WebSocket 客户端进行推送（支持 `title` 和 `description` 字段）。
       9. `telegram`：通过 Telegram 机器人进行推送（`description` 或 `content` 字段二选一，支持 Markdown 的子集）。
       10. `discord`：通过 Discord 群机器人进行推送（注意事项同上）。
-      11. `none`：仅保存到数据库，不做推送。
+      11. `one_api`：通过 OneAPI 协议推送消息到 QQ。
+      12. `none`：仅保存到数据库，不做推送。
    5. `token`：如果你在后台设置了推送 token，则此项必填。另外可以通过设置 HTTP `Authorization` 头部设置此项。
    6. `url`：选填，如果不填则系统自动为消息生成 URL，其内容为消息详情。
    7. `to`：选填，推送给指定用户，如果不填则默认推送给自己，受限于具体的消息推送方式，有些推送方式不支持此项。
