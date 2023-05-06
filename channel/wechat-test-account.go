@@ -94,6 +94,9 @@ func SendWeChatTestMessage(message *model.Message, user *model.User, channel_ *m
 		TemplateId: channel_.Other,
 		URL:        "",
 	}
+	if message.To != "" {
+		values.ToUser = message.To
+	}
 	values.Data.Text.Value = message.Description
 	values.URL = message.URL
 	jsonData, err := json.Marshal(values)
