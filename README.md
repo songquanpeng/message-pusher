@@ -548,10 +548,11 @@ send_message('标题', '描述', '**Markdown 内容**')
 此处均以 SQLite 为例，其他数据库请自行修改。
 
 ### 从 `v0.3` 迁移到 `v0.4`
-1. 首先备份你的数据库文件，修改原本的数据库文件名称为 `message-pusher-v0.3.db`。
-2. 下载最新的 `v0.4` 版本，启动程序，程序会生成新的数据库文件，手动重命名为 `message-pusher-v0.4.db`。
-3. 执行脚本：`./bin/migrate_v3_to_v4.py`。
-4. 执行完毕后将 `message-pusher-v0.4.db` 重命名为 `message-pusher.db` 即可。
+1. 首先备份你的数据库文件，复制一份，命名为 `message-pusher-v0.3.db`。
+2. 下载最新的 `v0.4` 版本，启动程序，程序会自动进行数据库表结构的迁移。
+3. 终止程序。
+4. 之后执行脚本：`./bin/migrate_v3_to_v4.py --v4_db_path ./message-pusher.db`，进行数据的迁移。
+5. 重新启动程序即可。
 
 ## 其他
 1. `v0.3` 之前的版本基于 Node.js，你可以切换到 [`nodejs`](https://github.com/songquanpeng/message-pusher/tree/nodejs) 分支查看，该版本不再有功能性更新。
