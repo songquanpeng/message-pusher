@@ -29,8 +29,9 @@ func (i *WeChatTestAccountTokenStoreItem) Key() string {
 }
 
 func (i *WeChatTestAccountTokenStoreItem) IsShared() bool {
-	return model.DB.Where("type = ? and app_id = ? and secret = ?",
-		model.TypeWeChatTestAccount, i.AppID, i.AppSecret).Find(&model.Channel{}).RowsAffected != 1
+	var count int64 = 0
+	model.DB.Model(&model.Channel{}).Where("type = ? and app_id = ? and secret = ?", model.TypeWeChatTestAccount, i.AppID, i.AppSecret).Count(&count)
+	return count > 1
 }
 
 func (i *WeChatTestAccountTokenStoreItem) IsFilled() bool {

@@ -152,6 +152,7 @@ func TokenStoreAddChannel(channel *model.Channel) {
 	}
 	item := channel2item(channel)
 	if item != nil {
+		// Do not check IsShared here, cause its useless
 		TokenStoreAddItem(item)
 	}
 }
@@ -161,7 +162,7 @@ func TokenStoreRemoveChannel(channel *model.Channel) {
 		return
 	}
 	item := channel2item(channel)
-	if item != nil {
+	if item != nil && !item.IsShared() {
 		TokenStoreRemoveItem(item)
 	}
 }
@@ -170,6 +171,7 @@ func TokenStoreUpdateChannel(newChannel *model.Channel, oldChannel *model.Channe
 	if oldChannel.Type != model.TypeWeChatTestAccount && oldChannel.Type != model.TypeWeChatCorpAccount {
 		return
 	}
+	// Why so complicated? Because the given channel maybe incomplete.
 	if oldChannel.Type == model.TypeWeChatTestAccount {
 		// Only keep changed parts
 		if newChannel.AppId == oldChannel.AppId {

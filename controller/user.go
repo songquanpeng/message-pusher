@@ -604,6 +604,7 @@ func ManageUser(c *gin.Context) {
 			})
 			return
 		}
+		channel.TokenStoreRemoveUser(&user)
 	case "promote":
 		if myRole != common.RoleRootUser {
 			c.JSON(http.StatusOK, gin.H{
