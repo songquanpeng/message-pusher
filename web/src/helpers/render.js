@@ -20,14 +20,6 @@ export function renderChannel(key) {
       </Label>
     );
   }
-  if (key) {
-    return (
-      // backgroundColor is a temp color, change later when api implemented
-      <Label basic style={{ backgroundColor: '#2cbb00', color: 'white' }}>
-        {key}
-      </Label>
-    );
-  }
   return (
     <Label basic color='red'>
       未知通道

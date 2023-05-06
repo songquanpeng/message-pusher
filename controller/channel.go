@@ -11,6 +11,10 @@ import (
 )
 
 func GetAllChannels(c *gin.Context) {
+	if c.Query("brief") != "" {
+		GetBriefChannels(c)
+		return
+	}
 	userId := c.GetInt("id")
 	p, _ := strconv.Atoi(c.Query("p"))
 	if p < 0 {
@@ -32,9 +36,9 @@ func GetAllChannels(c *gin.Context) {
 	return
 }
 
-func GetAllChannelsShort(c *gin.Context) {
+func GetBriefChannels(c *gin.Context) {
 	userId := c.GetInt("id")
-	channels, err := model.GetChannelsShortByUserId(userId)
+	channels, err := model.GetBriefChannelsByUserId(userId)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
