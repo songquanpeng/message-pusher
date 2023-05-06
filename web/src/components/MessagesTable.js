@@ -1,81 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Form, Label, Modal, Pagination, Table } from 'semantic-ui-react';
-import { API, openPage, showError, showSuccess, showWarning, timestamp2string } from '../helpers';
+import {
+  Button,
+  Form,
+  Label,
+  Modal,
+  Pagination,
+  Table,
+} from 'semantic-ui-react';
+import { API, openPage, showError, showSuccess, showWarning } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
-
-function renderChannel(channel) {
-  switch (channel) {
-    case 'email':
-      return <Label color='green'>邮件</Label>;
-    case 'test':
-      return (
-        <Label style={{ backgroundColor: '#2cbb00', color: 'white' }}>
-          微信测试号
-        </Label>
-      );
-    case 'corp_app':
-      return (
-        <Label style={{ backgroundColor: '#5fc9ec', color: 'white' }}>
-          企业微信应用号
-        </Label>
-      );
-    case 'corp':
-      return (
-        <Label style={{ backgroundColor: '#019d82', color: 'white' }}>
-          企业微信群机器人
-        </Label>
-      );
-    case 'lark':
-      return (
-        <Label style={{ backgroundColor: '#00d6b9', color: 'white' }}>
-          飞书群机器人
-        </Label>
-      );
-    case 'ding':
-      return (
-        <Label style={{ backgroundColor: '#007fff', color: 'white' }}>
-          钉钉群机器人
-        </Label>
-      );
-    case 'bark':
-      return (
-        <Label style={{ backgroundColor: '#ff3b30', color: 'white' }}>
-          Bark App
-        </Label>
-      );
-    case 'client':
-      return (
-        <Label style={{ backgroundColor: '#121212', color: 'white' }}>
-          WebSocket 客户端
-        </Label>
-      );
-    case 'telegram':
-      return (
-        <Label style={{ backgroundColor: '#29a9ea', color: 'white' }}>
-          Telegram 机器人
-        </Label>
-      );
-    case 'discord':
-      return (
-        <Label style={{ backgroundColor: '#404eed', color: 'white' }}>
-          Discord 群机器人
-        </Label>
-      );
-    case 'none':
-      return <Label>无</Label>;
-    default:
-      return <Label color='grey'>未知通道</Label>;
-  }
-}
-
-function renderTimestamp(timestamp) {
-  return (
-    <>
-      {timestamp2string(timestamp)}
-    </>
-  );
-}
+import { renderChannel, renderTimestamp } from '../helpers/render';
 
 function renderStatus(status) {
   switch (status) {
@@ -119,8 +54,8 @@ const MessagesTable = () => {
     title: '消息标题',
     description: '消息描述',
     content: '消息内容',
-    link: ''
-  });  // Message to be viewed
+    link: '',
+  }); // Message to be viewed
   const [viewModalOpen, setViewModalOpen] = useState(false);
 
   const loadMessages = async (startIdx) => {
@@ -277,14 +212,13 @@ const MessagesTable = () => {
           autoRefreshSecondsRef.current = 10;
         } else {
           autoRefreshSecondsRef.current -= 1;
-          setAutoRefreshSeconds(autoRefreshSeconds => autoRefreshSeconds - 1); // Important!
+          setAutoRefreshSeconds((autoRefreshSeconds) => autoRefreshSeconds - 1); // Important!
         }
       }, 1000);
     }
 
     return () => clearInterval(intervalId);
   }, [autoRefresh]);
-
 
   return (
     <>
@@ -405,16 +339,26 @@ const MessagesTable = () => {
         <Table.Footer>
           <Table.Row>
             <Table.HeaderCell colSpan='6'>
-              <Button size='small' loading={loading} onClick={() => {
-                refresh().then();
-              }}>
+              <Button
+                size='small'
+                loading={loading}
+                onClick={() => {
+                  refresh().then();
+                }}
+              >
                 手动刷新
               </Button>
-              <Button size='small' loading={loading} onClick={() => {
-                setAutoRefresh(!autoRefresh);
-                setAutoRefreshSeconds(10);
-              }}>
-                {autoRefresh ? `自动刷新中（${autoRefreshSeconds} 秒后刷新）` : '自动刷新'}
+              <Button
+                size='small'
+                loading={loading}
+                onClick={() => {
+                  setAutoRefresh(!autoRefresh);
+                  setAutoRefreshSeconds(10);
+                }}
+              >
+                {autoRefresh
+                  ? `自动刷新中（${autoRefreshSeconds} 秒后刷新）`
+                  : '自动刷新'}
               </Button>
               <Pagination
                 floated='right'
@@ -431,28 +375,33 @@ const MessagesTable = () => {
           </Table.Row>
         </Table.Footer>
       </Table>
-      <Modal
-        size='tiny'
-        open={viewModalOpen}
-      >
+      <Modal size='tiny' open={viewModalOpen}>
         <Modal.Header>{message.title ? message.title : '无标题'}</Modal.Header>
         <Modal.Content>
-          {message.description ? <p className={'quote'}>{message.description}</p> : ''}
+          {message.description ? (
+            <p className={'quote'}>{message.description}</p>
+          ) : (
+            ''
+          )}
           {message.content ? <p>{message.content}</p> : ''}
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={() => {
-            if (message.URL) {
-              openPage(message.URL);
-            } else {
-              openPage(`/message/${message.link}`);
-            }
-          }}>
+          <Button
+            onClick={() => {
+              if (message.URL) {
+                openPage(message.URL);
+              } else {
+                openPage(`/message/${message.link}`);
+              }
+            }}
+          >
             打开
           </Button>
-          <Button onClick={() => {
-            setViewModalOpen(false);
-          }}>
+          <Button
+            onClick={() => {
+              setViewModalOpen(false);
+            }}
+          >
             关闭
           </Button>
         </Modal.Actions>

@@ -23,7 +23,7 @@ type telegramMessageResponse struct {
 func SendTelegramMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	// https://core.telegram.org/bots/api#sendmessage
 	messageRequest := telegramMessageRequest{
-		ChatId:    channel_.AppId,
+		ChatId:    channel_.AccountId,
 		Text:      message.Content,
 		ParseMode: "markdown",
 	}

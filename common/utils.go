@@ -12,6 +12,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func OpenBrowser(url string) {
@@ -150,4 +151,8 @@ func Markdown2HTML(markdown string) (HTML string, err error) {
 	}
 	HTML = buf.String()
 	return
+}
+
+func GetTimestamp() int64 {
+	return time.Now().Unix()
 }

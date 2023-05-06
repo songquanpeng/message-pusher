@@ -19,16 +19,18 @@ const (
 )
 
 type Channel struct {
-	Id        int    `json:"id"`
-	Type      string `json:"type" gorm:"type:varchar(32)"`
-	UserId    int    `json:"user_id" gorm:"uniqueIndex:name_user_id"`
-	Name      string `json:"name" gorm:"type:varchar(32);uniqueIndex:name_user_id"`
-	Status    int    `json:"status" gorm:"default:1"` // enabled, disabled
-	Secret    string `json:"secret"`
-	AppId     string `json:"app_id"`
-	AccountId string `json:"account_id"`
-	URL       string `json:"url" gorm:"column:url"`
-	Other     string `json:"other"`
+	Id          int    `json:"id"`
+	Type        string `json:"type" gorm:"type:varchar(32)"`
+	UserId      int    `json:"user_id" gorm:"uniqueIndex:name_user_id"`
+	Name        string `json:"name" gorm:"type:varchar(32);uniqueIndex:name_user_id"`
+	Description string `json:"description"`
+	Status      int    `json:"status" gorm:"default:1"` // enabled, disabled
+	Secret      string `json:"secret"`
+	AppId       string `json:"app_id"`
+	AccountId   string `json:"account_id"`
+	URL         string `json:"url" gorm:"column:url"`
+	Other       string `json:"other"`
+	CreatedTime int64  `json:"created_time" gorm:"bigint"`
 }
 
 func GetChannelById(id int, userId int) (*Channel, error) {
@@ -60,12 +62,12 @@ func GetTokenStoreChannelsByUserId(userId int) (channels []*Channel, err error) 
 }
 
 func GetChannelsByUserId(userId int, startIdx int, num int) (channels []*Channel, err error) {
-	err = DB.Where("user_id = ?", userId).Order("id desc").Limit(num).Offset(startIdx).Find(&channels).Error
+	err = DB.Omit("secret").Where("user_id = ?", userId).Order("id desc").Limit(num).Offset(startIdx).Find(&channels).Error
 	return channels, err
 }
 
 func SearchChannels(userId int, keyword string) (channels []*Channel, err error) {
-	err = DB.Where("user_id = ?", userId).Select([]string{"id", "name"}).Where("id = ? or name LIKE", keyword, keyword+"%").Find(&channels).Error
+	err = DB.Omit("secret").Where("user_id = ?", userId).Where("id = ? or name LIKE ?", keyword, keyword+"%").Find(&channels).Error
 	return channels, err
 }
 
@@ -96,7 +98,7 @@ func (channel *Channel) UpdateStatus(status int) error {
 // Update Make sure your token's fields is completed, because this will update non-zero values
 func (channel *Channel) Update() error {
 	var err error
-	err = DB.Model(channel).Select("type", "name", "secret", "app_id", "account_id", "url", "other").Updates(channel).Error
+	err = DB.Model(channel).Select("type", "name", "description", "secret", "app_id", "account_id", "url", "other", "status").Updates(channel).Error
 	return err
 }
 

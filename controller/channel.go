@@ -94,8 +94,17 @@ func AddChannel(c *gin.Context) {
 		return
 	}
 	cleanChannel := model.Channel{
-		UserId: c.GetInt("id"),
-		Name:   channel_.Name,
+		Type:        channel_.Type,
+		UserId:      c.GetInt("id"),
+		Name:        channel_.Name,
+		Description: channel_.Description,
+		Status:      common.ChannelStatusEnabled,
+		Secret:      channel_.Secret,
+		AppId:       channel_.AppId,
+		AccountId:   channel_.AccountId,
+		URL:         channel_.URL,
+		Other:       channel_.Other,
+		CreatedTime: common.GetTimestamp(),
 	}
 	err = cleanChannel.Insert()
 	if err != nil {
@@ -159,6 +168,7 @@ func UpdateChannel(c *gin.Context) {
 		// If you add more fields, please also update channel_.Update()
 		cleanChannel.Type = channel_.Type
 		cleanChannel.Name = channel_.Name
+		cleanChannel.Description = channel_.Description
 		cleanChannel.Secret = channel_.Secret
 		cleanChannel.AppId = channel_.AppId
 		cleanChannel.AccountId = channel_.AccountId

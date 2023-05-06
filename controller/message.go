@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"message-pusher/channel"
@@ -136,6 +137,9 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 }
 
 func saveAndSendMessage(user *model.User, message *model.Message, channel_ *model.Channel) error {
+	if channel_.Status != common.ChannelStatusEnabled {
+		return errors.New("该渠道已被禁用")
+	}
 	message.Link = common.GetUUID()
 	if message.URL == "" {
 		message.URL = fmt.Sprintf("%s/message/%s", common.ServerAddress, message.Link)
