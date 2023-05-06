@@ -1,12 +1,13 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"message-pusher/channel"
 	"message-pusher/common"
 	"message-pusher/model"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetAllChannels(c *gin.Context) {
@@ -168,7 +169,7 @@ func UpdateChannel(c *gin.Context) {
 		})
 		return
 	}
-	cleanChannel := oldChannel
+	cleanChannel := *oldChannel
 	if statusOnly != "" {
 		cleanChannel.Status = channel_.Status
 	} else {
@@ -190,7 +191,7 @@ func UpdateChannel(c *gin.Context) {
 		})
 		return
 	}
-	channel.TokenStoreUpdateChannel(cleanChannel, oldChannel)
+	channel.TokenStoreUpdateChannel(&cleanChannel, oldChannel)
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
