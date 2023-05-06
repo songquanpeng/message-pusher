@@ -20,6 +20,13 @@ export function renderChannel(key) {
       </Label>
     );
   }
+  if (key) {
+    return (
+      <Label basic style={{ color: 'white' }}>
+        {key}
+      </Label>
+    );
+  }
   return (
     <Label basic color='red'>
       未知通道
