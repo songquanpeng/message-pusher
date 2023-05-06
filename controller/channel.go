@@ -191,7 +191,7 @@ func UpdateChannel(c *gin.Context) {
 		})
 		return
 	}
-	channel.TokenStoreUpdateChannel(cleanChannel, oldChannel)
+	channel.TokenStoreUpdateChannel(&cleanChannel, oldChannel)
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",

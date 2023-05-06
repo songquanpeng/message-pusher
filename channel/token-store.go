@@ -167,7 +167,7 @@ func TokenStoreRemoveChannel(channel *model.Channel) {
 	}
 }
 
-func TokenStoreUpdateChannel(newChannel model.Channel, oldChannel *model.Channel) {
+func TokenStoreUpdateChannel(newChannel *model.Channel, oldChannel *model.Channel) {
 	if oldChannel.Type != model.TypeWeChatTestAccount && oldChannel.Type != model.TypeWeChatCorpAccount {
 		return
 	}
