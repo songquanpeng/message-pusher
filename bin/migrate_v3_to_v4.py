@@ -12,14 +12,10 @@ def get_timestamp():
 def main(args):
     conn = sqlite3.connect(args.db_path)
     cursor = conn.cursor()
+    cursor.execute("DELETE FROM channels")
     res = cursor.execute("SELECT * FROM users")
     users = res.fetchall()
     for id, username, password, display_name, role, status, token, email, github_id, wechat_id, channel, wechat_test_account_id, wechat_test_account_secret, wechat_test_account_template_id, wechat_test_account_open_id, wechat_test_account_verification_token, wechat_corp_account_id, wechat_corp_account_agent_secret, wechat_corp_account_agent_id, wechat_corp_account_user_id, wechat_corp_account_client_type, corp_webhook_url, lark_webhook_url, lark_webhook_secret, ding_webhook_url, ding_webhook_secret, bark_server, bark_secret, client_secret, telegram_bot_token, telegram_chat_id, discord_webhook_url, send_email_to_others, save_message_to_database in users:
-        cursor.execute(
-            "INSERT INTO users (id,username,password,display_name,role,status,token,email,github_id,wechat_id,channel,"
-            "send_email_to_others,save_message_to_database) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (id, username, password, display_name, role, status, token, email, github_id, wechat_id, channel,
-             send_email_to_others, save_message_to_database))
         if email:
             cursor.execute(
                 "INSERT INTO channels "
@@ -73,7 +69,7 @@ def main(args):
                 "INSERT INTO channels "
                 "(type,user_id,name,description,status,secret,app_id,account_id,url,other,created_time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 ('client', id, 'client', '', 1, client_secret, '', '', '', '', get_timestamp()))
-    conn.commit()
+        conn.commit()
 
 
 if __name__ == '__main__':
