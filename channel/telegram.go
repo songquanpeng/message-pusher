@@ -27,6 +27,9 @@ func SendTelegramMessage(message *model.Message, user *model.User, channel_ *mod
 		Text:      message.Content,
 		ParseMode: "markdown",
 	}
+	if message.To != "" {
+		messageRequest.ChatId = message.To
+	}
 	if messageRequest.Text == "" {
 		messageRequest.Text = message.Description
 	}
