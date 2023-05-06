@@ -11,12 +11,34 @@ import (
 )
 
 func GetAllChannels(c *gin.Context) {
+	if c.Query("brief") != "" {
+		GetBriefChannels(c)
+		return
+	}
 	userId := c.GetInt("id")
 	p, _ := strconv.Atoi(c.Query("p"))
 	if p < 0 {
 		p = 0
 	}
 	channels, err := model.GetChannelsByUserId(userId, p*common.ItemsPerPage, common.ItemsPerPage)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data":    channels,
+	})
+	return
+}
+
+func GetBriefChannels(c *gin.Context) {
+	userId := c.GetInt("id")
+	channels, err := model.GetBriefChannelsByUserId(userId)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,

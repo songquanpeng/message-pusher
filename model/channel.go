@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"message-pusher/common"
 )
 
 const (
@@ -22,7 +23,7 @@ const (
 type Channel struct {
 	Id          int    `json:"id"`
 	Type        string `json:"type" gorm:"type:varchar(32)"`
-	UserId      int    `json:"user_id" gorm:"uniqueIndex:name_user_id"`
+	UserId      int    `json:"user_id" gorm:"uniqueIndex:name_user_id;index"`
 	Name        string `json:"name" gorm:"type:varchar(32);uniqueIndex:name_user_id"`
 	Description string `json:"description"`
 	Status      int    `json:"status" gorm:"default:1"` // enabled, disabled
@@ -32,6 +33,12 @@ type Channel struct {
 	URL         string `json:"url" gorm:"column:url"`
 	Other       string `json:"other"`
 	CreatedTime int64  `json:"created_time" gorm:"bigint"`
+}
+
+type BriefChannel struct {
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 func GetChannelById(id int, userId int) (*Channel, error) {
@@ -64,6 +71,11 @@ func GetTokenStoreChannelsByUserId(userId int) (channels []*Channel, err error) 
 
 func GetChannelsByUserId(userId int, startIdx int, num int) (channels []*Channel, err error) {
 	err = DB.Omit("secret").Where("user_id = ?", userId).Order("id desc").Limit(num).Offset(startIdx).Find(&channels).Error
+	return channels, err
+}
+
+func GetBriefChannelsByUserId(userId int) (channels []*BriefChannel, err error) {
+	err = DB.Model(&Channel{}).Select("id", "name", "description").Where("user_id = ? and status = ?", userId, common.ChannelStatusEnabled).Find(&channels).Error
 	return channels, err
 }
 
