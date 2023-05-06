@@ -22,7 +22,8 @@ export function renderChannel(key) {
   }
   if (key) {
     return (
-      <Label basic style={{ color: 'white' }}>
+      // backgroundColor is a temp color, change later when api implemented
+      <Label basic style={{ backgroundColor: '#2cbb00', color: 'white' }}>
         {key}
       </Label>
     );
