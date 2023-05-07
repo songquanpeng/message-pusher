@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import { toastConstants } from '../constants';
+import { API } from './api';
 
 export function isAdmin() {
   let user = localStorage.getItem('user');
@@ -152,4 +153,22 @@ export function downloadTextAsFile(text, filename) {
   a.href = url;
   a.download = filename;
   a.click();
+}
+
+export async function testChannel(username, token, channel) {
+  let res = await API.post(
+    `/push/${username}/`, {
+      token,
+      channel,
+      title: '消息推送服务',
+      description: channel === "" ? '消息推送通道测试成功' : `消息推送通道 ${channel} 测试成功`,
+      content: '欢迎使用消息推送服务，这是一条测试消息。'
+    }
+  );
+  const { success, message } = res.data;
+  if (success) {
+    showSuccess('测试消息已发送');
+  } else {
+    showError(message);
+  }
 }

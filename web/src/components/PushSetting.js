@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Grid, Header, Message } from 'semantic-ui-react';
-import { API, showError, showSuccess } from '../helpers';
+import { API, showError, showSuccess, testChannel } from '../helpers';
 
 const PushSetting = () => {
   let [user, setUser] = useState({
@@ -79,18 +79,6 @@ const PushSetting = () => {
     }
   };
 
-  const test = async () => {
-    let res = await API.get(
-      `/push/${user.username}?token=${user.token}&channel=${user.channel}&title=消息推送服务&description=配置成功！`
-    );
-    const { success, message } = res.data;
-    if (success) {
-      showSuccess('测试消息已发送');
-    } else {
-      showError(message);
-    }
-  };
-
   return (
     <Grid columns={1}>
       <Grid.Column>
@@ -118,7 +106,7 @@ const PushSetting = () => {
           <Button onClick={() => submit('general')} loading={loading}>
             保存
           </Button>
-          <Button onClick={() => test('')}>测试</Button>
+          <Button onClick={() => testChannel(user.username, user.token, '')}>测试</Button>
         </Form>
       </Grid.Column>
     </Grid>

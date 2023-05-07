@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Label, Pagination, Table } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { API, showError, showSuccess } from '../helpers';
+import { API, showError, showSuccess, testChannel } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
 import { renderChannel, renderTimestamp } from '../helpers/render';
@@ -154,18 +154,6 @@ const ChannelsTable = () => {
     setLoading(false);
   };
 
-  const test = async (channel) => {
-    let res = await API.get(
-      `/push/${user.username}?token=${user.token}&channel=${channel}&title=消息推送服务&description=配置成功！`
-    );
-    const { success, message } = res.data;
-    if (success) {
-      showSuccess('测试消息已发送');
-    } else {
-      showError(message);
-    }
-  };
-
   return (
     <>
       <Form onSubmit={searchChannels}>
@@ -269,7 +257,7 @@ const ChannelsTable = () => {
                       <Button
                         size={'small'}
                         onClick={() => {
-                          test(channel.name).then();
+                          testChannel(user.username, user.token, channel.name).then();
                         }}
                       >
                         测试
