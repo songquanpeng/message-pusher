@@ -33,6 +33,7 @@ func main() {
 	if err != nil {
 		common.FatalLog(err)
 	}
+	go channel.LoadAsyncMessages()
 	defer func() {
 		err := model.CloseDB()
 		if err != nil {

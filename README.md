@@ -58,16 +58,17 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
    + Telegram 机器人，
    + Discord 群机器人，
    + 群组消息，可以将多个推送通道组合成一个群组，然后向群组发送消息，可以实现一次性推送到多个渠道的功能。
-2. 多种用户登录注册方式：
+2. 支持在 Web 端管理发送的消息，支持自动刷新。
+3. 支持异步消息。
+4. 多种用户登录注册方式：
    + 邮箱登录注册以及通过邮箱进行密码重置。
    + [GitHub 开放授权](https://github.com/settings/applications/new)。
    + 微信公众号授权（需要额外部署 [WeChat Server](https://github.com/songquanpeng/wechat-server)）。
-3. 支持 Markdown。
-4. 支持用户管理。
-5. Cloudflare Turnstile 用户校验。
-6. 支持在线发布公告，设置关于界面以及页脚。
-7. 支持在 Web 端管理发送的消息，支持自动刷新。
-8. API 兼容其他消息推送服务，例如 [Server 酱](https://sct.ftqq.com/)。
+5. 支持 Markdown。
+6. 支持用户管理。
+7. Cloudflare Turnstile 用户校验。
+8. 支持在线发布公告，设置关于界面以及页脚。
+9. API 兼容其他消息推送服务，例如 [Server 酱](https://sct.ftqq.com/)。
 
 ## 用途
 1. [整合进自己的博客系统，每当有人登录时发微信消息提醒](https://github.com/songquanpeng/blog/blob/486d63e96ef7906a6c767653a20ec2d3278e9a4a/routes/user.js#L27)。
@@ -180,6 +181,7 @@ proxy_send_timeout 300s;
    7. `to`：选填，推送给指定用户，如果不填则默认推送给自己，受限于具体的消息推送方式，有些推送方式不支持此项。
       1. `@all`：推送给所有用户。
       2. `user1|user2|user3`：推送给多个用户，用户之间使用 `|` 分隔。
+   8. `async`：选填，如果设置为 `true` 则消息推送将在后台异步进行，返回结果包含 `uuid` 字段，可用于后续[获取消息发送状态](./docs/API.md#通过消息 UUID 获取消息发送状态)。
 3. `POST` 请求方式：字段与上面 `GET` 请求方式保持一致。
    + 注意：请求体编码格式为 `application/json`，`v0.3.2` 版本起支持 Post Form。
 

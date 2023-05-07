@@ -34,3 +34,28 @@
 2. 待补充
 
 欢迎在此提交你的客户端实现。
+
+
+## 通过消息 UUID 获取消息发送状态
+1. API 端点为：`https://<domain>:<port>/api/message/status/<uuid>`
+2. 由于使用的是消息的 UUID 而非 ID，因此此处不需要鉴权，
+3. 返回内容示例：
+   ```json
+   {
+    "success": true,
+    "message": "",
+    "status": 2
+   }
+   ```
+4. 返回内容字段：
+   1. `success`：本次请求是否成功
+   2. `message`：错误信息
+   3. `status`：消息状态码。
+5. 消息状态码定义如下：
+   ```
+   MessageSendStatusUnknown      = 0
+   MessageSendStatusPending      = 1
+   MessageSendStatusSent         = 2
+   MessageSendStatusFailed       = 3
+   MessageSendStatusAsyncPending = 4
+   ```

@@ -59,6 +59,7 @@ func SetApiRouter(router *gin.Engine) {
 		{
 			messageRoute.GET("/", middleware.UserAuth(), controller.GetUserMessages)
 			messageRoute.GET("/search", middleware.UserAuth(), controller.SearchMessages)
+			messageRoute.GET("/status/:link", controller.GetMessageStatus)
 			messageRoute.POST("/resend/:id", middleware.UserAuth(), controller.ResendMessage)
 			messageRoute.GET("/:id", middleware.UserAuth(), controller.GetMessage)
 			messageRoute.DELETE("/", middleware.RootAuth(), controller.DeleteAllMessages)
