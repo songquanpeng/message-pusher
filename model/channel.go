@@ -18,6 +18,7 @@ const (
 	TypeClient            = "client"
 	TypeNone              = "none"
 	TypeOneBot            = "one_bot"
+	TypeGroup             = "group"
 )
 
 type Channel struct {

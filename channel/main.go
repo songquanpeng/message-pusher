@@ -31,6 +31,8 @@ func SendMessage(message *model.Message, user *model.User, channel_ *model.Chann
 		return nil
 	case model.TypeOneBot:
 		return SendOneBotMessage(message, user, channel_)
+	case model.TypeGroup:
+		return SendGroupMessage(message, user, channel_)
 	default:
 		return errors.New("不支持的消息通道：" + channel_.Type)
 	}

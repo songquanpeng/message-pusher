@@ -57,6 +57,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
    + WebSocket 客户端（[官方客户端](https://github.com/songquanpeng/personal-assistant)，[接入文档](./docs/API.md#websocket-客户端)），
    + Telegram 机器人，
    + Discord 群机器人，
+   + 群组消息，可以将多个推送通道组合成一个群组，然后向群组发送消息，可以实现一次性推送到多个渠道的功能。
 2. 多种用户登录注册方式：
    + 邮箱登录注册以及通过邮箱进行密码重置。
    + [GitHub 开放授权](https://github.com/settings/applications/new)。
@@ -172,7 +173,8 @@ proxy_send_timeout 300s;
       9. `telegram`：通过 Telegram 机器人进行推送（`description` 或 `content` 字段二选一，支持 Markdown 的子集）。
       10. `discord`：通过 Discord 群机器人进行推送（注意事项同上）。
       11. `one_api`：通过 OneAPI 协议推送消息到 QQ。
-      12. `none`：仅保存到数据库，不做推送。
+      12. `group`：通过预先配置的消息推送通道群组进行推送。
+      13. `none`：仅保存到数据库，不做推送。
    5. `token`：如果你在后台设置了推送 token，则此项必填。另外可以通过设置 HTTP `Authorization` 头部设置此项。
    6. `url`：选填，如果不填则系统自动为消息生成 URL，其内容为消息详情。
    7. `to`：选填，推送给指定用户，如果不填则默认推送给自己，受限于具体的消息推送方式，有些推送方式不支持此项。

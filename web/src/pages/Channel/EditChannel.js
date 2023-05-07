@@ -20,7 +20,7 @@ const EditChannel = () => {
     url: '',
     other: '',
     corp_id: '', // only for corp_app
-    agent_id: '', // only for corp_app
+    agent_id: '' // only for corp_app
   };
 
   const [inputs, setInputs] = useState(originInputs);
@@ -70,11 +70,22 @@ const EditChannel = () => {
           localInputs.url = localInputs.url.slice(0, -1);
         }
         break;
+      case 'group':
+        let channels = localInputs.app_id.split('|');
+        let targets = localInputs.account_id.split('|');
+        if (localInputs.account_id === '') {
+          for (let i = 0; i < channels.length - 1; i++) {
+            localInputs.account_id += '|';
+          }
+        } else if (channels.length !== targets.length) {
+          showError('群组通道的子通道数量与目标数量不匹配，对于不需要指定的目标请直接留空');
+          return;
+        }
     }
     if (isEditing) {
       res = await API.put(`/api/channel/`, {
         ...localInputs,
-        id: parseInt(channelId),
+        id: parseInt(channelId)
       });
     } else {
       res = await API.post(`/api/channel`, localInputs);
@@ -247,9 +258,9 @@ const EditChannel = () => {
                   {
                     key: 'plugin',
                     text: '微信中的企业微信插件',
-                    value: 'plugin',
+                    value: 'plugin'
                   },
-                  { key: 'app', text: '企业微信 APP', value: 'app' },
+                  { key: 'app', text: '企业微信 APP', value: 'app' }
                 ]}
                 value={inputs.other}
                 onChange={handleInputChange}
@@ -465,10 +476,11 @@ const EditChannel = () => {
         return (
           <>
             <Message>
-              通过 OneBot 协议进行推送，可以使用 <a href='https://github.com/Mrs4s/go-cqhttp' target='_blank'>cqhttp</a> 等实现。
+              通过 OneBot 协议进行推送，可以使用 <a href='https://github.com/Mrs4s/go-cqhttp'
+                                                   target='_blank'>cqhttp</a> 等实现。
               利用 OneBot 协议可以实现推送 QQ 消息。
             </Message>
-            <Form.Group widths={2}>
+            <Form.Group widths={3}>
               <Form.Input
                 label='服务器地址'
                 name='url'
@@ -493,6 +505,35 @@ const EditChannel = () => {
                 autoComplete='new-password'
                 value={inputs.account_id}
                 placeholder='在此填写默认推送目标，例如 QQ 号，如果是群号则前面必须加上群号前缀，例如 group_123456789'
+              />
+            </Form.Group>
+          </>
+        );
+      case 'group':
+        return (
+          <>
+            <Message>
+              对渠道进行分组，然后在推送时选择分组进行推送，可以实现一次性推送到多个渠道的功能。
+              <br />
+              <br />
+              推送目标如若不填，则使用子渠道的默认推送目标。如果填写，请务必全部按顺序填写，对于不需要指定的直接留空即可，例如 <code>123456789||@wechat</code>，两个连续的分隔符表示跳过该渠道。
+            </Message>
+            <Form.Group widths={2}>
+              <Form.Input
+                label='渠道列表'
+                name='app_id'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.app_id}
+                placeholder='在此填写渠道列表，使用 | 分割，例如 bark|telegram|wechat'
+              />
+              <Form.Input
+                label='默认推送目标'
+                name='account_id'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.account_id}
+                placeholder='在此填写默认推送目标，使用 | 分割，例如 123456789|@wechat|@wechat'
               />
             </Form.Group>
           </>

@@ -33,7 +33,13 @@ export const CHANNEL_OPTIONS = [
     key: 'one_bot',
     text: 'OneBot 协议',
     value: 'one_bot',
-    color: '#616cff',
+    color: '#76FF03',
+  },
+  {
+    key: 'group',
+    text: '群组消息',
+    value: 'group',
+    color: '#FF9800',
   },
   {
     key: 'none',
