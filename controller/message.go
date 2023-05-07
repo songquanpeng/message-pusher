@@ -38,6 +38,7 @@ func GetPushMessage(c *gin.Context) {
 		Desp:        c.Query("desp"),
 		Short:       c.Query("short"),
 		OpenId:      c.Query("openid"),
+		Async:       c.Query("async") == "true",
 	}
 	keepCompatible(&message)
 	pushMessageHelper(c, &message)
@@ -55,6 +56,7 @@ func PostPushMessage(c *gin.Context) {
 		Desp:        c.PostForm("desp"),
 		Short:       c.PostForm("short"),
 		OpenId:      c.PostForm("openid"),
+		Async:       c.PostForm("async") == "true",
 	}
 	if message == (model.Message{}) {
 		// Looks like the user is using JSON
@@ -142,6 +144,7 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
+		"uuid":    message.Link,
 	})
 }
 
@@ -149,6 +152,7 @@ func saveAndSendMessage(user *model.User, message *model.Message, channel_ *mode
 	if channel_.Status != common.ChannelStatusEnabled {
 		return errors.New("该渠道已被禁用")
 	}
+	common.MessageCount += 1 // We don't need to use atomic here because it's not a critical value
 	message.Link = common.GetUUID()
 	if message.URL == "" {
 		message.URL = fmt.Sprintf("%s/message/%s", common.ServerAddress, message.Link)
@@ -158,12 +162,19 @@ func saveAndSendMessage(user *model.User, message *model.Message, channel_ *mode
 		defer func() {
 			// Update the status of the message
 			status := common.MessageSendStatusFailed
-			if success {
-				status = common.MessageSendStatusSent
+			if message.Async {
+				status = common.MessageSendStatusAsyncPending
+			} else {
+				if success {
+					status = common.MessageSendStatusSent
+				}
 			}
 			err := message.UpdateStatus(status)
 			if err != nil {
 				common.SysError("failed to update the status of the message: " + err.Error())
+			}
+			if message.Async {
+				channel.AsyncMessageQueue <- message.Id
 			}
 		}()
 		err := message.UpdateAndInsert(user.Id)
@@ -171,12 +182,16 @@ func saveAndSendMessage(user *model.User, message *model.Message, channel_ *mode
 			return err
 		}
 	} else {
+		if message.Async {
+			return errors.New("异步发送消息需要用户具备消息持久化的权限")
+		}
 		message.Link = "unsaved" // This is for user to identify whether the message is saved
 	}
-	err := channel.SendMessage(message, user, channel_)
-	common.MessageCount += 1 // We don't need to use atomic here because it's not a critical value
-	if err != nil {
-		return err
+	if !message.Async {
+		err := channel.SendMessage(message, user, channel_)
+		if err != nil {
+			return err
+		}
 	}
 	success = true
 	return nil // After this line, the message status will be updated
@@ -258,7 +273,7 @@ func GetUserMessages(c *gin.Context) {
 func GetMessage(c *gin.Context) {
 	messageId, _ := strconv.Atoi(c.Param("id"))
 	userId := c.GetInt("id")
-	message, err := model.GetMessageById(messageId, userId)
+	message, err := model.GetMessageByIds(messageId, userId)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -296,7 +311,7 @@ func ResendMessage(c *gin.Context) {
 	messageId, _ := strconv.Atoi(c.Param("id"))
 	userId := c.GetInt("id")
 	helper := func() error {
-		message, err := model.GetMessageById(messageId, userId)
+		message, err := model.GetMessageByIds(messageId, userId)
 		message.Id = 0
 		if err != nil {
 			return err

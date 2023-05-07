@@ -18,20 +18,35 @@ type Message struct {
 	HTMLContent string `json:"html_content"  gorm:"-:all"`
 	Timestamp   int64  `json:"timestamp" gorm:"type:bigint"`
 	Link        string `json:"link" gorm:"unique;index"`
-	To          string `json:"to" gorm:"column:to"`     // if specified, will send to this user(s)
-	Status      int    `json:"status" gorm:"default:0"` // pending, sent, failed
-	OpenId      string `json:"openid" gorm:"-:all"`     // alias for to
-	Desp        string `json:"desp" gorm:"-:all"`       // alias for content
-	Short       string `json:"short" gorm:"-:all"`      // alias for description
+	To          string `json:"to" gorm:"column:to"`           // if specified, will send to this user(s)
+	Status      int    `json:"status" gorm:"default:0;index"` // pending, sent, failed
+	OpenId      string `json:"openid" gorm:"-:all"`           // alias for to
+	Desp        string `json:"desp" gorm:"-:all"`             // alias for content
+	Short       string `json:"short" gorm:"-:all"`            // alias for description
+	Async       bool   `json:"async" gorm:"-"`                // if true, will send message asynchronously
 }
 
-func GetMessageById(id int, userId int) (*Message, error) {
+func GetMessageByIds(id int, userId int) (*Message, error) {
 	if id == 0 || userId == 0 {
 		return nil, errors.New("id 或 userId 为空！")
 	}
 	message := Message{Id: id, UserId: userId}
 	err := DB.Where(message).First(&message).Error
 	return &message, err
+}
+
+func GetMessageById(id int) (*Message, error) {
+	if id == 0 {
+		return nil, errors.New("id 为空！")
+	}
+	message := Message{Id: id}
+	err := DB.Where(message).First(&message).Error
+	return &message, err
+}
+
+func GetAsyncPendingMessageIds() (ids []int, err error) {
+	err = DB.Model(&Message{}).Where("status = ?", common.MessageSendStatusAsyncPending).Pluck("id", &ids).Error
+	return ids, err
 }
 
 func GetMessageByLink(link string) (*Message, error) {

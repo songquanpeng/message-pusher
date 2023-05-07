@@ -17,7 +17,7 @@ function renderStatus(status) {
     case 1:
       return (
         <Label basic color='olive'>
-          投递中...
+          正在投递
         </Label>
       );
     case 2:
@@ -30,6 +30,12 @@ function renderStatus(status) {
       return (
         <Label basic color='red'>
           发送失败
+        </Label>
+      );
+    case 4:
+      return (
+        <Label basic color='orange'>
+          已在队列
         </Label>
       );
     default:
