@@ -35,6 +35,8 @@ func SendMessage(message *model.Message, user *model.User, channel_ *model.Chann
 		return SendGroupMessage(message, user, channel_)
 	case model.TypeLarkApp:
 		return SendLarkAppMessage(message, user, channel_)
+	case model.TypeCustom:
+		return SendCustomMessage(message, user, channel_)
 	default:
 		return errors.New("不支持的消息通道：" + channel_.Type)
 	}

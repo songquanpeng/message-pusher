@@ -42,6 +42,12 @@ export const CHANNEL_OPTIONS = [
     color: '#76FF03',
   },
   {
+    key: 'custom',
+    text: '自定义消息通道',
+    value: 'custom',
+    color: '#cc33ff',
+  },
+  {
     key: 'group',
     text: '群组消息',
     value: 'group',

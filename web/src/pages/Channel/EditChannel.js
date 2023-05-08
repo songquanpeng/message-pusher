@@ -83,6 +83,19 @@ const EditChannel = () => {
           );
           return;
         }
+        break;
+      case 'custom':
+        if (!localInputs.url.startsWith('https://')) {
+          showError('自定义通道的 URL 必须以 https:// 开头！');
+          return;
+        }
+        try {
+          JSON.parse(localInputs.other);
+        }catch (e) {
+          showError('JSON 格式错误：' + e.message);
+          return;
+        }
+        break;
     }
     if (isEditing) {
       res = await API.put(`/api/channel/`, {
@@ -601,7 +614,40 @@ const EditChannel = () => {
             </Form.Group>
           </>
         );
-
+      case 'custom':
+        return (
+          <>
+            <Message>
+              自定义推送，目前仅支持 POST 请求，请求体为 JSON 格式。
+              <br/>
+              支持以下模板变量：<code>$title</code>，<code>$description</code>，<code>$content</code>，<code>$url</code>，<code>$to</code>。
+              <br/>
+              <a href="https://iamazing.cn/page/message-pusher-common-custom-templates" target='_blank'>这个页面</a>给出了常见的第三方平台的配置实例，你可以参考这些示例进行配置。
+              <br/>
+              注意，为了防止攻击者利用本功能访问内部网络，也为了你的信息安全，请求地址必须使用 HTTPS 协议。
+            </Message>
+            <Form.Group widths={2}>
+              <Form.Input
+                label='请求地址'
+                name='url'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.url}
+                placeholder='在此填写完整的请求地址，必须使用 HTTPS 协议'
+              />
+            </Form.Group>
+            <Form.Group widths='equal'>
+              <Form.TextArea
+                label='请求体'
+                placeholder='在此输入请求体，支持模板变量，必须为合法的 JSON 格式'
+                value={inputs.other}
+                name='other'
+                onChange={handleInputChange}
+                style={{ minHeight: 200, fontFamily: 'JetBrains Mono, Consolas' }}
+              />
+            </Form.Group>
+          </>
+        );
       case 'none':
         return (
           <>

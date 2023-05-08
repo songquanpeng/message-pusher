@@ -20,6 +20,7 @@ const (
 	TypeOneBot            = "one_bot"
 	TypeGroup             = "group"
 	TypeLarkApp           = "lark_app"
+	TypeCustom            = "custom"
 )
 
 type Channel struct {
