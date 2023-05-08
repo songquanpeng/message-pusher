@@ -9,6 +9,12 @@ export const CHANNEL_OPTIONS = [
   },
   { key: 'corp', text: '企业微信群机器人', value: 'corp', color: '#019d82' },
   { key: 'lark', text: '飞书群机器人', value: 'lark', color: '#00d6b9' },
+  {
+    key: 'lark_app',
+    text: '飞书自建应用',
+    value: 'lark_app',
+    color: '#0d71fe',
+  },
   { key: 'ding', text: '钉钉群机器人', value: 'ding', color: '#007fff' },
   { key: 'bark', text: 'Bark App', value: 'bark', color: '#ff3b30' },
   {

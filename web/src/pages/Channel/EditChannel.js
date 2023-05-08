@@ -20,7 +20,7 @@ const EditChannel = () => {
     url: '',
     other: '',
     corp_id: '', // only for corp_app
-    agent_id: '' // only for corp_app
+    agent_id: '', // only for corp_app
   };
 
   const [inputs, setInputs] = useState(originInputs);
@@ -78,14 +78,16 @@ const EditChannel = () => {
             localInputs.account_id += '|';
           }
         } else if (channels.length !== targets.length) {
-          showError('群组通道的子通道数量与目标数量不匹配，对于不需要指定的目标请直接留空');
+          showError(
+            '群组通道的子通道数量与目标数量不匹配，对于不需要指定的目标请直接留空'
+          );
           return;
         }
     }
     if (isEditing) {
       res = await API.put(`/api/channel/`, {
         ...localInputs,
-        id: parseInt(channelId)
+        id: parseInt(channelId),
       });
     } else {
       res = await API.post(`/api/channel`, localInputs);
@@ -258,9 +260,9 @@ const EditChannel = () => {
                   {
                     key: 'plugin',
                     text: '微信中的企业微信插件',
-                    value: 'plugin'
+                    value: 'plugin',
                   },
-                  { key: 'app', text: '企业微信 APP', value: 'app' }
+                  { key: 'app', text: '企业微信 APP', value: 'app' },
                 ]}
                 value={inputs.other}
                 onChange={handleInputChange}
@@ -476,9 +478,11 @@ const EditChannel = () => {
         return (
           <>
             <Message>
-              通过 OneBot 协议进行推送，可以使用 <a href='https://github.com/Mrs4s/go-cqhttp'
-                                                   target='_blank'>cqhttp</a> 等实现。
-              利用 OneBot 协议可以实现推送 QQ 消息。
+              通过 OneBot 协议进行推送，可以使用{' '}
+              <a href='https://github.com/Mrs4s/go-cqhttp' target='_blank'>
+                cqhttp
+              </a>{' '}
+              等实现。 利用 OneBot 协议可以实现推送 QQ 消息。
             </Message>
             <Form.Group widths={3}>
               <Form.Input
@@ -516,7 +520,8 @@ const EditChannel = () => {
               对渠道进行分组，然后在推送时选择分组进行推送，可以实现一次性推送到多个渠道的功能。
               <br />
               <br />
-              推送目标如若不填，则使用子渠道的默认推送目标。如果填写，请务必全部按顺序填写，对于不需要指定的直接留空即可，例如 <code>123456789||@wechat</code>，两个连续的分隔符表示跳过该渠道。
+              推送目标如若不填，则使用子渠道的默认推送目标。如果填写，请务必全部按顺序填写，对于不需要指定的直接留空即可，例如{' '}
+              <code>123456789||@wechat</code>，两个连续的分隔符表示跳过该渠道。
             </Message>
             <Form.Group widths={2}>
               <Form.Input
@@ -538,6 +543,64 @@ const EditChannel = () => {
             </Form.Group>
           </>
         );
+      case 'lark_app':
+        return (
+          <>
+            <Message>
+              通过飞书自建应用进行推送，点击前往配置：
+              <a target='_blank' href='https://open.feishu.cn/app'>
+                飞书开放平台
+              </a>
+              。
+              <br />
+              需要为应用添加机器人能力：应用能力->添加应用能力—>机器人。
+              <br />
+              需要为应用添加消息发送权限：开发配置->权限管理->权限配置->搜索「获取与发送单聊、群组消息」->开通权限。
+              <br />
+              注意，添加完成权限后需要发布版本提交审核才能见效。
+              <br />
+              注意，推送目标的格式为：
+              <strong>
+                <code>类型:ID</code>
+              </strong>
+              ，详见飞书
+              <a
+                href='https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/im-v1/message/create#bc6d1214'
+                target='_blank'
+              >
+                开发文档
+              </a>
+              中查询参数一节。
+            </Message>
+            <Form.Group widths={3}>
+              <Form.Input
+                label='App ID'
+                name='app_id'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.app_id}
+                placeholder='应用凭证 -> App ID'
+              />
+              <Form.Input
+                label='App Secret'
+                name='secret'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.secret}
+                placeholder='应用凭证 -> App Secret'
+              />
+              <Form.Input
+                label='默认推送目标'
+                name='account_id'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.account_id}
+                placeholder='格式必须为：<类型>:<ID>，例如 open_id:123456'
+              />
+            </Form.Group>
+          </>
+        );
+
       case 'none':
         return (
           <>

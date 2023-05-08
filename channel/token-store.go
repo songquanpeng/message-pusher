@@ -24,13 +24,14 @@ type tokenStore struct {
 var s tokenStore
 
 func channel2item(channel_ *model.Channel) TokenStoreItem {
-	if channel_.Type == model.TypeWeChatTestAccount {
+	switch channel_.Type {
+	case model.TypeWeChatTestAccount:
 		item := &WeChatTestAccountTokenStoreItem{
 			AppID:     channel_.AppId,
 			AppSecret: channel_.Secret,
 		}
 		return item
-	} else if channel_.Type == model.TypeWeChatCorpAccount {
+	case model.TypeWeChatCorpAccount:
 		corpId, agentId, err := parseWechatCorpAccountAppId(channel_.AppId)
 		if err != nil {
 			common.SysError(err.Error())
@@ -40,6 +41,12 @@ func channel2item(channel_ *model.Channel) TokenStoreItem {
 			CorpId:      corpId,
 			AgentSecret: channel_.Secret,
 			AgentId:     agentId,
+		}
+		return item
+	case model.TypeLarkApp:
+		item := &LarkAppTokenStoreItem{
+			AppID:     channel_.AppId,
+			AppSecret: channel_.Secret,
 		}
 		return item
 	}
@@ -146,8 +153,12 @@ func TokenStoreRemoveUser(user *model.User) {
 	}
 }
 
+func checkTokenStoreChannelType(channelType string) bool {
+	return channelType == model.TypeWeChatTestAccount || channelType == model.TypeWeChatCorpAccount || channelType == model.TypeLarkApp
+}
+
 func TokenStoreAddChannel(channel *model.Channel) {
-	if channel.Type != model.TypeWeChatTestAccount && channel.Type != model.TypeWeChatCorpAccount {
+	if !checkTokenStoreChannelType(channel.Type) {
 		return
 	}
 	item := channel2item(channel)
@@ -158,7 +169,7 @@ func TokenStoreAddChannel(channel *model.Channel) {
 }
 
 func TokenStoreRemoveChannel(channel *model.Channel) {
-	if channel.Type != model.TypeWeChatTestAccount && channel.Type != model.TypeWeChatCorpAccount {
+	if !checkTokenStoreChannelType(channel.Type) {
 		return
 	}
 	item := channel2item(channel)

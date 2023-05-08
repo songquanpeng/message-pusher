@@ -19,6 +19,7 @@ const (
 	TypeNone              = "none"
 	TypeOneBot            = "one_bot"
 	TypeGroup             = "group"
+	TypeLarkApp           = "lark_app"
 )
 
 type Channel struct {
@@ -61,7 +62,7 @@ func GetChannelByName(name string, userId int) (*Channel, error) {
 }
 
 func GetTokenStoreChannels() (channels []*Channel, err error) {
-	err = DB.Where("type = ? or type = ?", TypeWeChatCorpAccount, TypeWeChatTestAccount).Find(&channels).Error
+	err = DB.Where("type in ?", []string{TypeWeChatCorpAccount, TypeWeChatTestAccount, TypeLarkApp}).Find(&channels).Error
 	return channels, err
 }
 

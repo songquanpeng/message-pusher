@@ -25,20 +25,24 @@ type larkMessageRequestCardElement struct {
 	Text larkMessageRequestCardElementText `json:"text"`
 }
 
+type larkTextContent struct {
+	Text string `json:"text"`
+}
+
+type larkCardContent struct {
+	Config struct {
+		WideScreenMode bool `json:"wide_screen_mode"`
+		EnableForward  bool `json:"enable_forward"`
+	}
+	Elements []larkMessageRequestCardElement `json:"elements"`
+}
+
 type larkMessageRequest struct {
-	MessageType string `json:"msg_type"`
-	Timestamp   string `json:"timestamp"`
-	Sign        string `json:"sign"`
-	Content     struct {
-		Text string `json:"text"`
-	} `json:"content"`
-	Card struct {
-		Config struct {
-			WideScreenMode bool `json:"wide_screen_mode"`
-			EnableForward  bool `json:"enable_forward"`
-		}
-		Elements []larkMessageRequestCardElement `json:"elements"`
-	} `json:"card"`
+	MessageType string          `json:"msg_type"`
+	Timestamp   string          `json:"timestamp"`
+	Sign        string          `json:"sign"`
+	Content     larkTextContent `json:"content"`
+	Card        larkCardContent `json:"card"`
 }
 
 type larkMessageResponse struct {
@@ -46,11 +50,7 @@ type larkMessageResponse struct {
 	Message string `json:"msg"`
 }
 
-func SendLarkMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
-	// https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#e1cdee9f
-	messageRequest := larkMessageRequest{
-		MessageType: "text",
-	}
+func getLarkAtPrefix(message *model.Message) string {
 	atPrefix := ""
 	if message.To != "" {
 		if message.To == "@all" {
@@ -62,6 +62,15 @@ func SendLarkMessage(message *model.Message, user *model.User, channel_ *model.C
 			}
 		}
 	}
+	return atPrefix
+}
+
+func SendLarkMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
+	// https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#e1cdee9f
+	messageRequest := larkMessageRequest{
+		MessageType: "text",
+	}
+	atPrefix := getLarkAtPrefix(message)
 	if message.Content == "" {
 		messageRequest.MessageType = "text"
 		messageRequest.Content.Text = atPrefix + message.Description
