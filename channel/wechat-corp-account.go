@@ -33,7 +33,8 @@ func (i *WeChatCorpAccountTokenStoreItem) Key() string {
 func (i *WeChatCorpAccountTokenStoreItem) IsShared() bool {
 	appId := fmt.Sprintf("%s|%s", i.CorpId, i.AgentId)
 	var count int64 = 0
-	model.DB.Model(&model.Channel{}).Where("secret = ? and app_id = ? and type = ?", model.TypeWeChatCorpAccount, appId, i.AgentSecret).Count(&count)
+	model.DB.Model(&model.Channel{}).Where("secret = ? and app_id = ? and type = ?",
+		i.AgentSecret, appId, model.TypeWeChatCorpAccount).Count(&count)
 	return count > 1
 }
 
