@@ -23,15 +23,16 @@ type telegramMessageResponse struct {
 func SendTelegramMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	// https://core.telegram.org/bots/api#sendmessage
 	messageRequest := telegramMessageRequest{
-		ChatId:    channel_.AccountId,
-		Text:      message.Content,
-		ParseMode: "markdown",
+		ChatId: channel_.AccountId,
 	}
 	if message.To != "" {
 		messageRequest.ChatId = message.To
 	}
-	if messageRequest.Text == "" {
+	if message.Content == "" {
 		messageRequest.Text = message.Description
+	} else {
+		messageRequest.Text = message.Content
+		messageRequest.ParseMode = "markdown"
 	}
 	jsonData, err := json.Marshal(messageRequest)
 	if err != nil {
