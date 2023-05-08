@@ -74,14 +74,19 @@ func (i *WeChatTestAccountTokenStoreItem) Refresh() {
 	common.SysLog("access token refreshed")
 }
 
+type wechatTestAccountRequestValue struct {
+	Value string `json:"value"`
+}
+
 type wechatTestMessageRequest struct {
 	ToUser     string `json:"touser"`
 	TemplateId string `json:"template_id"`
 	URL        string `json:"url"`
 	Data       struct {
-		Text struct {
-			Value string `json:"value"`
-		} `json:"text"`
+		Text        wechatTestAccountRequestValue `json:"text"` // alias for description, for compatibility
+		Title       wechatTestAccountRequestValue `json:"title"`
+		Description wechatTestAccountRequestValue `json:"description"`
+		Content     wechatTestAccountRequestValue `json:"content"`
 	} `json:"data"`
 }
 
@@ -91,6 +96,7 @@ type wechatTestMessageResponse struct {
 }
 
 func SendWeChatTestMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
+	// https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html
 	values := wechatTestMessageRequest{
 		ToUser:     channel_.AccountId,
 		TemplateId: channel_.Other,
@@ -100,6 +106,9 @@ func SendWeChatTestMessage(message *model.Message, user *model.User, channel_ *m
 		values.ToUser = message.To
 	}
 	values.Data.Text.Value = message.Description
+	values.Data.Title.Value = message.Title
+	values.Data.Description.Value = message.Description
+	values.Data.Content.Value = message.Content
 	values.URL = message.URL
 	jsonData, err := json.Marshal(values)
 	if err != nil {

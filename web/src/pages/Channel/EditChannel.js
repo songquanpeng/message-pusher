@@ -152,9 +152,10 @@ const EditChannel = () => {
               </a>
               。
               <br />
-              <br />
-              需要新增测试模板，模板标题推荐填写为「消息推送」，模板内容必须填写为
-              {' {{'}text.DATA{'}}'}。
+              需要新增测试模板，模板标题推荐填写为「消息推送」，模板内容填写为：
+              <br/>标题：{' {{'}title.DATA{'}}'}
+              <br/>描述：{' {{'}description.DATA{'}}'}
+              <br/>内容：{' {{'}content.DATA{'}}'}
             </Message>
             <Form.Group widths={3}>
               <Form.Input
