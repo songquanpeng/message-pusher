@@ -201,12 +201,12 @@ proxy_send_timeout 300s;
 |   `ding`   |    ✅    |       ✅       |     ✅     |  ✅️   |  ✅   |      ✅      |
 |   `bark`   |    ✅    |       ✅       |     ✅     |  ✅️   |  ❌   |      ✅      |
 |  `client`  |    ✅    |       ✅       |     ❌     |   ❌   |  ❌   |      ❌      |
-| `telegram` |    ❌    |       ❌       |     ✅     |   ❌   |  ✅   |      ❌      |
+| `telegram` |    ❌    |       ❌       |     ✅     |   ❌   |  ✅   |      ✅      |
 | `discord`  |    ❌    |       ❌       |     ✅     |   ❌   |  ✅   |      ❌      |
 
 注意：
 1. 对于大部分通道，`description` 字段和 `content` 是不能同时存在的，如果你只需要文字消息，请使用 `description` 字段，如果你需要发送 Markdown 消息，请使用 `content` 字段。
-2. 部分通道的 Markdown 支持实际上是通过 URL 跳转到本系统所渲染的消息详情实现的。
+2. 部分通道的 Markdown 支持实际上是通过 URL 跳转到本系统所渲染的消息详情实现的，其他通道的 Markdown 支持受限于具体的通道，支持的语法并不统一。
 
 **示例：**
 
