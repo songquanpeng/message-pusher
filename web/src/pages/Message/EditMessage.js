@@ -134,7 +134,7 @@ const EditMessage = () => {
               placeholder='请输入消息链接'
               value={inputs.url}
               type={'url'}
-              name='content'
+              name='url'
               onChange={handleInputChange}
             />
           </Form.Group>
