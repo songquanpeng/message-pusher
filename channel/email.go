@@ -2,6 +2,7 @@ package channel
 
 import (
 	"errors"
+	"fmt"
 	"message-pusher/common"
 	"message-pusher/model"
 )
@@ -16,16 +17,17 @@ func SendEmailMessage(message *model.Message, user *model.User, channel_ *model.
 	if user.Email == "" {
 		return errors.New("未配置邮箱地址")
 	}
-	subject := message.Description
-	if subject == "" {
-		subject = message.Title
+	subject := message.Title
+	content := message.Content
+	if subject == common.SystemName || subject == "" {
+		subject = message.Description
+	} else {
+		content = fmt.Sprintf("描述：%s\n\n%s", message.Description, message.Content)
 	}
-	if message.Content != "" {
-		var err error
-		message.HTMLContent, err = common.Markdown2HTML(message.Content)
-		if err != nil {
-			common.SysLog(err.Error())
-		}
+	var err error
+	message.HTMLContent, err = common.Markdown2HTML(content)
+	if err != nil {
+		common.SysLog(err.Error())
 	}
 	return common.SendEmail(subject, user.Email, message.HTMLContent)
 }

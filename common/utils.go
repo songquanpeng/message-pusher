@@ -144,6 +144,9 @@ func Max(a int, b int) int {
 }
 
 func Markdown2HTML(markdown string) (HTML string, err error) {
+	if markdown == "" {
+		return "", nil
+	}
 	var buf bytes.Buffer
 	err = goldmark.Convert([]byte(markdown), &buf)
 	if err != nil {
