@@ -18,6 +18,7 @@ import { StatusContext } from './context/Status';
 import Message from './pages/Message';
 import Channel from './pages/Channel';
 import EditChannel from './pages/Channel/EditChannel';
+import EditMessage from './pages/Message/EditMessage';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -138,6 +139,22 @@ function App() {
         element={
           <PrivateRoute>
             <Message />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path='/editor'
+        element={
+          <PrivateRoute>
+            <EditMessage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path='/editor/:id'
+        element={
+          <PrivateRoute>
+            <EditMessage />
           </PrivateRoute>
         }
       />

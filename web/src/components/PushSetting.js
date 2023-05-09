@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Grid, Header, Message } from 'semantic-ui-react';
 import { API, showError, showSuccess, testChannel } from '../helpers';
+import { loadUser, loadUserChannels } from '../helpers/loader';
 
 const PushSetting = () => {
   let [user, setUser] = useState({
@@ -16,44 +17,19 @@ const PushSetting = () => {
     setUser((inputs) => ({ ...inputs, [name]: value }));
   };
 
-  const loadUser = async () => {
-    let res = await API.get(`/api/user/self`);
-    const { success, message, data } = res.data;
-    if (success) {
-      if (data.channel === '') {
-        data.channel = 'email';
-      }
-      if (data.token === ' ') {
-        data.token = '';
-      }
-      setUser(data);
-    } else {
-      showError(message);
-    }
-    setLoading(false);
-  };
-
-  const loadUserChannels = async () => {
-    let res = await API.get(`/api/channel?brief=true`);
-    const { success, message, data } = res.data;
-    if (success) {
-      data.forEach((channel) => {
-        channel.key = channel.name;
-        channel.text = channel.name;
-        channel.value = channel.name;
-        if (channel.description === '') {
-          channel.description = '无备注信息';
-        }
-      });
-      setChannels(data);
-    } else {
-      showError(message);
-    }
-  };
-
   useEffect(() => {
-    loadUser().then();
-    loadUserChannels().then();
+    const loader = async () => {
+      let user = await loadUser();
+      if (user) {
+        setUser(user);
+      }
+      let channels = await loadUserChannels();
+      if (channels) {
+        setChannels(channels);
+      }
+      setLoading(false);
+    };
+    loader().then();
   }, []);
 
   const submit = async (which) => {
@@ -106,7 +82,9 @@ const PushSetting = () => {
           <Button onClick={() => submit('general')} loading={loading}>
             保存
           </Button>
-          <Button onClick={() => testChannel(user.username, user.token, '')}>测试</Button>
+          <Button onClick={() => testChannel(user.username, user.token, '')}>
+            测试
+          </Button>
         </Form>
       </Grid.Column>
     </Grid>

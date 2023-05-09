@@ -11,6 +11,7 @@ import { API, openPage, showError, showSuccess, showWarning } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
 import { renderTimestamp } from '../helpers/render';
+import { Link } from 'react-router-dom';
 
 function renderStatus(status) {
   switch (status) {
@@ -316,6 +317,15 @@ const MessagesTable = () => {
                         }}
                       >
                         查看
+                      </Button>
+                      <Button
+                        size={'small'}
+                        primary
+                        loading={loading}
+                        as={Link}
+                        to={'/editor/' + message.id}
+                      >
+                        编辑
                       </Button>
                       <Button
                         size={'small'}

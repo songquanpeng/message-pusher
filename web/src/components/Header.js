@@ -19,6 +19,11 @@ const headerButtons = [
     icon: 'mail',
   },
   {
+    name: '编辑',
+    to: '/editor',
+    icon: 'edit',
+  },
+  {
     name: '通道',
     to: '/channel',
     icon: 'sitemap',
