@@ -46,20 +46,20 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 
 ## 描述
 1. 多种消息推送方式：
-   + 邮件消息，
-   + 微信测试号，
-   + QQ，
-   + 企业微信应用号，
+   + 邮件消息
+   + 微信测试号
+   + QQ
+   + 企业微信应用号
    + 企业微信群机器人
    + 飞书自建应用
-   + 飞书群机器人，
-   + 钉钉群机器人，
-   + Bark App,
-   + WebSocket 客户端（[官方客户端](https://github.com/songquanpeng/personal-assistant)，[接入文档](./docs/API.md#websocket-客户端)），
-   + Telegram 机器人，
-   + Discord 群机器人，
-   + 群组消息，可以将多个推送通道组合成一个群组，然后向群组发送消息，可以实现一次性推送到多个渠道的功能。
-   + 自定义消息，可以自定义消息请求 URL 和请求体格式，实现与其他服务的对接，支持[众多第三方服务](https://iamazing.cn/page/message-pusher-common-custom-templates)。
+   + 飞书群机器人
+   + 钉钉群机器人
+   + Bark App
+   + WebSocket 客户端（[官方客户端](https://github.com/songquanpeng/personal-assistant)，[接入文档](./docs/API.md#websocket-客户端)）
+   + Telegram 机器人
+   + Discord 群机器人
+   + 群组消息 (可以将多个推送通道组合成一个群组，然后向群组发送消息，可以实现一次性推送到多个渠道的功能。)
+   + 自定义消息 (可以自定义消息请求 URL 和请求体格式，实现与其他服务的对接，支持[众多第三方服务](https://iamazing.cn/page/message-pusher-common-custom-templates))
 2. 支持在 Web 端编辑 & 管理发送的消息，支持自动刷新。
 3. 支持异步消息。
 4. 多种用户登录注册方式：
