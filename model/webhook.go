@@ -48,7 +48,7 @@ func GetWebhooksByUserId(userId int, startIdx int, num int) (webhooks []*Webhook
 }
 
 func SearchWebhooks(userId int, keyword string) (webhooks []*Webhook, err error) {
-	err = DB.Where("user_id = ?", userId).Where("id = ? or name LIKE ?", keyword, keyword+"%").Find(&webhooks).Error
+	err = DB.Where("user_id = ?", userId).Where("id = ? or link = ? or name LIKE ?", keyword, keyword, keyword+"%").Find(&webhooks).Error
 	return webhooks, err
 }
 
@@ -76,10 +76,10 @@ func (webhook *Webhook) UpdateStatus(status int) error {
 	return err
 }
 
-// Update Make sure your token's fields is completed, because this will update non-zero values
+// Update Make sure your token's fields is completed, because this will update zero values
 func (webhook *Webhook) Update() error {
 	var err error
-	err = DB.Model(webhook).Select("name", "extract_rule", "construct_rule", "channel").Updates(webhook).Error
+	err = DB.Model(webhook).Select("status", "name", "extract_rule", "construct_rule", "channel").Updates(webhook).Error
 	return err
 }
 

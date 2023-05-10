@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
+	"io"
 	"message-pusher/common"
 	"message-pusher/model"
 	"net/http"
@@ -96,12 +97,14 @@ func AddWebhook(c *gin.Context) {
 		return
 	}
 	cleanWebhook := model.Webhook{
-		UserId:      c.GetInt("id"),
-		Name:        webhook_.Name,
-		Status:      common.WebhookStatusEnabled,
-		Link:        common.GetUUID(),
-		CreatedTime: common.GetTimestamp(),
-		ExtractRule: webhook_.ExtractRule,
+		UserId:        c.GetInt("id"),
+		Name:          webhook_.Name,
+		Status:        common.WebhookStatusEnabled,
+		Link:          common.GetUUID(),
+		CreatedTime:   common.GetTimestamp(),
+		Channel:       webhook_.Channel,
+		ExtractRule:   webhook_.ExtractRule,
+		ConstructRule: webhook_.ConstructRule,
 	}
 	err = cleanWebhook.Insert()
 	if err != nil {
@@ -183,8 +186,7 @@ func UpdateWebhook(c *gin.Context) {
 }
 
 func TriggerWebhook(c *gin.Context) {
-	var reqText string
-	err := c.Bind(&reqText)
+	jsonData, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -192,6 +194,7 @@ func TriggerWebhook(c *gin.Context) {
 		})
 		return
 	}
+	reqText := string(jsonData)
 	link := c.Param("link")
 	webhook, err := model.GetWebhookByLink(link)
 	if err != nil {

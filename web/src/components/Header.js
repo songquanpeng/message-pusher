@@ -29,6 +29,11 @@ const headerButtons = [
     icon: 'sitemap',
   },
   {
+    name: '接口',
+    to: '/webhook',
+    icon: 'code',
+  },
+  {
     name: '用户',
     to: '/user',
     icon: 'user',

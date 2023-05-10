@@ -19,6 +19,8 @@ import Message from './pages/Message';
 import Channel from './pages/Channel';
 import EditChannel from './pages/Channel/EditChannel';
 import EditMessage from './pages/Message/EditMessage';
+import Webhook from './pages/Webhook';
+import EditWebhook from './pages/Webhook/EditWebhook';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -131,6 +133,30 @@ function App() {
         element={
           <Suspense fallback={<Loading></Loading>}>
             <EditChannel />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/webhook'
+        element={
+          <PrivateRoute>
+            <Webhook />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path='/webhook/edit/:id'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditWebhook />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/webhook/add'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditWebhook />
           </Suspense>
         }
       />

@@ -132,17 +132,7 @@ export function timestamp2string(timestamp) {
     second = '0' + second;
   }
   return (
-    year +
-    '-' +
-    month +
-    '-' +
-    day +
-    ' ' +
-    hour +
-    ':' +
-    minute +
-    ':' +
-    second
+    year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
   );
 }
 
@@ -156,15 +146,16 @@ export function downloadTextAsFile(text, filename) {
 }
 
 export async function testChannel(username, token, channel) {
-  let res = await API.post(
-    `/push/${username}/`, {
-      token,
-      channel,
-      title: '消息推送服务',
-      description: channel === "" ? '消息推送通道测试成功' : `消息推送通道 ${channel} 测试成功`,
-      content: '欢迎使用消息推送服务，这是一条测试消息。'
-    }
-  );
+  let res = await API.post(`/push/${username}/`, {
+    token,
+    channel,
+    title: '消息推送服务',
+    description:
+      channel === ''
+        ? '消息推送通道测试成功'
+        : `消息推送通道 ${channel} 测试成功`,
+    content: '欢迎使用消息推送服务，这是一条测试消息。',
+  });
   const { success, message } = res.data;
   if (success) {
     showSuccess('测试消息已发送');
@@ -172,3 +163,12 @@ export async function testChannel(username, token, channel) {
     showError(message);
   }
 }
+
+export const verifyJSON = (str) => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};

@@ -60,17 +60,18 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
    + Discord 群机器人，
    + 群组消息：可以将多个推送通道组合成一个群组，然后向群组发送消息，可以实现一次性推送到多个渠道的功能，
    + 自定义消息，可以自定义消息请求 URL 和请求体格式，实现与其他服务的对接，支持[众多第三方服务](https://iamazing.cn/page/message-pusher-common-custom-templates)。
-2. 支持在 Web 端编辑 & 管理发送的消息，支持自动刷新。
-3. 支持异步消息。
-4. 多种用户登录注册方式：
+2. 支持**自定义 Webhook，反向适配各种调用平台**，你可以接入各种已有的系统，而无需修改其代码。
+3. 支持在 Web 端编辑 & 管理发送的消息，支持自动刷新。
+4. 支持异步消息。
+5. 多种用户登录注册方式：
    + 邮箱登录注册以及通过邮箱进行密码重置。
    + [GitHub 开放授权](https://github.com/settings/applications/new)。
    + 微信公众号授权（需要额外部署 [WeChat Server](https://github.com/songquanpeng/wechat-server)）。
-5. 支持 Markdown。
-6. 支持用户管理。
-7. Cloudflare Turnstile 用户校验。
-8. 支持在线发布公告，设置关于界面以及页脚。
-9. API 兼容其他消息推送服务，例如 [Server 酱](https://sct.ftqq.com/)。
+6. 支持 Markdown。
+7. 支持用户管理。
+8. Cloudflare Turnstile 用户校验。
+9. 支持在线发布公告，设置关于界面以及页脚。
+10. API 兼容其他消息推送服务，例如 [Server 酱](https://sct.ftqq.com/)。
 
 ## 用途
 1. [整合进自己的博客系统，每当有人登录时发微信消息提醒](https://github.com/songquanpeng/blog/blob/486d63e96ef7906a6c767653a20ec2d3278e9a4a/routes/user.js#L27)。
