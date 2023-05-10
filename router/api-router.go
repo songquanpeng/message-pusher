@@ -75,11 +75,26 @@ func SetApiRouter(router *gin.Engine) {
 			channelRoute.PUT("/", controller.UpdateChannel)
 			channelRoute.DELETE("/:id", controller.DeleteChannel)
 		}
+		webhookRoute := apiRouter.Group("/webhook")
+		webhookRoute.Use(middleware.UserAuth())
+		{
+			webhookRoute.GET("/", controller.GetAllWebhooks)
+			webhookRoute.GET("/search", controller.SearchWebhooks)
+			webhookRoute.GET("/:id", controller.GetWebhook)
+			webhookRoute.POST("/", controller.AddWebhook)
+			webhookRoute.PUT("/", controller.UpdateWebhook)
+			webhookRoute.DELETE("/:id", controller.DeleteWebhook)
+		}
 	}
 	pushRouter := router.Group("/push")
 	pushRouter.Use(middleware.GlobalAPIRateLimit())
 	{
 		pushRouter.GET("/:username", controller.GetPushMessage)
 		pushRouter.POST("/:username", controller.PostPushMessage)
+	}
+	webhookRouter := router.Group("/webhook")
+	webhookRouter.Use(middleware.GlobalAPIRateLimit())
+	{
+		webhookRouter.POST("/:link", controller.TriggerWebhook)
 	}
 }

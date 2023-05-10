@@ -116,6 +116,10 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 			return
 		}
 	}
+	processMessage(c, message, &user)
+}
+
+func processMessage(c *gin.Context, message *model.Message, user *model.User) {
 	if message.Title == "" {
 		message.Title = common.SystemName
 	}
@@ -133,7 +137,7 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 		})
 		return
 	}
-	err = saveAndSendMessage(&user, message, channel_)
+	err = saveAndSendMessage(user, message, channel_)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,

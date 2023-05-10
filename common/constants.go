@@ -113,3 +113,9 @@ const (
 	ChannelStatusEnabled  = 1
 	ChannelStatusDisabled = 2
 )
+
+const (
+	WebhookStatusUnknown  = 0
+	WebhookStatusEnabled  = 1
+	WebhookStatusDisabled = 2
+)
