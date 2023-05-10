@@ -37,6 +37,9 @@ func GetAllWebhooks(c *gin.Context) {
 func SearchWebhooks(c *gin.Context) {
 	userId := c.GetInt("id")
 	keyword := c.Query("keyword")
+	if strings.HasPrefix(keyword, common.ServerAddress+"/webhook/") {
+		keyword = strings.TrimPrefix(keyword, common.ServerAddress+"/webhook/")
+	}
 	webhooks, err := model.SearchWebhooks(userId, keyword)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
