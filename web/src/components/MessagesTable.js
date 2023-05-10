@@ -413,7 +413,7 @@ const MessagesTable = () => {
               }
             }}
           >
-            打开
+            访问链接
           </Button>
           <Button
             onClick={() => {
