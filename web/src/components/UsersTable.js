@@ -5,6 +5,7 @@ import {
   Form,
   Label,
   Pagination,
+  Popup,
   Table,
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -85,7 +86,8 @@ const UsersTable = () => {
           newUsers[realIdx].status = user.status;
           newUsers[realIdx].role = user.role;
           newUsers[realIdx].send_email_to_others = user.send_email_to_others;
-          newUsers[realIdx].save_message_to_database = user.save_message_to_database;
+          newUsers[realIdx].save_message_to_database =
+            user.save_message_to_database;
         }
         setUsers(newUsers);
       } else {
@@ -246,15 +248,25 @@ const UsersTable = () => {
                       >
                         降级
                       </Button>
-                      <Button
-                        size={'small'}
-                        negative
-                        onClick={() => {
-                          manageUser(user.username, 'delete', idx);
-                        }}
+                      <Popup
+                        trigger={
+                          <Button size='small' negative>
+                            删除
+                          </Button>
+                        }
+                        on='click'
+                        flowing
+                        hoverable
                       >
-                        删除
-                      </Button>
+                        <Button
+                          negative
+                          onClick={() => {
+                            manageUser(user.username, 'delete', idx);
+                          }}
+                        >
+                          删除账户 {user.username}
+                        </Button>
+                      </Popup>
                       <Button
                         size={'small'}
                         onClick={() => {
