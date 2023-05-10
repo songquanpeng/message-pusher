@@ -22,7 +22,7 @@ const EditWebhook = () => {
       '  "title": "$title",\n' +
       '  "description": "描述信息：$description",\n' +
       '  "content": "内容：$content",\n' +
-      '  "url": "https://example.com/$titl}"\n' +
+      '  "url": "https://example.com/$title"\n' +
       '}',
     channel: '',
   };
