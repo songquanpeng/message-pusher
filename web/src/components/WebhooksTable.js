@@ -198,6 +198,14 @@ const WebhooksTable = () => {
             <Table.HeaderCell
               style={{ cursor: 'pointer' }}
               onClick={() => {
+                sortWebhook('channel');
+              }}
+            >
+              通道
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
                 sortWebhook('created_time');
               }}
             >
@@ -220,6 +228,11 @@ const WebhooksTable = () => {
                   <Table.Cell>{webhook.id}</Table.Cell>
                   <Table.Cell>{webhook.name}</Table.Cell>
                   <Table.Cell>{renderStatus(webhook.status)}</Table.Cell>
+                  <Table.Cell>
+                    <Label>
+                      {webhook.channel ? webhook.channel : '默认通道'}
+                    </Label>
+                  </Table.Cell>
                   <Table.Cell>
                     {renderTimestamp(webhook.created_time)}
                   </Table.Cell>

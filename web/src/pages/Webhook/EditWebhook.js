@@ -24,7 +24,7 @@ const EditWebhook = () => {
       '  "content": "内容：$content",\n' +
       '  "url": "https://example.com/$title"\n' +
       '}',
-    channel: '',
+    channel: 'default',
   };
 
   const [inputs, setInputs] = useState(originInputs);
@@ -39,6 +39,9 @@ const EditWebhook = () => {
     let res = await API.get(`/api/webhook/${webhookId}`);
     const { success, message, data } = res.data;
     if (success) {
+      if (data.channel === '') {
+        data.channel = 'default';
+      }
       setInputs(data);
     } else {
       showError(message);
@@ -53,6 +56,12 @@ const EditWebhook = () => {
       }
       let channels = await loadUserChannels();
       if (channels) {
+        channels.unshift({
+          key: 'default',
+          text: '默认通道',
+          value: 'default',
+          description: '使用默认通道',
+        });
         setChannels(channels);
       }
     };
@@ -71,6 +80,9 @@ const EditWebhook = () => {
     }
     let res = undefined;
     let localInputs = { ...inputs };
+    if (localInputs.channel === 'default') {
+      localInputs.channel = '';
+    }
     if (isEditing) {
       res = await API.put(`/api/webhook/`, {
         ...localInputs,
