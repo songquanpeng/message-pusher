@@ -2,6 +2,7 @@ package channel
 
 import (
 	"errors"
+	"fmt"
 	"message-pusher/model"
 	"strings"
 )
@@ -12,6 +13,7 @@ func SendGroupMessage(message *model.Message, user *model.User, channel_ *model.
 	if len(subChannels) != len(subTargets) {
 		return errors.New("无效的群组消息配置，子通道数量与子目标数量不一致")
 	}
+	errMessage := ""
 	for i := 0; i < len(subChannels); i++ {
 		message.To = subTargets[i]
 		message.Channel = subChannels[i]
@@ -24,8 +26,11 @@ func SendGroupMessage(message *model.Message, user *model.User, channel_ *model.
 		}
 		err = SendMessage(message, user, subChannel)
 		if err != nil {
-			return errors.New("发送群组消息失败：" + err.Error())
+			errMessage += fmt.Sprintf("发送群组消息子通道 %s 失败：%s\n", subChannels[i], err.Error())
 		}
+	}
+	if errMessage != "" {
+		return errors.New(errMessage)
 	}
 	return nil
 }
