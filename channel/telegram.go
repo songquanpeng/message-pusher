@@ -9,6 +9,8 @@ import (
 	"net/http"
 )
 
+var TelegramMaxMessageLength = 4096
+
 type telegramMessageRequest struct {
 	ChatId    string `json:"chat_id"`
 	Text      string `json:"text"`
@@ -34,22 +36,32 @@ func SendTelegramMessage(message *model.Message, user *model.User, channel_ *mod
 		messageRequest.Text = message.Content
 		messageRequest.ParseMode = "markdown"
 	}
-	jsonData, err := json.Marshal(messageRequest)
-	if err != nil {
-		return err
-	}
-	resp, err := http.Post(fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", channel_.Secret), "application/json",
-		bytes.NewBuffer(jsonData))
-	if err != nil {
-		return err
-	}
-	var res telegramMessageResponse
-	err = json.NewDecoder(resp.Body).Decode(&res)
-	if err != nil {
-		return err
-	}
-	if !res.Ok {
-		return errors.New(res.Description)
+	text := messageRequest.Text
+	idx := 0
+	for idx < len(text) {
+		nextIdx := idx + TelegramMaxMessageLength
+		if nextIdx > len(text) {
+			nextIdx = len(text)
+		}
+		messageRequest.Text = text[idx:nextIdx]
+		idx = nextIdx
+		jsonData, err := json.Marshal(messageRequest)
+		if err != nil {
+			return err
+		}
+		resp, err := http.Post(fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", channel_.Secret), "application/json",
+			bytes.NewBuffer(jsonData))
+		if err != nil {
+			return err
+		}
+		var res telegramMessageResponse
+		err = json.NewDecoder(resp.Body).Decode(&res)
+		if err != nil {
+			return err
+		}
+		if !res.Ok {
+			return errors.New(res.Description)
+		}
 	}
 	return nil
 }
