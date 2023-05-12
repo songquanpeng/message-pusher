@@ -58,6 +58,7 @@ func SetApiRouter(router *gin.Engine) {
 		messageRoute := apiRouter.Group("/message")
 		{
 			messageRoute.GET("/", middleware.UserAuth(), controller.GetUserMessages)
+			messageRoute.GET("/stream", middleware.UserAuth(), middleware.SetSSEHeaders(), controller.GetNewMessages)
 			messageRoute.GET("/search", middleware.UserAuth(), controller.SearchMessages)
 			messageRoute.GET("/status/:link", controller.GetMessageStatus)
 			messageRoute.POST("/resend/:id", middleware.UserAuth(), controller.ResendMessage)

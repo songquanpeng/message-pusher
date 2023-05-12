@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-contrib/sessions/redis"
@@ -56,7 +55,7 @@ func main() {
 	// Initialize HTTP server
 	server := gin.Default()
 	server.SetHTMLTemplate(common.LoadTemplate())
-	server.Use(gzip.Gzip(gzip.DefaultCompression))
+	//server.Use(gzip.Gzip(gzip.DefaultCompression))  // conflict with sse
 
 	// Initialize session store
 	if common.RedisEnabled {

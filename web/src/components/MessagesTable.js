@@ -1,12 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Button,
-  Form,
-  Label,
-  Modal,
-  Pagination,
-  Table,
-} from 'semantic-ui-react';
+import { Button, Form, Label, Modal, Pagination, Table } from 'semantic-ui-react';
 import { API, openPage, showError, showSuccess, showWarning } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
@@ -61,7 +54,7 @@ const MessagesTable = () => {
     title: '消息标题',
     description: '消息描述',
     content: '消息内容',
-    link: '',
+    link: ''
   }); // Message to be viewed
   const [viewModalOpen, setViewModalOpen] = useState(false);
 
@@ -123,6 +116,17 @@ const MessagesTable = () => {
         showError(reason);
       });
     checkPermission().then();
+    const eventSource = new EventSource('/api/message/stream');
+    eventSource.onerror = (e) => {
+      showError('服务端消息推送流连接出错！');
+    };
+    eventSource.onmessage = (e) => {
+      let newMessage = JSON.parse(e.data);
+      insertNewMessage(newMessage);
+    };
+    return () => {
+      eventSource.close();
+    };
   }, []);
 
   const viewMessage = async (id) => {
@@ -201,6 +205,17 @@ const MessagesTable = () => {
     }
     setMessages(sortedMessages);
     setLoading(false);
+  };
+
+  const insertNewMessage = (message) => {
+    console.log(messages);
+    setMessages(messages => {
+        let newMessages = [message];
+        newMessages.push(...messages);
+        return newMessages;
+      }
+    );
+    setActivePage(1);
   };
 
   const refresh = async () => {
