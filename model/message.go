@@ -68,12 +68,16 @@ func GetMessageStatusByLink(link string) (int, error) {
 }
 
 func GetMessagesByUserId(userId int, startIdx int, num int) (messages []*Message, err error) {
-	err = DB.Where("user_id = ?", userId).Order("id desc").Limit(num).Offset(startIdx).Find(&messages).Error
+	err = DB.Select([]string{"id", "title", "channel", "timestamp", "status"}).
+		Where("user_id = ?", userId).Order("id desc").Limit(num).Offset(startIdx).Find(&messages).Error
 	return messages, err
 }
 
 func SearchMessages(keyword string) (messages []*Message, err error) {
-	err = DB.Select([]string{"id", "title", "description", "content"}).Where("id = ? or title LIKE ? or description LIKE ? or content LIKE ?", keyword, keyword+"%", keyword+"%", keyword+"%").Find(&messages).Error
+	err = DB.Select([]string{"id", "title", "channel", "timestamp", "status"}).
+		Where("id = ? or title LIKE ? or description LIKE ? or content LIKE ?", keyword, keyword+"%", keyword+"%", keyword+"%").
+		Order("id desc").
+		Find(&messages).Error
 	return messages, err
 }
 
