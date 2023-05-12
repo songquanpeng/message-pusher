@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"message-pusher/model"
 	"net/http"
+	"unicode/utf8"
 )
 
 var TelegramMaxMessageLength = 4096
@@ -41,7 +42,10 @@ func SendTelegramMessage(message *model.Message, user *model.User, channel_ *mod
 	for idx < len(text) {
 		nextIdx := idx + TelegramMaxMessageLength
 		if nextIdx > len(text) {
+			// we have reach the end, must be valid
 			nextIdx = len(text)
+		} else {
+			nextIdx = getNearestValidSplit(text, nextIdx)
 		}
 		messageRequest.Text = text[idx:nextIdx]
 		idx = nextIdx
@@ -64,4 +68,19 @@ func SendTelegramMessage(message *model.Message, user *model.User, channel_ *mod
 		}
 	}
 	return nil
+}
+
+func getNearestValidSplit(s string, idx int) int {
+	if idx >= len(s) {
+		return idx
+	}
+	if idx == 0 {
+		return 0
+	}
+	isStartByte := utf8.RuneStart(s[idx])
+	if isStartByte {
+		return idx
+	} else {
+		return getNearestValidSplit(s, idx-1)
+	}
 }
