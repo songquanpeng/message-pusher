@@ -497,6 +497,8 @@ const EditChannel = () => {
                 cqhttp
               </a>{' '}
               等实现。 利用 OneBot 协议可以实现推送 QQ 消息。
+              <br/>
+              注意，如果推送目标是群号则前面必须加上群号前缀，例如 group_123456789。
             </Message>
             <Form.Group widths={3}>
               <Form.Input
@@ -522,7 +524,7 @@ const EditChannel = () => {
                 onChange={handleInputChange}
                 autoComplete='new-password'
                 value={inputs.account_id}
-                placeholder='在此填写默认推送目标，例如 QQ 号，如果是群号则前面必须加上群号前缀，例如 group_123456789'
+                placeholder='在此填写默认推送目标，例如 QQ 号'
               />
             </Form.Group>
           </>
