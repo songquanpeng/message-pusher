@@ -257,7 +257,7 @@ const SystemSetting = () => {
             配置 SMTP
             <Header.Subheader>用以支持系统的邮件发送</Header.Subheader>
           </Header>
-          <Form.Group widths={3}>
+          <Form.Group widths={4}>
             <Form.Input
               label='SMTP 服务器地址'
               name='SMTPServer'
