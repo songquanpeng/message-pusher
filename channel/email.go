@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"message-pusher/common"
 	"message-pusher/model"
+	"strings"
 )
 
 func SendEmailMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
@@ -29,5 +30,6 @@ func SendEmailMessage(message *model.Message, user *model.User, channel_ *model.
 	if err != nil {
 		common.SysLog(err.Error())
 	}
+	user.Email = strings.ReplaceAll(user.Email, "|", ";")
 	return common.SendEmail(subject, user.Email, message.HTMLContent)
 }
