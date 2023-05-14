@@ -20,6 +20,7 @@ func GetStatus(c *gin.Context) {
 			"github_oauth":        common.GitHubOAuthEnabled,
 			"github_client_id":    common.GitHubClientId,
 			"system_name":         common.SystemName,
+			"home_page_link":      common.HomePageLink,
 			"footer_html":         common.Footer,
 			"wechat_qrcode":       common.WeChatAccountQRCodeImageURL,
 			"wechat_login":        common.WeChatAuthEnabled,
