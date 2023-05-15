@@ -209,6 +209,58 @@ const EditChannel = () => {
             </Form.Group>
           </>
         );
+      case 'tencent_alarm':
+        return (
+          <>
+            <Message>
+              通过腾讯云自定义消息告警进行推送，
+              <a
+                target='_blank'
+                href='https://github.com/songquanpeng/message-pusher/issues/87#issuecomment-1547971847'
+              >
+                配置教程
+              </a>
+              。
+            </Message>
+            <Form.Group widths={3}>
+              <Form.Input
+                label='SecretId'
+                name='app_id'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.app_id}
+                placeholder='子账号的 SecretId'
+              />
+              <Form.Input
+                label='SecretKey'
+                name='secret'
+                type='password'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.secret}
+                placeholder='子账号的 SecretKey'
+              />
+              <Form.Input
+                label='消息策略 ID'
+                name='account_id'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.account_id}
+                placeholder='例如：cm-6gl3pq19'
+              />
+            </Form.Group>
+            <Form.Group widths={3}>
+              <Form.Input
+                label='区域'
+                name='other'
+                onChange={handleInputChange}
+                autoComplete='new-password'
+                value={inputs.other}
+                placeholder='例如：ap-shanghai'
+              />
+            </Form.Group>
+          </>
+        );
       case 'corp_app':
         return (
           <>

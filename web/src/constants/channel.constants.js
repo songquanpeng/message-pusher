@@ -54,6 +54,12 @@ export const CHANNEL_OPTIONS = [
     color: '#FF9800',
   },
   {
+    key: 'tencent_alarm',
+    text: '腾讯云消息告警',
+    value: 'tencent_alarm',
+    color: '#00a4ff',
+  },
+  {
     key: 'none',
     text: '不推送',
     value: 'none',
