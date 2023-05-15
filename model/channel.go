@@ -45,12 +45,17 @@ type BriefChannel struct {
 	Description string `json:"description"`
 }
 
-func GetChannelById(id int, userId int) (*Channel, error) {
+func GetChannelById(id int, userId int, selectAll bool) (*Channel, error) {
 	if id == 0 || userId == 0 {
 		return nil, errors.New("id 或 userId 为空！")
 	}
 	c := Channel{Id: id, UserId: userId}
-	err := DB.Where(c).First(&c).Error
+	var err error
+	if selectAll {
+		err = DB.Where(c).First(&c).Error
+	} else {
+		err = DB.Omit("secret").Where(c).First(&c).Error
+	}
 	return &c, err
 }
 

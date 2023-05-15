@@ -83,7 +83,7 @@ func GetChannel(c *gin.Context) {
 		})
 		return
 	}
-	channel_, err := model.GetChannelById(id, userId)
+	channel_, err := model.GetChannelById(id, userId, false)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -183,7 +183,7 @@ func UpdateChannel(c *gin.Context) {
 		})
 		return
 	}
-	oldChannel, err := model.GetChannelById(channel_.Id, userId)
+	oldChannel, err := model.GetChannelById(channel_.Id, userId, true)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
