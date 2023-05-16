@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Segment } from 'semantic-ui-react';
+import { Button, Form, Header, Segment } from 'semantic-ui-react';
 import { useParams } from 'react-router-dom';
 import { API, showError, showSuccess } from '../../helpers';
 import { loadUser, loadUserChannels } from '../../helpers/loader';
@@ -21,7 +21,7 @@ const EditMessage = () => {
     description: '',
     content: '',
     url: '',
-    channel: '',
+    channel: localStorage.getItem('editor_channel') || '',
     to: '',
     async: false,
   };
@@ -31,6 +31,9 @@ const EditMessage = () => {
 
   const handleInputChange = (e, { name, value }) => {
     setInputs((inputs) => ({ ...inputs, [name]: value }));
+    if (name === "channel") {
+      localStorage.setItem('editor_channel', value);
+    }
   };
 
   const loadMessage = async () => {
@@ -84,6 +87,7 @@ const EditMessage = () => {
   return (
     <>
       <Segment loading={loading} className={'clearing'}>
+        <Header as='h3'>消息编辑</Header>
         <Form>
           <Form.Group widths='equal'>
             <Form.Input
