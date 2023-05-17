@@ -128,7 +128,7 @@ sudo service nginx restart
    git clone https://github.com/songquanpeng/message-pusher.git
    cd message-pusher/web
    npm install
-   npm build
+   npm run build
    cd ..
    go mod download
    go build -ldflags "-s -w" -o message-pusher
