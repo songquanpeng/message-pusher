@@ -126,7 +126,10 @@ sudo service nginx restart
 1. 从 [GitHub Releases](https://github.com/songquanpeng/message-pusher/releases/latest) 下载可执行文件或者从源码编译：
    ```shell
    git clone https://github.com/songquanpeng/message-pusher.git
-   cd message-pusher
+   cd message-pusher/web
+   npm install
+   npm build
+   cd ..
    go mod download
    go build -ldflags "-s -w" -o message-pusher
    ````
