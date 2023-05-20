@@ -45,7 +45,7 @@ func SendTelegramMessage(message *model.Message, user *model.User, channel_ *mod
 			// we have reach the end, must be valid
 			nextIdx = len(text)
 		} else {
-			nextIdx = getNearestValidSplit(text, nextIdx)
+			nextIdx = getNearestValidSplit(text, nextIdx, messageRequest.ParseMode)
 		}
 		messageRequest.Text = text[idx:nextIdx]
 		idx = nextIdx
@@ -70,7 +70,15 @@ func SendTelegramMessage(message *model.Message, user *model.User, channel_ *mod
 	return nil
 }
 
-func getNearestValidSplit(s string, idx int) int {
+func getNearestValidSplit(s string, idx int, mode string) int {
+	if mode == "markdown" {
+		return getMarkdownNearestValidSplit(s, idx)
+	} else {
+		return getPlainTextNearestValidSplit(s, idx)
+	}
+}
+
+func getPlainTextNearestValidSplit(s string, idx int) int {
 	if idx >= len(s) {
 		return idx
 	}
@@ -81,6 +89,22 @@ func getNearestValidSplit(s string, idx int) int {
 	if isStartByte {
 		return idx
 	} else {
-		return getNearestValidSplit(s, idx-1)
+		return getPlainTextNearestValidSplit(s, idx-1)
 	}
+}
+
+func getMarkdownNearestValidSplit(s string, idx int) int {
+	if idx >= len(s) {
+		return idx
+	}
+	if idx == 0 {
+		return 0
+	}
+	for i := idx; i >= 0; i-- {
+		if s[i] == '\n' {
+			return i + 1
+		}
+	}
+	// unable to find a '\n'
+	return idx
 }
