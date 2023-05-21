@@ -109,13 +109,15 @@ const PersonalSetting = () => {
       {/*<Button onClick={generateToken}>生成访问令牌</Button>*/}
       <Divider />
       <Header as='h3'>账号绑定</Header>
-      <Button
-        onClick={() => {
-          setShowWeChatBindModal(true);
-        }}
-      >
-        绑定微信账号
-      </Button>
+      {status.wechat_login && (
+        <Button
+          onClick={() => {
+            setShowWeChatBindModal(true);
+          }}
+        >
+          绑定微信账号
+        </Button>
+      )}
       <Modal
         onClose={() => setShowWeChatBindModal(false)}
         onOpen={() => setShowWeChatBindModal(true)}
@@ -145,7 +147,9 @@ const PersonalSetting = () => {
           </Modal.Description>
         </Modal.Content>
       </Modal>
-      <Button onClick={openGitHubOAuth}>绑定 GitHub 账号</Button>
+      {status.github_oauth && (
+        <Button onClick={openGitHubOAuth}>绑定 GitHub 账号</Button>
+      )}
       <Button
         onClick={() => {
           setShowEmailBindModal(true);
