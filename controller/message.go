@@ -45,21 +45,10 @@ func GetPushMessage(c *gin.Context) {
 }
 
 func PostPushMessage(c *gin.Context) {
-	message := model.Message{
-		Title:       c.PostForm("title"),
-		Description: c.PostForm("description"),
-		Content:     c.PostForm("content"),
-		URL:         c.PostForm("url"),
-		Channel:     c.PostForm("channel"),
-		Token:       c.PostForm("token"),
-		To:          c.PostForm("to"),
-		Desp:        c.PostForm("desp"),
-		Short:       c.PostForm("short"),
-		OpenId:      c.PostForm("openid"),
-		Async:       c.PostForm("async") == "true",
-	}
-	if message == (model.Message{}) {
+	var message model.Message
+	if c.Request.Header.Get("Content-Type") == "application/json" {
 		// Looks like the user is using JSON
+		message = model.Message{}
 		err := json.NewDecoder(c.Request.Body).Decode(&message)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
@@ -68,6 +57,30 @@ func PostPushMessage(c *gin.Context) {
 			})
 			return
 		}
+	} else {
+		message = model.Message{
+			Title:       c.PostForm("title"),
+			Description: c.PostForm("description"),
+			Content:     c.PostForm("content"),
+			URL:         c.PostForm("url"),
+			Channel:     c.PostForm("channel"),
+			Token:       c.PostForm("token"),
+			To:          c.PostForm("to"),
+			Desp:        c.PostForm("desp"),
+			Short:       c.PostForm("short"),
+			OpenId:      c.PostForm("openid"),
+			Async:       c.PostForm("async") == "true",
+		}
+	}
+	if message == (model.Message{}) {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "请求体为空，如果使用 JSON 请设置 Content-Type 为 application/json，否则请使用表单提交",
+		})
+		return
+	}
+	if message.Token == "" {
+		message.Token = c.Query("token")
 	}
 	keepCompatible(&message)
 	pushMessageHelper(c, &message)
