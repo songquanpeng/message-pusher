@@ -221,7 +221,8 @@ proxy_send_timeout 300s;
       2. `user1|user2|user3`：推送给多个用户，用户之间使用 `|` 分隔。
    8. `async`：选填，如果设置为 `true` 则消息推送将在后台异步进行，返回结果包含 `uuid` 字段，可用于后续[获取消息发送状态](./docs/API.md#通过消息 UUID 获取消息发送状态)。
 3. `POST` 请求方式：字段与上面 `GET` 请求方式保持一致。
-   + 注意：请求体编码格式为 `application/json`，`v0.3.2` 版本起支持 Post Form。
+   + 如果发送的是 JSON，HTTP Header `Content-Type` 请务必设置为 `application/json`，否则一律按 Form 处理。
+   + POST 请求方式下的 `token` 字段也可以通过 URL 查询参数进行设置。
 
 
 **各种通道的支持程度：**
