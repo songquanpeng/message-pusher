@@ -199,7 +199,9 @@ func UpdateChannel(c *gin.Context) {
 		cleanChannel.Type = channel_.Type
 		cleanChannel.Name = channel_.Name
 		cleanChannel.Description = channel_.Description
-		cleanChannel.Secret = channel_.Secret
+		if channel_.Secret != "" {
+			cleanChannel.Secret = channel_.Secret
+		}
 		cleanChannel.AppId = channel_.AppId
 		cleanChannel.AccountId = channel_.AccountId
 		cleanChannel.URL = channel_.URL
