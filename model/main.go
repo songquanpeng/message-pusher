@@ -1,11 +1,13 @@
 package model
 
 import (
-	"gorm.io/driver/mysql"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 	"message-pusher/common"
 	"os"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
@@ -38,7 +40,11 @@ func CountTable(tableName string) (num int64) {
 
 func InitDB() (err error) {
 	var db *gorm.DB
-	if os.Getenv("SQL_DSN") != "" {
+	if os.Getenv("POSTGRES_DSN") != "" {
+		db, err = gorm.Open(postgres.Open(os.Getenv("POSTGRES_DSN")), &gorm.Config{
+			PrepareStmt: true, // precompile SQL
+		})
+	} else if os.Getenv("SQL_DSN") != "" {
 		// Use MySQL
 		db, err = gorm.Open(mysql.Open(os.Getenv("SQL_DSN")), &gorm.Config{
 			PrepareStmt: true, // precompile SQL
