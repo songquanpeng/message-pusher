@@ -159,3 +159,8 @@ func Markdown2HTML(markdown string) (HTML string, err error) {
 func GetTimestamp() int64 {
 	return time.Now().Unix()
 }
+
+func Replace(s, old, new string, n int) string {
+	new = strings.TrimPrefix(strings.TrimSuffix(fmt.Sprintf("%q", new), "\""), "\"")
+	return strings.Replace(s, old, new, n)
+}
