@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
 	"html/template"
 	"log"
 	"net"
@@ -148,7 +149,10 @@ func Markdown2HTML(markdown string) (HTML string, err error) {
 		return "", nil
 	}
 	var buf bytes.Buffer
-	err = goldmark.Convert([]byte(markdown), &buf)
+	goldMarkEntity := goldmark.New(
+		goldmark.WithExtensions(extension.GFM),
+	)
+	err = goldMarkEntity.Convert([]byte(markdown), &buf)
 	if err != nil {
 		return fmt.Sprintf("Markdown 渲染出错：%s", err.Error()), err
 	}
