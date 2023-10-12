@@ -150,7 +150,10 @@ func Markdown2HTML(markdown string) (HTML string, err error) {
 	}
 	var buf bytes.Buffer
 	goldMarkEntity := goldmark.New(
-		goldmark.WithExtensions(extension.GFM),
+		goldmark.WithExtensions(
+			extension.GFM,
+			extension.Footnote,
+		),
 	)
 	err = goldMarkEntity.Convert([]byte(markdown), &buf)
 	if err != nil {
