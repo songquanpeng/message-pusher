@@ -5,6 +5,7 @@ import { API, openPage, showError, showSuccess, showWarning } from '../helpers';
 import { ITEMS_PER_PAGE } from '../constants';
 import { renderTimestamp } from '../helpers/render';
 import { Link } from 'react-router-dom';
+import { marked } from 'marked';
 
 function renderStatus(status) {
   switch (status) {
@@ -416,7 +417,7 @@ const MessagesTable = () => {
           ) : (
             ''
           )}
-          {message.content ? <p>{message.content}</p> : ''}
+          {message.content ? <div dangerouslySetInnerHTML={{ __html: marked.parse(message.content) }}></div> : ''}
         </Modal.Content>
         <Modal.Actions>
           <Button
