@@ -10,6 +10,9 @@ import (
 func SendGroupMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	subChannels := strings.Split(channel_.AppId, "|")
 	subTargets := strings.Split(channel_.AccountId, "|")
+	if message.To != "" {
+		subTargets = strings.Split(message.To, "|")
+	}
 	if len(subChannels) != len(subTargets) {
 		return errors.New("无效的群组消息配置，子通道数量与子目标数量不一致")
 	}
