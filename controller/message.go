@@ -46,7 +46,7 @@ func GetPushMessage(c *gin.Context) {
 
 func PostPushMessage(c *gin.Context) {
 	var message model.Message
-	if c.Request.Header.Get("Content-Type") == "application/json" {
+	if strings.Contains(c.Request.Header.Get("Content-Type"), "application/json") {
 		// Looks like the user is using JSON
 		message = model.Message{}
 		err := json.NewDecoder(c.Request.Body).Decode(&message)
