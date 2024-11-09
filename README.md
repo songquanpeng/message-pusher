@@ -276,6 +276,28 @@ function send_message_with_json {
 send_message 'title' 'description' 'content'
 ```
 
+另一个版本：
+```shell
+MESSAGE_PUSHER_SERVER="https://msgpusher.com"
+MESSAGE_PUSHER_USERNAME="test"
+MESSAGE_PUSHER_TOKEN="666"
+MESSAGE_PUSHER_CHANNEL="lark"
+
+sendmsg() {
+    if [ -t 0 ]; then
+        local param="$*"
+    else
+        local param=$(</dev/stdin)
+    fi
+    curl -s -o /dev/null --get --data-urlencode "content=${param}" "$MESSAGE_PUSHER_SERVER/push/$MESSAGE_PUSHER_USERNAME?channel=$MESSAGE_PUSHER_CHANNEL&token=$MESSAGE_PUSHER_TOKEN"
+}
+```
+
+之后便可以进行这样的操作：
+```shell
+uname -ra | sendmsg
+```
+
 </div>
 </details>
 
