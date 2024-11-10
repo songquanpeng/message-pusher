@@ -8,7 +8,14 @@ import {
   Popup,
   Table,
 } from 'semantic-ui-react';
-import { API, openPage, showError, showSuccess, showWarning } from '../helpers';
+import {
+  API,
+  openPage,
+  showError,
+  showInfo,
+  showSuccess,
+  showWarning,
+} from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
 import { renderTimestamp } from '../helpers/render';
@@ -20,7 +27,7 @@ function renderStatus(status) {
     case 1:
       return (
         <Label basic color='olive'>
-          正在投递
+          正在发送
         </Label>
       );
     case 2:
@@ -53,7 +60,7 @@ function renderStatus(status) {
 const MessagesTable = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [autoRefresh, setAutoRefresh] = useState(true);
   const [autoRefreshSeconds, setAutoRefreshSeconds] = useState(10);
   const autoRefreshSecondsRef = useRef(autoRefreshSeconds);
   const [activePage, setActivePage] = useState(1);
@@ -125,14 +132,21 @@ const MessagesTable = () => {
         showError(reason);
       });
     checkPermission().then();
-    const eventSource = new EventSource('/api/message/stream');
-    eventSource.onerror = (e) => {
-      showError('服务端消息推送流连接出错！');
+    const connectEventSource = () => {
+      const eventSource = new EventSource('/api/message/stream');
+      eventSource.onmessage = (e) => {
+        const newMessage = JSON.parse(e.data);
+        insertNewMessage(newMessage);
+      };
+      eventSource.onerror = () => {
+        showError('服务端消息推送流连接出错！即将重试...');
+        eventSource.close();
+        setTimeout(connectEventSource, 1000); // 1000ms
+      };
+      return eventSource;
     };
-    eventSource.onmessage = (e) => {
-      let newMessage = JSON.parse(e.data);
-      insertNewMessage(newMessage);
-    };
+    const eventSource = connectEventSource();
+    showInfo('服务器消息推送流已连接，您将实时收到新消息');
     return () => {
       eventSource.close();
     };
