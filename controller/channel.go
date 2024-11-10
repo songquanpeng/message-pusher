@@ -135,6 +135,7 @@ func AddChannel(c *gin.Context) {
 		URL:         channel_.URL,
 		Other:       channel_.Other,
 		CreatedTime: common.GetTimestamp(),
+		Token:       channel_.Token,
 	}
 	err = cleanChannel.Insert()
 	if err != nil {
@@ -206,6 +207,7 @@ func UpdateChannel(c *gin.Context) {
 		cleanChannel.AccountId = channel_.AccountId
 		cleanChannel.URL = channel_.URL
 		cleanChannel.Other = channel_.Other
+		cleanChannel.Token = channel_.Token
 	}
 	err = cleanChannel.Update()
 	if err != nil {

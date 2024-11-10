@@ -25,18 +25,19 @@ const (
 )
 
 type Channel struct {
-	Id          int    `json:"id"`
-	Type        string `json:"type" gorm:"type:varchar(32)"`
-	UserId      int    `json:"user_id" gorm:"uniqueIndex:name_user_id;index"`
-	Name        string `json:"name" gorm:"type:varchar(32);uniqueIndex:name_user_id"`
-	Description string `json:"description"`
-	Status      int    `json:"status" gorm:"default:1"` // enabled, disabled
-	Secret      string `json:"secret" gorm:"index"`
-	AppId       string `json:"app_id"`
-	AccountId   string `json:"account_id"`
-	URL         string `json:"url" gorm:"column:url"`
-	Other       string `json:"other"`
-	CreatedTime int64  `json:"created_time" gorm:"bigint"`
+	Id          int     `json:"id"`
+	Type        string  `json:"type" gorm:"type:varchar(32)"`
+	UserId      int     `json:"user_id" gorm:"uniqueIndex:name_user_id;index"`
+	Name        string  `json:"name" gorm:"type:varchar(32);uniqueIndex:name_user_id"`
+	Description string  `json:"description"`
+	Status      int     `json:"status" gorm:"default:1"` // enabled, disabled
+	Secret      string  `json:"secret" gorm:"index"`
+	AppId       string  `json:"app_id"`
+	AccountId   string  `json:"account_id"`
+	URL         string  `json:"url" gorm:"column:url"`
+	Other       string  `json:"other"`
+	CreatedTime int64   `json:"created_time" gorm:"bigint"`
+	Token       *string `json:"token" gorm:"token"`
 }
 
 type BriefChannel struct {
@@ -120,7 +121,7 @@ func (channel *Channel) UpdateStatus(status int) error {
 // Update Make sure your token's fields is completed, because this will update non-zero values
 func (channel *Channel) Update() error {
 	var err error
-	err = DB.Model(channel).Select("type", "name", "description", "secret", "app_id", "account_id", "url", "other", "status").Updates(channel).Error
+	err = DB.Model(channel).Select("type", "name", "description", "secret", "app_id", "account_id", "url", "other", "status", "token").Updates(channel).Error
 	return err
 }
 

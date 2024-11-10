@@ -10,6 +10,7 @@ import (
 	"message-pusher/model"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -46,7 +47,7 @@ func GetPushMessage(c *gin.Context) {
 
 func PostPushMessage(c *gin.Context) {
 	var message model.Message
-	if c.Request.Header.Get("Content-Type") == "application/json" {
+	if strings.Contains(strings.ToLower(c.Request.Header.Get("Content-Type")), "application/json") {
 		// Looks like the user is using JSON
 		message = model.Message{}
 		err := json.NewDecoder(c.Request.Body).Decode(&message)
@@ -110,26 +111,24 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 		})
 		return
 	}
-	if user.Token != "" && user.Token != " " {
-		if message.Token == "" {
-			message.Token = c.Request.Header.Get("Authorization")
-			if message.Token == "" {
-				c.JSON(http.StatusOK, gin.H{
-					"success": false,
-					"message": "token 为空",
-				})
-				return
-			}
-		}
-		if user.Token != message.Token {
-			c.JSON(http.StatusOK, gin.H{
-				"success": false,
-				"message": "无效的 token",
-			})
-			return
-		}
+	if message.Token == "" {
+		message.Token = strings.TrimPrefix(c.Request.Header.Get("Authorization"), "Bearer ")
 	}
 	processMessage(c, message, &user)
+}
+
+func authMessage(messageToken string, userToken string, channelToken *string) bool {
+	if userToken != "" {
+		if messageToken == userToken {
+			return true
+		}
+	}
+	if channelToken != nil && *channelToken != "" {
+		if messageToken != *channelToken {
+			return false
+		}
+	}
+	return true
 }
 
 func processMessage(c *gin.Context, message *model.Message, user *model.User) {
@@ -147,6 +146,20 @@ func processMessage(c *gin.Context, message *model.Message, user *model.User) {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "无效的渠道名称：" + message.Channel,
+		})
+		return
+	}
+	if !authMessage(message.Token, user.Token, channel_.Token) {
+		if message.Token == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"success": false,
+				"message": "通道维度或用户维度设置了鉴权令牌，需要提供鉴权令牌",
+			})
+			return
+		}
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"message": "无效的 token",
 		})
 		return
 	}

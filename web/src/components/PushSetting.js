@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Grid, Header, Message } from 'semantic-ui-react';
-import { API, showError, showSuccess, testChannel } from '../helpers';
+import {
+  API,
+  generateToken,
+  showError,
+  showSuccess,
+  testChannel,
+} from '../helpers';
 import { loadUser, loadUserChannels } from '../helpers/loader';
 
 const PushSetting = () => {
@@ -70,15 +76,25 @@ const PushSetting = () => {
               options={channels}
               value={user.channel}
               onChange={handleInputChange}
-              width={6}
+              width={5}
             />
             <Form.Input
               label='全局鉴权令牌'
-              placeholder='未设置渠道维度令牌时，会检查该令牌，如果该令牌也没有设置，则不检查'
+              placeholder='优先级高于通道维度令牌，但为了安全期间建议使用通道维度的令牌'
               value={user.token}
               name='token'
               onChange={handleInputChange}
-              width={10}
+              width={9}
+              action={{
+                content: '随机生成',
+                onClick: () => {
+                  console.log('generate token');
+                  setUser((inputs) => ({
+                    ...inputs,
+                    token: generateToken(16),
+                  }));
+                },
+              }}
             />
           </Form.Group>
           <Button onClick={() => submit('general')} loading={loading}>
