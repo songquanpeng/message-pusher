@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Label, Pagination, Table } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Label,
+  Pagination,
+  Popup,
+  Table,
+} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { API, showError, showSuccess, testChannel } from '../helpers';
 
@@ -246,24 +253,21 @@ const ChannelsTable = () => {
                   <Table.Cell>
                     <div>
                       <Button
-                        size={'small'}
-                        negative
-                        onClick={() => {
-                          manageChannel(channel.id, 'delete', idx).then();
-                        }}
-                      >
-                        删除
-                      </Button>
-                      <Button
+                        positive
                         size={'small'}
                         onClick={() => {
-                          testChannel(user.username, user.token, channel.name).then();
+                          testChannel(
+                            user.username,
+                            user.token,
+                            channel.name
+                          ).then();
                         }}
                       >
                         测试
                       </Button>
                       <Button
                         size={'small'}
+                        color={'yellow'}
                         onClick={() => {
                           manageChannel(
                             channel.id,
@@ -281,6 +285,26 @@ const ChannelsTable = () => {
                       >
                         编辑
                       </Button>
+                      <Popup
+                        trigger={
+                          <Button size='small' negative>
+                            删除
+                          </Button>
+                        }
+                        on='click'
+                        flowing
+                        hoverable
+                      >
+                        <Button
+                          size={'small'}
+                          negative
+                          onClick={() => {
+                            manageChannel(channel.id, 'delete', idx).then();
+                          }}
+                        >
+                          删除通道 {channel.name}
+                        </Button>
+                      </Popup>
                     </div>
                   </Table.Cell>
                 </Table.Row>

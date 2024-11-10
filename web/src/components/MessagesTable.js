@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Form, Label, Modal, Pagination, Table } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Label,
+  Modal,
+  Pagination,
+  Popup,
+  Table,
+} from 'semantic-ui-react';
 import { API, openPage, showError, showSuccess, showWarning } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
@@ -55,7 +63,7 @@ const MessagesTable = () => {
     title: '消息标题',
     description: '消息描述',
     content: '消息内容',
-    link: ''
+    link: '',
   }); // Message to be viewed
   const [viewModalOpen, setViewModalOpen] = useState(false);
 
@@ -210,12 +218,11 @@ const MessagesTable = () => {
 
   const insertNewMessage = (message) => {
     console.log(messages);
-    setMessages(messages => {
-        let newMessages = [message];
-        newMessages.push(...messages);
-        return newMessages;
-      }
-    );
+    setMessages((messages) => {
+      let newMessages = [message];
+      newMessages.push(...messages);
+      return newMessages;
+    });
     setActivePage(1);
   };
 
@@ -353,16 +360,28 @@ const MessagesTable = () => {
                       >
                         重发
                       </Button>
-                      <Button
-                        size={'small'}
-                        negative
-                        loading={loading}
-                        onClick={() => {
-                          deleteMessage(message.id, idx).then();
-                        }}
+
+                      <Popup
+                        trigger={
+                          <Button size='small' negative>
+                            删除
+                          </Button>
+                        }
+                        on='click'
+                        flowing
+                        hoverable
                       >
-                        删除
-                      </Button>
+                        <Button
+                          size={'small'}
+                          negative
+                          loading={loading}
+                          onClick={() => {
+                            deleteMessage(message.id, idx).then();
+                          }}
+                        >
+                          删除消息 #{message.id}
+                        </Button>
+                      </Popup>
                     </div>
                   </Table.Cell>
                 </Table.Row>
@@ -417,7 +436,15 @@ const MessagesTable = () => {
           ) : (
             ''
           )}
-          {message.content ? <div dangerouslySetInnerHTML={{ __html: marked.parse(message.content) }}></div> : ''}
+          {message.content ? (
+            <div
+              dangerouslySetInnerHTML={{
+                __html: marked.parse(message.content),
+              }}
+            ></div>
+          ) : (
+            ''
+          )}
         </Modal.Content>
         <Modal.Actions>
           <Button
