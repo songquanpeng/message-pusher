@@ -83,6 +83,8 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 ### 通过 Docker 部署
 部署：`docker run -d --restart always --name message-pusher -p 3000:3000 -e TZ=Asia/Shanghai -v /home/ubuntu/data/message-pusher:/data justsong/message-pusher`
 
+如果无法拉去，请将 `justsong/message-pusher` 替换为 `ghcr.io/songquanpeng/message-pusher`。
+
 更新：`docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower -cR`
 
 开放的端口号为 3000，之后用 Nginx 配置域名，反代以及 SSL 证书即可，具体参考[详细部署教程](https://iamazing.cn/page/how-to-deploy-a-website)。
