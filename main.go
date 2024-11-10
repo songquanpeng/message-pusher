@@ -66,6 +66,7 @@ func main() {
 		store = cookie.NewStore([]byte(common.SessionSecret))
 	}
 	store.Options(sessions.Options{
+		Path:     "/",
 		HttpOnly: true,
 		MaxAge:   30 * 24 * 3600,
 	})
