@@ -172,3 +172,10 @@ export const verifyJSON = (str) => {
   }
   return true;
 };
+
+export const generateToken = (byteNum) => {
+  const bytes = crypto.getRandomValues(new Uint8Array(byteNum));
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase();
+};

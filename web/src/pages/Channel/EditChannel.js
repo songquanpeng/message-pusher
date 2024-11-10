@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Header, Message, Segment } from 'semantic-ui-react';
 import { useParams } from 'react-router-dom';
-import { API, showError, showSuccess } from '../../helpers';
+import { API, generateToken, showError, showSuccess } from '../../helpers';
 import { CHANNEL_OPTIONS } from '../../constants';
 import axios from 'axios';
 
@@ -21,6 +21,7 @@ const EditChannel = () => {
     other: '',
     corp_id: '', // only for corp_app
     agent_id: '', // only for corp_app
+    token: '',
   };
 
   const [inputs, setInputs] = useState(originInputs);
@@ -91,7 +92,7 @@ const EditChannel = () => {
         }
         try {
           JSON.parse(localInputs.other);
-        }catch (e) {
+        } catch (e) {
           showError('JSON 格式错误：' + e.message);
           return;
         }
@@ -166,9 +167,12 @@ const EditChannel = () => {
               。
               <br />
               需要新增测试模板，模板标题推荐填写为「消息推送」，模板内容填写为：
-              <br/>标题：{' {{'}title.DATA{'}}'}
-              <br/>描述：{' {{'}description.DATA{'}}'}
-              <br/>内容：{' {{'}content.DATA{'}}'}
+              <br />
+              标题：{' {{'}title.DATA{'}}'}
+              <br />
+              描述：{' {{'}description.DATA{'}}'}
+              <br />
+              内容：{' {{'}content.DATA{'}}'}
             </Message>
             <Form.Group widths={3}>
               <Form.Input
@@ -549,8 +553,9 @@ const EditChannel = () => {
                 cqhttp
               </a>{' '}
               等实现。 利用 OneBot 协议可以实现推送 QQ 消息。
-              <br/>
-              注意，如果推送目标是群号则前面必须加上群号前缀，例如 group_123456789。
+              <br />
+              注意，如果推送目标是群号则前面必须加上群号前缀，例如
+              group_123456789。
             </Message>
             <Form.Group widths={3}>
               <Form.Input
@@ -673,12 +678,20 @@ const EditChannel = () => {
           <>
             <Message>
               自定义推送，目前仅支持 POST 请求，请求体为 JSON 格式。
-              <br/>
-              支持以下模板变量：<code>$title</code>，<code>$description</code>，<code>$content</code>，<code>$url</code>，<code>$to</code>。
-              <br/>
-              <a href="https://iamazing.cn/page/message-pusher-common-custom-templates" target='_blank'>这个页面</a>给出了常见的第三方平台的配置实例，你可以参考这些示例进行配置。
-              <br/>
-              注意，为了防止攻击者利用本功能访问内部网络，也为了你的信息安全，请求地址必须使用 HTTPS 协议。
+              <br />
+              支持以下模板变量：<code>$title</code>，<code>$description</code>，
+              <code>$content</code>，<code>$url</code>，<code>$to</code>。
+              <br />
+              <a
+                href='https://iamazing.cn/page/message-pusher-common-custom-templates'
+                target='_blank'
+              >
+                这个页面
+              </a>
+              给出了常见的第三方平台的配置实例，你可以参考这些示例进行配置。
+              <br />
+              注意，为了防止攻击者利用本功能访问内部网络，也为了你的信息安全，请求地址必须使用
+              HTTPS 协议。
             </Message>
             <Form.Group widths={2}>
               <Form.Input
@@ -697,7 +710,10 @@ const EditChannel = () => {
                 value={inputs.other}
                 name='other'
                 onChange={handleInputChange}
-                style={{ minHeight: 200, fontFamily: 'JetBrains Mono, Consolas' }}
+                style={{
+                  minHeight: 200,
+                  fontFamily: 'JetBrains Mono, Consolas',
+                }}
               />
             </Form.Group>
           </>
@@ -755,6 +771,23 @@ const EditChannel = () => {
             options={CHANNEL_OPTIONS}
             value={type}
             onChange={handleInputChange}
+          />
+          <Form.Input
+            label='鉴权令牌'
+            name='token'
+            onChange={handleInputChange}
+            autoComplete='new-password'
+            value={inputs.token}
+            placeholder='通道维度鉴权令牌，设置后使用该通道推送需要鉴权（使用全局鉴权令牌也可以）'
+            action={{
+              content: '随机生成',
+              onClick: () => {
+                setInputs((inputs) => ({
+                  ...inputs,
+                  token: generateToken(16),
+                }));
+              },
+            }}
           />
           {renderChannelForm()}
           <Button disabled={type === 'email'} onClick={submit}>
