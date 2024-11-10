@@ -40,6 +40,7 @@ func GetPushMessage(c *gin.Context) {
 		Short:       c.Query("short"),
 		OpenId:      c.Query("openid"),
 		Async:       c.Query("async") == "true",
+		RenderMode:  c.Query("render_mode"),
 	}
 	keepCompatible(&message)
 	pushMessageHelper(c, &message)
@@ -71,6 +72,7 @@ func PostPushMessage(c *gin.Context) {
 			Short:       c.PostForm("short"),
 			OpenId:      c.PostForm("openid"),
 			Async:       c.PostForm("async") == "true",
+			RenderMode:  c.PostForm("render_mode"),
 		}
 	}
 	if message == (model.Message{}) {
@@ -162,6 +164,11 @@ func processMessage(c *gin.Context, message *model.Message, user *model.User) {
 			"message": "无效的 token",
 		})
 		return
+	}
+	if message.RenderMode == "code" {
+		if message.Content != "" {
+			message.Content = fmt.Sprintf("```\n%s\n```", message.Content)
+		}
 	}
 	err = saveAndSendMessage(user, message, channel_)
 	if err != nil {
@@ -259,16 +266,18 @@ func RenderMessage(c *gin.Context) {
 		c.Status(http.StatusNotFound)
 		return
 	}
-	if message.Description != "" {
-		message.Description, err = common.Markdown2HTML(message.Description)
-		if err != nil {
-			common.SysLog(err.Error())
+	if message.RenderMode != "raw" {
+		if message.Description != "" {
+			message.Description, err = common.Markdown2HTML(message.Description)
+			if err != nil {
+				common.SysLog(err.Error())
+			}
 		}
-	}
-	if message.Content != "" {
-		message.HTMLContent, err = common.Markdown2HTML(message.Content)
-		if err != nil {
-			common.SysLog(err.Error())
+		if message.Content != "" {
+			message.HTMLContent, err = common.Markdown2HTML(message.Content)
+			if err != nil {
+				common.SysLog(err.Error())
+			}
 		}
 	}
 	c.HTML(http.StatusOK, "message.html", gin.H{

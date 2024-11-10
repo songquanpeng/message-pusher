@@ -24,6 +24,7 @@ type Message struct {
 	Desp        string `json:"desp" gorm:"-:all"`             // alias for content
 	Short       string `json:"short" gorm:"-:all"`            // alias for description
 	Async       bool   `json:"async" gorm:"-"`                // if true, will send message asynchronously
+	RenderMode  string `json:"render_mode" gorm:"raw"`        // markdown (default), code, raw
 }
 
 func GetMessageByIds(id int, userId int) (*Message, error) {
