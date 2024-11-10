@@ -116,7 +116,7 @@ func pushMessageHelper(c *gin.Context, message *model.Message) {
 	if message.Token == "" {
 		message.Token = strings.TrimPrefix(c.Request.Header.Get("Authorization"), "Bearer ")
 	}
-	processMessage(c, message, &user)
+	processMessage(c, message, &user, true)
 }
 
 func authMessage(messageToken string, userToken string, channelToken *string) bool {
@@ -133,7 +133,7 @@ func authMessage(messageToken string, userToken string, channelToken *string) bo
 	return true
 }
 
-func processMessage(c *gin.Context, message *model.Message, user *model.User) {
+func processMessage(c *gin.Context, message *model.Message, user *model.User, needAuth bool) {
 	if message.Title == "" {
 		message.Title = common.SystemName
 	}
@@ -151,7 +151,7 @@ func processMessage(c *gin.Context, message *model.Message, user *model.User) {
 		})
 		return
 	}
-	if !authMessage(message.Token, user.Token, channel_.Token) {
+	if needAuth && !authMessage(message.Token, user.Token, channel_.Token) {
 		if message.Token == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"success": false,
