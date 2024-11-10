@@ -280,6 +280,7 @@ const ChannelsTable = () => {
                       </Button>
                       <Button
                         size={'small'}
+                        primary
                         as={Link}
                         to={'/channel/edit/' + channel.id}
                       >
