@@ -58,14 +58,18 @@ func main() {
 	//server.Use(gzip.Gzip(gzip.DefaultCompression))  // conflict with sse
 
 	// Initialize session store
+	var store sessions.Store
 	if common.RedisEnabled {
 		opt := common.ParseRedisOption()
-		store, _ := redis.NewStore(opt.MinIdleConns, opt.Network, opt.Addr, opt.Password, []byte(common.SessionSecret))
-		server.Use(sessions.Sessions("session", store))
+		store, _ = redis.NewStore(opt.MinIdleConns, opt.Network, opt.Addr, opt.Password, []byte(common.SessionSecret))
 	} else {
-		store := cookie.NewStore([]byte(common.SessionSecret))
-		server.Use(sessions.Sessions("session", store))
+		store = cookie.NewStore([]byte(common.SessionSecret))
 	}
+	store.Options(sessions.Options{
+		HttpOnly: true,
+		MaxAge:   30 * 24 * 3600,
+	})
+	server.Use(sessions.Sessions("session", store))
 
 	router.SetRouter(server, buildFS, indexPage)
 	var port = os.Getenv("PORT")
