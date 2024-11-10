@@ -23,7 +23,7 @@ func SendEmailMessage(message *model.Message, user *model.User, channel_ *model.
 	if subject == common.SystemName || subject == "" {
 		subject = message.Description
 	} else {
-		content = fmt.Sprintf("描述：%s\n\n%s", message.Description, message.Content)
+		content = fmt.Sprintf("%s\n\n%s", message.Description, message.Content)
 	}
 	var err error
 	message.HTMLContent, err = common.Markdown2HTML(content)
