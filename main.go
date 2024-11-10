@@ -65,11 +65,11 @@ func main() {
 	} else {
 		store = cookie.NewStore([]byte(common.SessionSecret))
 	}
-	//store.Options(sessions.Options{
-	//	Path:     "/",
-	//	HttpOnly: true,
-	//	MaxAge:   30 * 24 * 3600,
-	//})
+	store.Options(sessions.Options{
+		Path:     "/",
+		HttpOnly: true,
+		MaxAge:   30 * 24 * 3600,
+	})
 	server.Use(sessions.Sessions("session", store))
 
 	router.SetRouter(server, buildFS, indexPage)
