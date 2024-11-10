@@ -3,8 +3,8 @@ FROM node:16 as builder
 WORKDIR /build
 COPY ./web .
 COPY ./VERSION .
-RUN npm install
-RUN REACT_APP_VERSION=$(cat VERSION) npm run build
+RUN yarn install
+RUN REACT_APP_VERSION=$(cat VERSION) yarn build
 
 FROM golang AS builder2
 
