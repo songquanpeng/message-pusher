@@ -86,10 +86,10 @@ const EditChannel = () => {
         }
         break;
       case 'custom':
-        if (!localInputs.url.startsWith('https://')) {
-          showError('自定义通道的 URL 必须以 https:// 开头！');
-          return;
-        }
+        // if (!localInputs.url.startsWith('https://')) {
+        //   showError('自定义通道的 URL 必须以 https:// 开头！');
+        //   return;
+        // }
         try {
           JSON.parse(localInputs.other);
         } catch (e) {
