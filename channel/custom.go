@@ -3,15 +3,17 @@ package channel
 import (
 	"bytes"
 	"errors"
+	"net/http"
+	"os"
+	"strings"
+
 	"message-pusher/common"
 	"message-pusher/model"
-	"net/http"
-	"strings"
 )
 
 func SendCustomMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
 	url := channel_.URL
-	if strings.HasPrefix(url, "http:") {
+	if strings.HasPrefix(url, "http:") && os.Getenv("CHANNEL_URL_ALLOW_NON_HTTPS") != "true" {
 		return errors.New("自定义通道必须使用 HTTPS 协议")
 	}
 	if strings.HasPrefix(url, common.ServerAddress) {
