@@ -22,7 +22,11 @@ jobs:
 
       - name: Save version info
         run: |
-          git describe --tags > VERSION 
+          if git describe --tags >/dev/null 2>&1; then
+            git describe --tags > VERSION
+          else
+            echo "v0.4.14" > VERSION
+          fi
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
