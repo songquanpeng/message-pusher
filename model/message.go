@@ -13,6 +13,7 @@ type Message struct {
 	Description string `json:"description"`
 	Content     string `json:"content"`
 	URL         string `json:"url" gorm:"column:url"`
+	Btntxt     string `json:"btntxt"`
 	Channel     string `json:"channel"`
 	Token       string `json:"token" gorm:"-:all"`
 	HTMLContent string `json:"html_content"  gorm:"-:all"`
