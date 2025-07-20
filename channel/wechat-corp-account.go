@@ -92,6 +92,24 @@ type wechatCorpMessageRequest struct {
 	Markdown struct {
 		Content string `json:"content"`
 	} `json:"markdown"`
+	News struct {
+		Articles []struct {
+			Title       string `json:"title"`
+			Description string `json:"description"`
+			URL         string `json:"url"`
+			PicURL      string `json:"picurl"`
+		} `json:"articles"`
+	} `json:"news"`
+	MpNews struct {
+		Articles []struct {
+			Title            string `json:"title"`
+			ThumbMediaID     string `json:"thumb_media_id"`
+			Author           string `json:"author"`
+			ContentSourceURL string `json:"content_source_url"`
+			Content          string `json:"content"`
+			Digest           string `json:"digest"`
+		} `json:"articles"`
+	} `json:"mpnews"`
 }
 
 type wechatCorpMessageResponse struct {
@@ -123,27 +141,65 @@ func SendWeChatCorpMessage(message *model.Message, user *model.User, channel_ *m
 	if message.To != "" {
 		messageRequest.ToUser = message.To
 	}
-	if message.Content == "" {
-		if message.Title == "" {
-			messageRequest.MessageType = "text"
-			messageRequest.Text.Content = message.Description
-		} else {
-			messageRequest.MessageType = "textcard"
-			messageRequest.TextCard.Title = message.Title
-			messageRequest.TextCard.Description = message.Description
-			messageRequest.TextCard.URL = common.ServerAddress
-		}
-	} else {
-		if clientType == "plugin" {
+
+	if clientType == "plugin" {
+		// 按优先级和关键属性判断消息类型
+		if len(message.Articles) > 0 {
+			// 检查是否有 mpnews 所需的 content 字段来判断是否为 mpnews
+			if message.Articles[0].Content != "" && message.Articles[0].ThumbMediaID != "" {
+				messageRequest.MessageType = "mpnews"
+				for _, article := range message.Articles {
+					messageRequest.Mpnews.Articles = append(messageRequest.Mpnews.Articles, struct {
+						Title            string `json:"title"`
+						ThumbMediaID     string `json:"thumb_media_id"`
+						Author           string `json:"author,omitempty"`
+						ContentSourceURL string `json:"content_source_url,omitempty"`
+						Content          string `json:"content"`
+						Digest           string `json:"digest,omitempty"`
+					}{
+						Title:            article.Title,
+						ThumbMediaID:     article.ThumbMediaID,
+						Author:           article.Author,
+						ContentSourceURL: article.ContentSourceURL,
+						Content:          article.Content,
+						Digest:           article.Digest,
+					})
+				}
+			} else {
+				// 否则判断为 news 类型
+				messageRequest.MessageType = "news"
+				for _, article := range message.Articles {
+					messageRequest.News.Articles = append(messageRequest.News.Articles, struct {
+						Title       string `json:"title"`
+						Description string `json:"description"`
+						URL         string `json:"url"`
+						PicURL      string `json:"picurl"`
+					}{
+						Title:       article.Title,
+						Description: article.Description,
+						URL:         article.URL,
+						PicURL:      article.PicURL,
+					})
+				}
+			}
+		} else if message.Title != "" {
+			// textcard 消息判断：存在 title 属性
 			messageRequest.MessageType = "textcard"
 			messageRequest.TextCard.Title = message.Title
 			messageRequest.TextCard.Description = message.Description
 			messageRequest.TextCard.URL = message.URL
-		} else {
-			messageRequest.MessageType = "markdown"
-			messageRequest.Markdown.Content = message.Content
+			messageRequest.TextCard.BtnTxt = message.BtnTxt
+		} else if message.Content != "" {
+			// text 消息判断：存在 content 属性
+			messageRequest.MessageType = "text"
+			messageRequest.Text.Content = message.Content
 		}
+	} else if message.Content != "" {
+		// 非 plugin 客户端，使用 markdown 类型
+		messageRequest.MessageType = "markdown"
+		messageRequest.Markdown.Content = message.Content
 	}
+
 	jsonData, err := json.Marshal(messageRequest)
 	if err != nil {
 		return err
