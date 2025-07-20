@@ -46,7 +46,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            justsong/message-pusher
+            ljmalyp/message-pusher
             ghcr.io/${{ github.repository }}
 
       - name: Build and push Docker images
