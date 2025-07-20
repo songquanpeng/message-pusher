@@ -153,11 +153,11 @@ func SendWeChatCorpMessage(message *model.Message, user *model.User, channel_ *m
 					messageRequest.MpNews.Articles = append(messageRequest.MpNews.Articles, struct {
 						Title            string `json:"title"`
 						ThumbMediaID     string `json:"thumb_media_id"`
-						Author           string `json:"author,omitempty"`
-						ContentSourceURL string `json:"content_source_url,omitempty"`
+						Author           string `json:"author"`
+						ContentSourceURL string `json:"content_source_url"`
 						Content          string `json:"content"`
-						Digest           string `json:"digest,omitempty"`
-					}{
+						Digest           string `json:"digest"`
+					}{ // 移除 omitempty 标签，保持与 wechatCorpMessageRequest.MpNews.Articles 结构体一致
 						Title:            article.Title,
 						ThumbMediaID:     article.ThumbMediaID,
 						Author:           article.Author,
