@@ -85,6 +85,7 @@ type wechatCorpMessageRequest struct {
 		Title       string `json:"title"`
 		Description string `json:"description"`
 		URL         string `json:"url"`
+		Btntxt      string `json:"btntxt"`
 	} `json:"textcard"`
 	Text struct {
 		Content string `json:"content"`
@@ -188,7 +189,7 @@ func SendWeChatCorpMessage(message *model.Message, user *model.User, channel_ *m
 			messageRequest.TextCard.Title = message.Title
 			messageRequest.TextCard.Description = message.Description
 			messageRequest.TextCard.URL = message.URL
-			messageRequest.TextCard.BtnTxt = message.Btntxt
+			messageRequest.TextCard.Btntxt = message.Btntxt
 		} else if message.Content != "" {
 			// text 消息判断：存在 content 属性
 			messageRequest.MessageType = "text"
