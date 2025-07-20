@@ -127,7 +127,10 @@ func parseWechatCorpAccountAppId(appId string) (string, string, error) {
 }
 
 func SendWeChatCorpMessage(message *model.Message, user *model.User, channel_ *model.Channel) error {
-	// https://developer.work.weixin.qq.com/document/path/90236
+    if message == nil || user == nil || channel_ == nil {
+        return errors.New("message, user or channel is nil")
+    }
+	// https://developer.work.weixin.com/document/path/90236
 	corpId, agentId, err := parseWechatCorpAccountAppId(channel_.AppId)
 	if err != nil {
 		return err
