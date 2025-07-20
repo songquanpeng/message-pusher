@@ -149,7 +149,7 @@ func SendWeChatCorpMessage(message *model.Message, user *model.User, channel_ *m
 			if message.Articles[0].Content != "" && message.Articles[0].ThumbMediaID != "" {
 				messageRequest.MessageType = "mpnews"
 				for _, article := range message.Articles {
-					messageRequest.Mpnews.Articles = append(messageRequest.Mpnews.Articles, struct {
+					messageRequest.MpNews.Articles = append(messageRequest.MpNews.Articles, struct {
 						Title            string `json:"title"`
 						ThumbMediaID     string `json:"thumb_media_id"`
 						Author           string `json:"author,omitempty"`
@@ -188,7 +188,7 @@ func SendWeChatCorpMessage(message *model.Message, user *model.User, channel_ *m
 			messageRequest.TextCard.Title = message.Title
 			messageRequest.TextCard.Description = message.Description
 			messageRequest.TextCard.URL = message.URL
-			messageRequest.TextCard.BtnTxt = message.BtnTxt
+			messageRequest.TextCard.BtnTxt = message.Btntxt
 		} else if message.Content != "" {
 			// text 消息判断：存在 content 属性
 			messageRequest.MessageType = "text"
