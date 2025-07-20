@@ -75,7 +75,8 @@ func PostPushMessage(c *gin.Context) {
 			RenderMode:  c.PostForm("render_mode"),
 		}
 	}
-	if message == (model.Message{}) {
+	// 修改比较逻辑，检查关键字段是否为空
+	if message.Title == "" && message.Description == "" && message.Content == "" && message.Channel == "" && message.Token == "" {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "请求体为空，如果使用 JSON 请设置 Content-Type 为 application/json，否则请使用表单提交",
