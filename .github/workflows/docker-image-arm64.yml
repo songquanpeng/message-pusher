@@ -22,7 +22,11 @@ jobs:
 
       - name: Save version info
         run: |
-          git describe --tags > VERSION 
+          if git describe --tags >/dev/null 2>&1; then
+            git describe --tags > VERSION
+          else
+            echo "v0.4.14" > VERSION
+          fi
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -48,7 +52,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            justsong/message-pusher
+            ljmalyp/message-pusher
             ghcr.io/${{ github.repository }}
 
       - name: Build and push Docker images
