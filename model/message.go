@@ -26,7 +26,7 @@ type Message struct {
 	Short       string `json:"short" gorm:"-:all"`            // alias for description
 	Async       bool   `json:"async" gorm:"-"`                // if true, will send message asynchronously
 	RenderMode  string `json:"render_mode" gorm:"raw"`        // markdown (default), code, raw
-	Articles    []Article `json:"articles" gorm:"-:all"`         // 通用文章列表，支持 news 和 mpnews 消息类型
+	Articles    []Article `json:"articles"`         // 通用文章列表，支持 news 和 mpnews 消息类型
 }
 
 // 定义通用的 Article 结构体，移除小程序专用的 AppID 和 PagePath 字段
