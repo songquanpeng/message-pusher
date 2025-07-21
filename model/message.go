@@ -1,48 +1,50 @@
 package model
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"errors"
 	"message-pusher/common"
 	"time"
 )
 
 type Message struct {
-	Id          int    `json:"id"`
-	UserId      int    `json:"user_id" gorm:"index"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Content     string `json:"content"`
-	URL         string `json:"url" gorm:"column:url"`
-	Btntxt     string `json:"btntxt"`
-	Channel     string `json:"channel"`
-	Token       string `json:"token" gorm:"-:all"`
-	HTMLContent string `json:"html_content"  gorm:"-:all"`
-	Timestamp   int64  `json:"timestamp" gorm:"type:bigint"`
-	Link        string `json:"link" gorm:"unique;index"`
-	To          string `json:"to" gorm:"column:to"`           // if specified, will send to this user(s)
-	Status      int    `json:"status" gorm:"default:0;index"` // pending, sent, failed
-	OpenId      string `json:"openid" gorm:"-:all"`           // alias for to
-	Desp        string `json:"desp" gorm:"-:all"`             // alias for content
-	Short       string `json:"short" gorm:"-:all"`            // alias for description
-	Async       bool   `json:"async" gorm:"-"`                // if true, will send message asynchronously
-	RenderMode  string `json:"render_mode" gorm:"raw"`        // markdown (default), code, raw
-	Articles    []Article `json:"articles"`         // 通用文章列表，支持 news 和 mpnews 消息类型
+	Id          int       `json:"id"`
+	UserId      int       `json:"user_id" gorm:"index"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Content     string    `json:"content"`
+	URL         string    `json:"url" gorm:"column:url"`
+	Btntxt      string    `json:"btntxt"`
+	Channel     string    `json:"channel"`
+	Token       string    `json:"token" gorm:"-:all"`
+	HTMLContent string    `json:"html_content"  gorm:"-:all"`
+	Timestamp   int64     `json:"timestamp" gorm:"type:bigint"`
+	Link        string    `json:"link" gorm:"unique;index"`
+	To          string    `json:"to" gorm:"column:to"`           // if specified, will send to this user(s)
+	Status      int       `json:"status" gorm:"default:0;index"` // pending, sent, failed
+	OpenId      string    `json:"openid" gorm:"-:all"`           // alias for to
+	Desp        string    `json:"desp" gorm:"-:all"`             // alias for content
+	Short       string    `json:"short" gorm:"-:all"`            // alias for description
+	Async       bool      `json:"async" gorm:"-"`                // if true, will send message asynchronously
+	RenderMode  string    `json:"render_mode" gorm:"raw"`        // markdown (default), code, raw
+	Articles    []Article `json:"articles" gorm:"type:text"`         // 通用文章列表，支持 news 和 mpnews 消息类型
 }
 
 // 定义通用的 Article 结构体，移除小程序专用的 AppID 和 PagePath 字段
- type Article struct {
+type Article struct {
 	// news 消息字段
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	URL         string `json:"url"`
 	PicURL      string `json:"picurl"`
-	
+
 	// mpnews 消息字段
-	ThumbMediaID      string `json:"thumb_media_id"`
-	Author            string `json:"author"`
-	ContentSourceURL  string `json:"content_source_url"`
-	Content           string `json:"content"`
-	Digest            string `json:"digest"`
+	ThumbMediaID     string `json:"thumb_media_id"`
+	Author           string `json:"author"`
+	ContentSourceURL string `json:"content_source_url"`
+	Content          string `json:"content"`
+	Digest           string `json:"digest"`
 }
 
 func GetMessageByIds(id int, userId int) (*Message, error) {
@@ -134,4 +136,18 @@ func (message *Message) UpdateStatus(status int) error {
 func (message *Message) Delete() error {
 	err := DB.Delete(message).Error
 	return err
+}
+
+// Value 实现 driver.Valuer 接口，将 Articles 序列化为 JSON 字符串
+func (a []Article) Value() (driver.Value, error) {
+	return json.Marshal(a)
+}
+
+// Scan 实现 sql.Scanner 接口，将 JSON 字符串反序列化为 Articles
+func (a *[]Article) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return errors.New("failed to scan Articles")
+	}
+	return json.Unmarshal(bytes, a)
 }
