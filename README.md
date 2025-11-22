@@ -40,7 +40,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
   <a href="https://push.justsong.cn">在线演示</a>
 </p>
 
-> **Warning**：原域名（https://msgpusher.com）将于 2026-11-24 下线，请尽快迁移至 https://push.justsong.cn
+> **Warning**：原域名（msgpusher.com）将于 2026-11-24 下线，请尽快迁移至 https://push.justsong.cn
 
 > **Warning**：从 `v0.3` 版本升级到 `v0.4` 版本需要手动迁移数据库，具体方法见[迁移数据库](#迁移数据库)。
 
