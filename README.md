@@ -37,10 +37,10 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
   ·
   <a href="https://github.com/songquanpeng/message-pusher/issues">意见反馈</a>
   ·
-  <a href="https://message-pusher.onrender.com/">在线演示</a>
+  <a href="https://push.justsong.cn">在线演示</a>
 </p>
 
-> **Note**：官方部署站 https://msgpusher.com 现已上线，当前开放注册，欢迎使用。如果收到积极反馈未来可以考虑换用延迟更低的服务器。
+> **Note**：官方部署站 https://push.justsong.cn 现已上线，当前开放注册，欢迎使用。如果收到积极反馈未来可以考虑换用延迟更低的服务器。
 
 > **Warning**：从 `v0.3` 版本升级到 `v0.4` 版本需要手动迁移数据库，具体方法见[迁移数据库](#迁移数据库)。
 
@@ -94,7 +94,7 @@ _✨ 搭建专属于你的消息推送服务，支持多种消息推送方式，
 Nginx 的参考配置：
 ```
 server{
-   server_name msgpusher.com;  # 请根据实际情况修改你的域名
+   server_name push.justsong.cn;  # 请根据实际情况修改你的域名
    
    location / {
           client_max_body_size  64m;
@@ -261,7 +261,7 @@ proxy_send_timeout 300s;
 ```shell
 #!/bin/bash
 
-MESSAGE_PUSHER_SERVER="https://msgpusher.com"
+MESSAGE_PUSHER_SERVER="https://push.justsong.cn"
 MESSAGE_PUSHER_USERNAME="test"
 MESSAGE_PUSHER_TOKEN="666"
 
@@ -285,7 +285,7 @@ send_message 'title' 'description' 'content'
 
 另一个版本：
 ```shell
-MESSAGE_PUSHER_SERVER="https://msgpusher.com"
+MESSAGE_PUSHER_SERVER="https://push.justsong.cn"
 MESSAGE_PUSHER_USERNAME="test"
 MESSAGE_PUSHER_TOKEN="666"
 MESSAGE_PUSHER_CHANNEL="lark"
@@ -315,7 +315,7 @@ uname -ra | sendmsg
 ```python
 import requests
 
-SERVER = "https://msgpusher.com"
+SERVER = "https://push.justsong.cn"
 USERNAME = "test"
 TOKEN = "666"
 
@@ -363,7 +363,7 @@ import (
    "net/url"
 )
 
-var serverAddress = "https://msgpusher.com"
+var serverAddress = "https://push.justsong.cn"
 var username = "test"
 var token = "666"
 
@@ -480,7 +480,7 @@ namespace Demo
         /// <summary>
         /// ServerAddress
         /// </summary>
-        public const string ServerAddress = "https://msgpusher.com";
+        public const string ServerAddress = "https://push.justsong.cn";
 
         /// <summary>
         /// UserName
@@ -591,7 +591,7 @@ namespace Demo
 const axios = require('axios');
 const querystring = require('querystring');
 
-const MESSAGE_PUSHER_SERVER = 'https://msgpusher.com'
+const MESSAGE_PUSHER_SERVER = 'https://push.justsong.cn'
 const MESSAGE_PUSHER_USERNAME = 'test'
 const MESSAGE_PUSHER_TOKEN = '666'
 
