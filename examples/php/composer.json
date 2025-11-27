@@ -1,0 +1,29 @@
+{
+    "name": "message-pusher/php-example",
+    "description": "PHP example for Message Pusher API",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "guzzlehttp/guzzle": "^7.5"
+    },
+    "autoload": {
+        "classmap": [
+            "MessagePusher.php"
+        ]
+    },
+    "autoload-dev": {
+        "classmap": [
+            "MessagePusherTest.php"
+        ]
+    },
+    "scripts": {
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --coverage-html coverage"
+    }
+}

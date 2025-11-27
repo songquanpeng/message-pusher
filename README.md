@@ -637,7 +637,173 @@ send_message('标题', '描述', '**Markdown 内容**')
 </div>
 </details>
 
+<details>
+<summary><strong>Java 示例 </strong></summary>
+<div>
+
+```java
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class MessagePusher {
+    private static final String SERVER = "https://push.justsong.cn";
+    private static final String USERNAME = "test";
+    private static final String TOKEN = "666";
+    private static final HttpClient httpClient = HttpClient.newHttpClient();
+    private static final Gson gson = new Gson();
+
+    public static class MessageRequest {
+        private String title;
+        private String description;
+        private String content;
+        private String token;
+
+        public MessageRequest(String title, String description, String content, String token) {
+            this.title = title;
+            this.description = description;
+            this.content = content;
+            this.token = token;
+        }
+    }
+
+    public static class MessageResponse {
+        private boolean success;
+        private String message;
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+
+    // POST JSON 方式
+    public static MessageResponse sendMessageWithJson(String title, String description, String content) 
+            throws IOException, InterruptedException {
+        MessageRequest request = new MessageRequest(title, description, content, TOKEN);
+        String jsonBody = gson.toJson(request);
+
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create(SERVER + "/push/" + USERNAME))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(httpRequest, 
+                HttpResponse.BodyHandlers.ofString());
+        return gson.fromJson(response.body(), MessageResponse.class);
+    }
+
+    // POST Form 方式
+    public static MessageResponse sendMessageWithForm(String title, String description, String content) 
+            throws IOException, InterruptedException {
+        Map<String, String> formData = new HashMap<>();
+        formData.put("title", title);
+        formData.put("description", description);
+        formData.put("content", content);
+        formData.put("token", TOKEN);
+
+        String formBody = formData.entrySet().stream()
+                .map(entry -> URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8) + "=" + 
+                             URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8))
+                .collect(Collectors.joining("&"));
+
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create(SERVER + "/push/" + USERNAME))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(formBody))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(httpRequest, 
+                HttpResponse.BodyHandlers.ofString());
+        return gson.fromJson(response.body(), MessageResponse.class);
+    }
+
+    public static void main(String[] args) {
+        try {
+            // 使用 JSON 方式发送
+            MessageResponse response = sendMessageWithJson("标题", "描述", "**Markdown 内容**");
+            
+            // 或使用 Form 方式发送
+            // MessageResponse response = sendMessageWithForm("标题", "描述", "**Markdown 内容**");
+            
+            if (response.isSuccess()) {
+                System.out.println("推送成功！");
+            } else {
+                System.out.println("推送失败：" + response.getMessage());
+            }
+        } catch (Exception e) {
+            System.err.println("推送失败：" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+**依赖 (Maven):**
+```xml
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.10.1</version>
+</dependency>
+```
+
+**依赖 (Gradle):**
+```gradle
+implementation 'com.google.code.gson:gson:2.10.1'
+```
+
+**注意：** 此示例使用 Java 11+ 的 `HttpClient`。如果使用 Java 8，请使用 `OkHttp` 或 `Apache HttpClient` 库。
+
+</div>
+</details>
+
 欢迎 PR 添加更多语言的示例。
+
+## 完整示例项目
+
+除了上述内联代码示例外，我们还提供了完整的示例项目，包含单元测试、依赖管理和详细文档：
+
+### [Java 示例](./examples/java/)
+- ✅ 使用 Java 11+ HttpClient
+- ✅ 支持 JSON 和 Form 两种请求方式
+- ✅ 包含 JUnit 5 + WireMock 单元测试
+- ✅ Maven 项目配置
+- ✅ 完整的 README 文档
+
+```bash
+cd examples/java
+mvn clean test
+```
+
+### [PHP 示例](./examples/php/)
+- ✅ 支持 cURL 和 Guzzle 两种方式
+- ✅ 包含 PHPUnit 单元测试
+- ✅ Composer 依赖管理
+- ✅ 支持 PHP 7.4+
+- ✅ 完整的 README 文档
+
+```bash
+cd examples/php
+composer install
+composer test
+```
+
+查看 [`examples/`](./examples/) 目录获取更多语言的完整实现。
 
 
 ## 迁移数据库
