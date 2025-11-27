@@ -637,7 +637,207 @@ send_message('标题', '描述', '**Markdown 内容**')
 </div>
 </details>
 
+<details>
+<summary><strong>Java 示例 </strong></summary>
+<div>
+
+```java
+import com.google.gson.Gson;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class MessagePusherExample {
+    private static final String SERVER = "https://push.justsong.cn";
+    private static final String USERNAME = "test";
+    private static final String TOKEN = "666";
+    
+    public static void main(String[] args) throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+        Gson gson = new Gson();
+        
+        // 创建请求体
+        var request = new MessageRequest("标题", "描述", "**Markdown 内容**", TOKEN);
+        String jsonBody = gson.toJson(request);
+        
+        // 发送 POST 请求
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+            .uri(URI.create(SERVER + "/push/" + USERNAME))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+            .build();
+        
+        HttpResponse<String> response = client.send(httpRequest, 
+            HttpResponse.BodyHandlers.ofString());
+        
+        var result = gson.fromJson(response.body(), MessageResponse.class);
+        if (result.success) {
+            System.out.println("推送成功！");
+        } else {
+            System.out.println("推送失败：" + result.message);
+        }
+    }
+    
+    record MessageRequest(String title, String description, String content, String token) {}
+    record MessageResponse(boolean success, String message) {}
+}
+```
+
+**完整示例请查看** [`examples/java/`](./examples/java/)
+
+</div>
+</details>
+
+<details>
+<summary><strong>PHP 示例 </strong></summary>
+<div>
+
+```php
+<?php
+
+$server = 'https://push.justsong.cn';
+$username = 'test';
+$token = '666';
+
+// 准备数据
+$data = [
+    'title' => '标题',
+    'description' => '描述',
+    'content' => '**Markdown 内容**',
+    'token' => $token,
+];
+
+// 使用 cURL 发送 JSON 请求
+$ch = curl_init("$server/push/$username");
+curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+    CURLOPT_POSTFIELDS => json_encode($data),
+]);
+
+$response = curl_exec($ch);
+$result = json_decode($response, true);
+curl_close($ch);
+
+if ($result['success']) {
+    echo "推送成功！\n";
+} else {
+    echo "推送失败：{$result['message']}\n";
+}
+```
+
+**完整示例请查看** [`examples/php/`](./examples/php/)
+
+</div>
+</details>
+
+<details>
+<summary><strong>Rust 示例 </strong></summary>
+<div>
+
+```rust
+use reqwest::Client;
+use serde::{Deserialize, Serialize};
+use anyhow::Result;
+
+#[derive(Serialize)]
+struct MessageRequest {
+    title: String,
+    description: String,
+    content: String,
+    token: String,
+}
+
+#[derive(Deserialize)]
+struct MessageResponse {
+    success: bool,
+    message: String,
+}
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    let server = "https://push.justsong.cn";
+    let username = "test";
+    let token = "666";
+    
+    let client = Client::new();
+    let request = MessageRequest {
+        title: "标题".to_string(),
+        description: "描述".to_string(),
+        content: "**Markdown 内容**".to_string(),
+        token: token.to_string(),
+    };
+    
+    let response = client
+        .post(format!("{}/push/{}", server, username))
+        .json(&request)
+        .send()
+        .await?;
+    
+    let result: MessageResponse = response.json().await?;
+    
+    if result.success {
+        println!("推送成功！");
+    } else {
+        println!("推送失败：{}", result.message);
+    }
+    
+    Ok(())
+}
+```
+
+**完整示例请查看** [`examples/rust/`](./examples/rust/)
+
+</div>
+</details>
+
 欢迎 PR 添加更多语言的示例。
+
+## 完整示例项目
+
+除了上述内联代码示例外，我们还提供了完整的示例项目，包含单元测试、依赖管理和详细文档：
+
+### [Java 示例](./examples/java/)
+- ✅ 使用 Java 11+ HttpClient
+- ✅ 支持 JSON 和 Form 两种请求方式
+- ✅ 包含 JUnit 5 + WireMock 单元测试
+- ✅ Maven 项目配置
+- ✅ 完整的 README 文档
+
+```bash
+cd examples/java
+mvn clean test
+```
+
+### [PHP 示例](./examples/php/)
+- ✅ 支持 cURL 和 Guzzle 两种方式
+- ✅ 包含 PHPUnit 单元测试
+- ✅ Composer 依赖管理
+- ✅ 支持 PHP 7.4+
+- ✅ 完整的 README 文档
+
+```bash
+cd examples/php
+composer install
+composer test
+```
+
+### [Rust 示例](./examples/rust/)
+- ✅ 异步 API（基于 tokio）
+- ✅ 使用 reqwest HTTP 客户端
+- ✅ 包含 mockito 单元测试（5 个测试通过）
+- ✅ Cargo 项目配置
+- ✅ 类型安全，零成本抽象
+- ✅ 完整的 README 文档
+
+```bash
+cd examples/rust
+cargo test
+```
+
+查看 [`examples/`](./examples/) 目录获取更多语言的完整实现。
 
 
 ## 迁移数据库
